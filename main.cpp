@@ -2,6 +2,8 @@
 #include "test.cpp"
 int main(int argc, char const *argv[])
 {
-    testAll();
-    return 0;
+    if (testAll())
+        std::cout << "==============="<< std::endl<<"all test pass" << std::endl;
+    
+       return 0;
 }

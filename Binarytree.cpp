@@ -205,28 +205,30 @@ BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node)
 {
     if (node->getChildren()[1] != nullptr)
         return (maximum(node->getChildren()[1]));
-    BSTNode<T> _parent = parentNode(node);
-    while (parentNode != nullptr)
+    BSTNode<T>* _parent = parentNode(node);
+    while (parentNode(node) != nullptr)
     {
         if (_parent->getChildren()[0] == node)
             return _parent;
         node = _parent;
         _parent = parentNode(node);
     }
+    return nullptr;
 }
 template <typename T>
 BSTNode<T> *Binarytree<T>::successorNode(BSTNode<T> *node)
 {
     if (node->getChildren()[0] != nullptr)
-        return (maximum(node->getChildren()[0]));
-    BSTNode<T> _parent = parentNode(node);
-    while (parentNode != nullptr)
+        return (minimum(node->getChildren()[0]));
+    BSTNode<T> *_parent = parentNode(node);
+    while (parentNode(node) != nullptr)
     {
         if (_parent->getChildren()[1] == node)
             return _parent;
         node = _parent;
         _parent = parentNode(node);
     }
+    return nullptr;
 }
 template <typename T>
 BSTNode<T> *Binarytree<T>::parentNode(BSTNode<T> *node)

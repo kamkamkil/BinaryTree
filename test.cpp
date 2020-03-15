@@ -48,7 +48,6 @@ bool testDelete(bool talk)
     tree.put(4);
     tree.put(9);
     tree.put(10);
-    tree.print();
     tree.delate(10);
     tree.delate(4);
     if (tree.contains(10))
@@ -145,33 +144,100 @@ bool testParent(bool talk = true)
     tree.put(10);
     tree.put(-10);
     tree.put(7);
-    if(tree.parent(-10) != 0)
-        {
-            result = false;
-            if(talk)
-                std::cout << "parent test fail should be 0 but it is:" << tree.parent(-10) << std::endl;
-        }
-    if(tree.parent(3) != 1)
-        {
-            result = false;
-            if(talk)
-                std::cout << "parent test fail should be 1 but it is:" << tree.parent(-10) << std::endl;
-        }
-    if(result && talk)
+    if (tree.parent(-10) != 0)
+    {
+        result = false;
+        if (talk)
+            std::cout << "parent test fail should be 0 but it is:" << tree.parent(-10) << std::endl;
+    }
+    if (tree.parent(3) != 1)
+    {
+        result = false;
+        if (talk)
+            std::cout << "parent test fail should be 1 but it is:" << tree.parent(-10) << std::endl;
+    }
+    if (result && talk)
         std::cout << "parent test pass" << std::endl;
     return result;
-        
+}
+bool testSuccessor(bool talk)
+{
+    bool result = true;
+    Binarytree<int> tree;
+    tree.put(5);
+    tree.put(7);
+    tree.put(4);
+    tree.put(14);
+    tree.put(13);
+    tree.put(6);
+    tree.put(2);
+    tree.put(11);
+    tree.put(8);
+    tree.put(1);
+    tree.put(3);
+    tree.put(10);
+    if (tree.successor(7) != 8)
+    {
+        result = false;
+        if (talk)
+            std::cout << "Successor test failed for 7 should be 8 but it is : " << tree.successor(14) << std::endl;
+    }
+    if (tree.successor(3) != 4)
+    {
+        result = false;
+        if (talk)
+            std::cout << "Successor test failed for 4 should be 4 but it is : " << tree.successor(14) << std::endl;
+    }
+    if (result && talk)
+        std::cout << "successor test pass" << std::endl;
 
+    return result;
+}
+bool testPredecessor(bool talk)
+{
+    bool result = true;
+    Binarytree<int> tree;
+    tree.put(5);
+    tree.put(7);
+    tree.put(4);
+    tree.put(14);
+    tree.put(13);
+    tree.put(6);
+    tree.put(2);
+    tree.put(11);
+    tree.put(8);
+    tree.put(1);
+    tree.put(3);
+    tree.put(10);
+    if (tree.predecessor(4) != 3)
+    {
+        result = false;
+        if (talk)
+            std::cout << "predecessor test failed for 3 should be 3 but it is : " << tree.predecessor(4) << std::endl;
+    }
+
+    if (tree.predecessor(8) != 7)
+    {
+        result = false;
+        if (talk)
+            std::cout << "predecessor test failed for 8 should be 7 but it is : " << tree.predecessor(8) << std::endl;
+    }
+    if (result && talk)
+        std::cout << "predecessor test pass" << std::endl;
+
+    return result;
 }
 bool testAll(bool talk = true)
 {
     bool result = true;
-    // result &= testPutContain(talk);
     // result &= testPrint(talk);
-    // result = result && testDelete(talk);
-    // result &= testMin(talk);
-    // result &= testMax(talk);
+    result &= testPutContain(talk);
+    // result &= testDelete(talk);
+    result &= testMin(talk);
+    result &= testMax(talk);
     result &= testParent(talk);
+    result &= testSuccessor(talk);
+    result &= testPredecessor(talk);
 
     return result;
 }
