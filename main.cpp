@@ -1,4 +1,5 @@
 #include "BinaryTree.cpp"
+#include "test.cpp"
 int main(int argc, char const *argv[])
 {
     Binarytree<int> temp(1);
@@ -8,6 +9,7 @@ int main(int argc, char const *argv[])
     temp.put(0);
     temp.put(4);
     temp.put(6);
+    int tempe = temp.search(6);
 
     temp.print();
     return 0;

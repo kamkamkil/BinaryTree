@@ -12,13 +12,6 @@
 // #include "printWinFun.cpp"//!!
 //
 
-class NoObjectException : public exception
-{
-    virtual const char *what() const throw()
-    {
-        return "there are no object like that in tree";
-    }
-};
 
 template <typename T>
 class Binarytree
@@ -38,7 +31,7 @@ public:
     void put(T data);
     int hight();
     void print();
-    T &&search(T value);
+    const T search(T value);
     bool contains(T value);
 };
 
@@ -112,19 +105,19 @@ BSTNode<T> *Binarytree<T>::searchNode(T value)
     q.push(node);
     while (!q.empty())
     {
-        node = q.front;
-        q.pop;
-        if (node->getData == value)
+        node = q.front();
+        q.pop();
+        if (node->getData() == value)
         {
             return node;
         }
-        if (node->getChildren[0] != nullptr)
+        if (node->getChildren()[0] != nullptr)
         {
-            q.push(node->getChildren[0]);
+            q.push(node->getChildren()[0]);
         }
-        if (node->getChildren[1] != nullptr)
+        if (node->getChildren()[1] != nullptr)
         {
-            q.push(node->getChildren[1]);
+            q.push(node->getChildren()[1]);
         }
     }
     return nullptr;
@@ -135,13 +128,15 @@ void Binarytree<T>::visit(T value)
     std::cout << "i'm in node : " << value << std::endl;
 }
 template <typename T>
-T &&Binarytree<T>::search(T value)
+const T Binarytree<T>::search(T value)
 {
     BSTNode<T> *node = searchNode(value);
     if (node == nullptr)
     {
-       // throw new NoObjectException;
+       throw "NoObjectException";
     }
+   const T result = node->getData();
+    return result ;
 }
 template <typename T>
 bool Binarytree<T>::contains(T value)
