@@ -24,6 +24,8 @@ private:
     BSTNode<T> *parent(BSTNode<T> *node);
     BSTNode<T> *successor(BSTNode<T> *node);
     BSTNode<T> *predecessor(BSTNode<T> *node);
+    BSTNode<T> *maximum(BSTNode<T> *node);
+    BSTNode<T> *minimum(BSTNode<T> *node);
     void visit(T value);
 
 public:
@@ -36,6 +38,8 @@ public:
     const T search(T value);
     bool contains(T value);
     void delate(T value);
+    T minimum(){return minimum(root)->getData();};
+    T maximum(){return maximum(root)->getData();};
 };
 
 template <typename T>
@@ -198,7 +202,31 @@ BSTNode<T> *Binarytree<T>::parent(BSTNode<T> * node)
             return nullptr; 
     }
     return parent;
-    
+}
+template<typename T>
+BSTNode<T> *Binarytree<T>::successor(BSTNode<T> * node)
+{
+}
+template<typename T>
+BSTNode<T> *Binarytree<T>::predecessor(BSTNode<T> * node)
+{
 
 }
+template<typename T>
+BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> * node)
+{
+    if(node->getChildren()[0] != nullptr)
+        return maximum(node->getChildren()[0]);
+    else
+        return node;
+}
+template<typename T>
+BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> * node)
+{
+        if(node->getChildren()[1] != nullptr)
+        return minimum(node->getChildren()[1]);
+    else
+        return node;
+}
+
 #endif // !BINARYTREE_CPP
