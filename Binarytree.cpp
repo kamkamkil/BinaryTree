@@ -6,6 +6,7 @@
 #include <queue>
 #include <stack>
 #include <iostream>
+#include <iterator>
 //to nie działa na linux
 // #include "printWinFun.cpp"//!!
 //
@@ -13,6 +14,7 @@
 template <typename T>
 class Binarytree
 {
+    
 private:
     BSTNode <T>*root;
     void put(T data,BSTNode<T> *node);
@@ -27,6 +29,11 @@ public:
 };
 
 template <typename T>
+Binarytree<T>::Binarytree()
+{
+    root = nullptr;
+} 
+template <typename T>
 Binarytree<T>::Binarytree(T head)
 {
     root = new BSTNode<T>(head);
@@ -39,7 +46,14 @@ Binarytree<T>::~Binarytree()
 template<typename T>
 void Binarytree<T>::put(T data)
 {
+    if (root == nullptr)
+    {
+        root = new BSTNode<T>(data);
+    }
+    else
+    {
     put(data,root);
+    }
 }
 template<typename T>
 void Binarytree<T>::put(T data,BSTNode<T> *node)
@@ -64,6 +78,7 @@ void Binarytree<T>::print(BSTNode<T> *root, int space)
     std::cout<<root->getData()<<std::endl;  
     print(root->getChildren()[1], space);  
 }
+
 
 
 
