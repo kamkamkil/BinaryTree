@@ -141,6 +141,7 @@ const T Binarytree<T>::search(T value)
 template <typename T>
 bool Binarytree<T>::contains(T value)
 {
-    return searchNode != nullptr;
+    bool test = (&searchNode != nullptr);
+    return test ;
 }
 #endif // !BINARYTREE_CPP
