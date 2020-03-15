@@ -6,12 +6,12 @@ template <typename T>
 class BSTNode
 {
 private:
-    T data;
+    T value;
     BSTNode<T> *children[2];
 public:
-    BSTNode(T data);
+    BSTNode(T value);
     ~BSTNode();
-    void put(T data);
+    void put(T value);
     BSTNode<T> **getChildren();
     T getData();
 };
@@ -19,7 +19,7 @@ public:
 template <typename T>
 BSTNode<T>::BSTNode(T data)
 {
-    this->data = data;
+    this->value = data;
     children[0] = nullptr;
     children[1] = nullptr;
 }
@@ -33,7 +33,7 @@ BSTNode<T>::~BSTNode()
 template <typename T>
 void BSTNode<T>::put(T __data) // FIXME zmiana nazwy
 {
-    children[__data < this->data] = new BSTNode<T>(__data);
+    children[__data < this->value] = new BSTNode<T>(__data);
 }
 template <typename T>
 BSTNode<T> **BSTNode<T>::getChildren()
@@ -43,7 +43,7 @@ BSTNode<T> **BSTNode<T>::getChildren()
 template <typename T>
 T BSTNode<T>::getData()
 {
-    return data;
+    return value;
 }
 
 #endif // !NODE_CPP

@@ -12,7 +12,6 @@
 // #include "printWinFun.cpp"//!!
 //
 
-
 template <typename T>
 class Binarytree
 {
@@ -29,10 +28,11 @@ public:
     Binarytree();
     ~Binarytree();
     void put(T data);
-    int hight();
+    int hight(); //todo
     void print();
     const T search(T value);
     bool contains(T value);
+    void delate(T value);
 };
 
 template <typename T>
@@ -133,15 +133,34 @@ const T Binarytree<T>::search(T value)
     BSTNode<T> *node = searchNode(value);
     if (node == nullptr)
     {
-       throw "NoObjectException";
+        throw "NoObjectException";
     }
-   const T result = node->getData();
-    return result ;
+    const T result = node->getData();
+    return result;
 }
 template <typename T>
 bool Binarytree<T>::contains(T value)
 {
-    bool test = (&searchNode != nullptr);
-    return test ;
+    return searchNode(value) != nullptr;
+}
+template <typename T>
+void Binarytree<T>::delate(T value)
+{
+    BSTNode<T> *node = root;
+    while (node->getChildren()[0] != nullptr || node->getChildren()[1] != nullptr)
+    {
+        for (size_t i = 0; i <= 1; i++)
+        {
+            std::cout << node->getChildren()[i]->getData() << std::endl;
+            if (node->getChildren()[i]->getData() == value)
+            {
+                std::cout << node->getData() << std::endl;
+                delete node->getChildren()[i];
+                node->getChildren()[i] = nullptr;
+                return;
+            }
+        }
+        node = node->getChildren()[value < node->getData()];
+    }
 }
 #endif // !BINARYTREE_CPP
