@@ -21,6 +21,9 @@ private:
     void put(T data, BSTNode<T> *node);
     void print(BSTNode<T> *root, int space);
     BSTNode<T> *searchNode(T value);
+    BSTNode<T> *parent(BSTNode<T> *node);
+    BSTNode<T> *successor(BSTNode<T> *node);
+    BSTNode<T> *predecessor(BSTNode<T> *node);
     void visit(T value);
 
 public:
@@ -149,18 +152,53 @@ void Binarytree<T>::delate(T value)
     BSTNode<T> *node = root;
     while (node->getChildren()[0] != nullptr || node->getChildren()[1] != nullptr)
     {
-        for (size_t i = 0; i <= 1; i++)
+        int side = value < node->getData();
+        if (node->getChildren()[side] != nullptr)
         {
-            std::cout << node->getChildren()[i]->getData() << std::endl;
-            if (node->getChildren()[i]->getData() == value)
+            if (node->getChildren()[side]->getData() == value)
             {
-                std::cout << node->getData() << std::endl;
-                delete node->getChildren()[i];
-                node->getChildren()[i] = nullptr;
-                return;
+                // BSTNode<T> *nodeToDelate = node->getChildren()[side];
+                // int children = 0;
+                // if (nodeToDelate->getChildren()[0] == nullptr && nodeToDelate->getChildren()[1] == nullptr)
+                // {
+                //     delete nodeToDelate;
+                //     node->getChildren()[side] = nullptr;
+                // }
+                // if (nodeToDelate->getChildren()[0] == nullptr && nodeToDelate->getChildren()[1] != nullptr)
+                // {
+                //     node->getChildren()[side] = nodeToDelate->getChildren()[1];
+                //     delete nodeToDelate;
+                // }
+                // if (nodeToDelate->getChildren()[0] == nullptr && nodeToDelate->getChildren()[1] == nullptr)
+                // {
+                //     BSTNode<T> *temp = node->getChildren()[side]; //FIXME
+
+                    
+                // }
             }
         }
-        node = node->getChildren()[value < node->getData()];
+        else
+            return;
+        node = node->getChildren()[side];
     }
+}
+template<typename T>
+BSTNode<T> *Binarytree<T>::parent(BSTNode<T> * node)
+{
+    if(root == node)
+        return nullptr;
+    BSTNode<T> *parent = root;
+    BSTNode<T> *temp = root;
+    temp = temp->getChildren()[node->getData() < temp->getData()];
+    while (temp != node)
+    {
+        parent = temp;
+        temp = temp->getChildren()[node->getData() < temp->getData()];
+        if (temp == nullptr)
+            return nullptr; 
+    }
+    return parent;
+    
+
 }
 #endif // !BINARYTREE_CPP

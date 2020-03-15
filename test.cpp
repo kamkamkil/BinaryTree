@@ -45,17 +45,17 @@ bool testDelete(bool talk)
     tree.put(10);
     tree.print();
     tree.delate(10);
-    // tree.delate(4);
+    tree.delate(4);
     if(tree.contains(10))
+        {
+            std::cout << "delate test fail : tree shouldn't contain 10" << std::endl;
+            result == false;
+        }
+    if(tree.contains(4))
         {
             std::cout << "delate test fail : tree should contain 10" << std::endl;
             result == false;
         }
-    // if(tree.contains(4))
-    //     {
-    //         std::cout << "delate test fail : tree should contain 10" << std::endl;
-    //         result == false;
-    //     }
     if(talk && result)
         std::cout << "delate test pass" << std::endl;
         return result;
@@ -64,8 +64,8 @@ bool testAll(bool talk = true)
 {
     bool result = true;
     // result = true && testPutContain(talk);
-    // result = result && testPrint(talk);
-    result = result && testDelete(talk);
+    result = result && testPrint(talk);
+    // result = result && testDelete(talk);
     return result;
 }
 #endif // !TEST_BSTTREE
