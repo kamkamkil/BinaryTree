@@ -19,10 +19,12 @@ private:
     BSTNode<T> *root;
     void put(T data, BSTNode<T> *node);
     void print(BSTNode<T> *root, int space);
-    BSTNode<T>* searchNode(T value);
+    BSTNode<T> *searchNode(T value);
+    void visit();
+
 public:
     Binarytree(T head);
-    Binarytree(); 
+    Binarytree();
     ~Binarytree();
     void put(T data);
     int hight();
@@ -90,13 +92,12 @@ int Binarytree<T>::hight()
 {
     return 0;
 }
- 
 
 template <typename T>
-BSTNode<T>* Binarytree<T>::searchNode(T value)
+BSTNode<T> *Binarytree<T>::searchNode(T value)
 {
     BSTNode<T> *node = root;
-    std::queue<BSTNode<T>*> q;
+    std::queue<BSTNode<T> *> q;
     q.push(node);
     while (!q.empty())
     {
@@ -113,10 +114,13 @@ BSTNode<T>* Binarytree<T>::searchNode(T value)
         if (node->getChildren[1] != nullptr)
         {
             q.push(node->getChildren[1]);
-        }    
+        }
     }
-    return null
-    
+    return nullptr;
 }
-
+template <typename T>
+void Binarytree<T>::visit(T value)
+{
+    std::cout << "i'm in node : "<<value << std::endl;
+}
 #endif // !BINARYTREE_CPP
