@@ -14,14 +14,15 @@
 template <typename T>
 class Binarytree
 {
-    
+
 private:
-    BSTNode <T>*root;
-    void put(T data,BSTNode<T> *node);
+    BSTNode<T> *root;
+    void put(T data, BSTNode<T> *node);
     void print(BSTNode<T> *root, int space);
+    BSTNode<T>* searchNode(T value);
 public:
     Binarytree(T head);
-    Binarytree(); //todo
+    Binarytree(); 
     ~Binarytree();
     void put(T data);
     int hight();
@@ -32,18 +33,18 @@ template <typename T>
 Binarytree<T>::Binarytree()
 {
     root = nullptr;
-} 
+}
 template <typename T>
 Binarytree<T>::Binarytree(T head)
 {
     root = new BSTNode<T>(head);
 }
-template<typename T>
+template <typename T>
 Binarytree<T>::~Binarytree()
 {
     delete root;
 }
-template<typename T>
+template <typename T>
 void Binarytree<T>::put(T data)
 {
     if (root == nullptr)
@@ -52,11 +53,11 @@ void Binarytree<T>::put(T data)
     }
     else
     {
-    put(data,root);
+        put(data, root);
     }
 }
-template<typename T>
-void Binarytree<T>::put(T data,BSTNode<T> *node)
+template <typename T>
+void Binarytree<T>::put(T data, BSTNode<T> *node)
 {
     while (node->getChildren()[data < (node->getData())] != nullptr)
     {
@@ -64,37 +65,58 @@ void Binarytree<T>::put(T data,BSTNode<T> *node)
     }
     node->put(data);
 }
-template<typename T>
+template <typename T>
 void Binarytree<T>::print(BSTNode<T> *root, int space)
 {
     const int gap = 5;
-    if (root == NULL)  
-        return;  
-    space += gap;  
-    print(root->getChildren()[0], space);  
-    std::cout<<std::endl;  
-    for (int i = gap; i < space; i++)  
-        std::cout<<" ";  
-    std::cout<<root->getData()<<std::endl;  
-    print(root->getChildren()[1], space);  
+    if (root == NULL)
+        return;
+    space += gap;
+    print(root->getChildren()[0], space);
+    std::cout << std::endl;
+    for (int i = gap; i < space; i++)
+        std::cout << " ";
+    std::cout << root->getData() << std::endl;
+    print(root->getChildren()[1], space);
 }
 
-
-
-
-
-
-
-
-template<typename T>
+template <typename T>
 void Binarytree<T>::print()
 {
-    print(root,0);
+    print(root, 0);
 }
-template<typename T>
+template <typename T>
 int Binarytree<T>::hight()
 {
     return 0;
+}
+ 
+
+template <typename T>
+BSTNode<T>* Binarytree<T>::searchNode(T value)
+{
+    BSTNode<T> *node = root;
+    std::queue<BSTNode<T>*> q;
+    q.push(node);
+    while (!q.empty())
+    {
+        node = q.front;
+        q.pop;
+        if (node->getData == value)
+        {
+            return node;
+        }
+        if (node->getChildren[0] != nullptr)
+        {
+            q.push(node->getChildren[0]);
+        }
+        if (node->getChildren[1] != nullptr)
+        {
+            q.push(node->getChildren[1]);
+        }    
+    }
+    return null
+    
 }
 
 #endif // !BINARYTREE_CPP
