@@ -17,7 +17,12 @@ bool testPutContain(bool talk)
             std::cout << "put/contain test pass" << std::endl;
         return true;
     }
-    return false;
+    else
+    {
+        if (talk)
+            std::cout << "put/contain test fail" << std::endl;
+        return false;
+    }
 }
 bool testPrint(bool talk)
 {
@@ -128,14 +133,46 @@ bool testMin(bool talk)
     }
     return result;
 }
+bool testParent(bool talk = true)
+{
+    bool result = true;
+    Binarytree<int> tree;
+    tree.put(1);
+    tree.put(0);
+    tree.put(3);
+    tree.put(4);
+    tree.put(9);
+    tree.put(10);
+    tree.put(-10);
+    tree.put(7);
+    if(tree.parent(-10) != 0)
+        {
+            result = false;
+            if(talk)
+                std::cout << "parent test fail should be 0 but it is:" << tree.parent(-10) << std::endl;
+        }
+    if(tree.parent(3) != 1)
+        {
+            result = false;
+            if(talk)
+                std::cout << "parent test fail should be 1 but it is:" << tree.parent(-10) << std::endl;
+        }
+    if(result && talk)
+        std::cout << "parent test pass" << std::endl;
+    return result;
+        
+
+}
 bool testAll(bool talk = true)
 {
     bool result = true;
     // result &= testPutContain(talk);
     // result &= testPrint(talk);
     // result = result && testDelete(talk);
-    result &= testMin(talk);
-    result &= testMax(talk);
+    // result &= testMin(talk);
+    // result &= testMax(talk);
+    result &= testParent(talk);
+
     return result;
 }
 #endif // !TEST_BSTTREE

@@ -21,9 +21,9 @@ private:
     void put(T data, BSTNode<T> *node);
     void print(BSTNode<T> *root, int space);
     BSTNode<T> *searchNode(T value);
-    BSTNode<T> *parent(BSTNode<T> *node);
-    BSTNode<T> *successor(BSTNode<T> *node);
-    BSTNode<T> *predecessor(BSTNode<T> *node);
+    BSTNode<T> *parentNode(BSTNode<T> *node);
+    BSTNode<T> *successorNode(BSTNode<T> *node);   
+    BSTNode<T> *predecessorNode(BSTNode<T> *node); 
     BSTNode<T> *maximum(BSTNode<T> *node);
     BSTNode<T> *minimum(BSTNode<T> *node);
     void visit(T value);
@@ -38,8 +38,11 @@ public:
     const T search(T value);
     bool contains(T value);
     void delate(T value);
-    T minimum(){return minimum(root)->getData();};
-    T maximum(){return maximum(root)->getData();};
+    T parent(T value) {return parentNode(searchNode(value))->getData();};
+    T predecessor( T value) {return predecessorNode(searchNode(value))->getData();}
+    T successor(T value)  {return successorNode(searchNode(value))->getData();}
+    T minimum() { return minimum(root)->getData(); };
+    T maximum() { return maximum(root)->getData(); };
 };
 
 template <typename T>
@@ -153,43 +156,82 @@ bool Binarytree<T>::contains(T value)
 template <typename T>
 void Binarytree<T>::delate(T value)
 {
-    BSTNode<T> *node = root;
-    while (node->getChildren()[0] != nullptr || node->getChildren()[1] != nullptr)
+    BSTNode<T> *toDelate = searchNode(value);
+    BSTNode<T> *_parent = parentNode(toDelate);
+    if (toDelate->getChildren()[0] == nullptr && toDelate->getChildren()[1] == nullptr)
     {
-        int side = value < node->getData();
-        if (node->getChildren()[side] != nullptr)
+        if (_parent->getChildren()[0] == toDelate)
         {
-            if (node->getChildren()[side]->getData() == value)
-            {
-                // BSTNode<T> *nodeToDelate = node->getChildren()[side];
-                // int children = 0;
-                // if (nodeToDelate->getChildren()[0] == nullptr && nodeToDelate->getChildren()[1] == nullptr)
-                // {
-                //     delete nodeToDelate;
-                //     node->getChildren()[side] = nullptr;
-                // }
-                // if (nodeToDelate->getChildren()[0] == nullptr && nodeToDelate->getChildren()[1] != nullptr)
-                // {
-                //     node->getChildren()[side] = nodeToDelate->getChildren()[1];
-                //     delete nodeToDelate;
-                // }
-                // if (nodeToDelate->getChildren()[0] == nullptr && nodeToDelate->getChildren()[1] == nullptr)
-                // {
-                //     BSTNode<T> *temp = node->getChildren()[side]; //FIXME
-
-                    
-                // }
-            }
+            _parent->getChildren()[0] == nullptr;
         }
         else
-            return;
-        node = node->getChildren()[side];
+        {
+            _parent->getChildren()[1] == nullptr;
+        }
+        delete toDelate;
+        return;
+    }
+
+    if (toDelate->getChildren()[0] != nullptr && toDelate->getChildren()[1] == nullptr)
+    {
+        if (_parent->getChildren()[0] == toDelate)
+        {
+            _parent->getChildren()[0] == toDelate->getChildren()[0];
+        }
+        else
+        {
+            _parent->getChildren()[1] == toDelate->getChildren()[0];
+        }
+        delete toDelate;
+        return;
+    }
+
+    if (toDelate->getChildren()[0] == nullptr && toDelate->getChildren()[1] != nullptr)
+    {
+        if (_parent->getChildren()[0] == toDelate)
+        {
+            _parent->getChildren()[0] == toDelate->getChildren()[1];
+        }
+        else
+        {
+            _parent->getChildren()[1] == toDelate->getChildren()[1];
+        }
+        delete toDelate;
+        return;
     }
 }
-template<typename T>
-BSTNode<T> *Binarytree<T>::parent(BSTNode<T> * node)
+template <typename T>
+BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node)
 {
-    if(root == node)
+    if (node->getChildren()[1] != nullptr)
+        return (maximum(node->getChildren()[1]));
+    BSTNode<T> _parent = parentNode(node);
+    while (parentNode != nullptr)
+    {
+        if (_parent->getChildren()[0] == node)
+            return _parent;
+        node = _parent;
+        _parent = parentNode(node);
+    }
+}
+template <typename T>
+BSTNode<T> *Binarytree<T>::successorNode(BSTNode<T> *node)
+{
+    if (node->getChildren()[0] != nullptr)
+        return (maximum(node->getChildren()[0]));
+    BSTNode<T> _parent = parentNode(node);
+    while (parentNode != nullptr)
+    {
+        if (_parent->getChildren()[1] == node)
+            return _parent;
+        node = _parent;
+        _parent = parentNode(node);
+    }
+}
+template <typename T>
+BSTNode<T> *Binarytree<T>::parentNode(BSTNode<T> *node)
+{
+    if (root == node)
         return nullptr;
     BSTNode<T> *parent = root;
     BSTNode<T> *temp = root;
@@ -199,31 +241,23 @@ BSTNode<T> *Binarytree<T>::parent(BSTNode<T> * node)
         parent = temp;
         temp = temp->getChildren()[node->getData() < temp->getData()];
         if (temp == nullptr)
-            return nullptr; 
+            return nullptr;
     }
     return parent;
 }
-template<typename T>
-BSTNode<T> *Binarytree<T>::successor(BSTNode<T> * node)
-{
-}
-template<typename T>
-BSTNode<T> *Binarytree<T>::predecessor(BSTNode<T> * node)
-{
 
-}
-template<typename T>
-BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> * node)
+template <typename T>
+BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> *node)
 {
-    if(node->getChildren()[0] != nullptr)
+    if (node->getChildren()[0] != nullptr)
         return maximum(node->getChildren()[0]);
     else
         return node;
 }
-template<typename T>
-BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> * node)
+template <typename T>
+BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> *node)
 {
-        if(node->getChildren()[1] != nullptr)
+    if (node->getChildren()[1] != nullptr)
         return minimum(node->getChildren()[1]);
     else
         return node;
