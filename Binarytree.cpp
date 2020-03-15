@@ -7,9 +7,18 @@
 #include <stack>
 #include <iostream>
 #include <iterator>
+#include <exception>
 //to nie działa na linux
 // #include "printWinFun.cpp"//!!
 //
+
+class NoObjectException : public exception
+{
+    virtual const char *what() const throw()
+    {
+        return "there are no object like that in tree";
+    }
+};
 
 template <typename T>
 class Binarytree
@@ -20,7 +29,7 @@ private:
     void put(T data, BSTNode<T> *node);
     void print(BSTNode<T> *root, int space);
     BSTNode<T> *searchNode(T value);
-    void visit();
+    void visit(T value);
 
 public:
     Binarytree(T head);
@@ -29,6 +38,8 @@ public:
     void put(T data);
     int hight();
     void print();
+    T &&search(T value);
+    bool contains(T value);
 };
 
 template <typename T>
@@ -121,6 +132,20 @@ BSTNode<T> *Binarytree<T>::searchNode(T value)
 template <typename T>
 void Binarytree<T>::visit(T value)
 {
-    std::cout << "i'm in node : "<<value << std::endl;
+    std::cout << "i'm in node : " << value << std::endl;
+}
+template <typename T>
+T &&Binarytree<T>::search(T value)
+{
+    BSTNode<T> *node = searchNode(value);
+    if (node == nullptr)
+    {
+       // throw new NoObjectException;
+    }
+}
+template <typename T>
+bool Binarytree<T>::contains(T value)
+{
+    return searchNode != nullptr;
 }
 #endif // !BINARYTREE_CPP
