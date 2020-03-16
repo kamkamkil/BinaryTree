@@ -476,7 +476,6 @@ bool testAll(bool talk = true)
     result &= testPredecessor(talk);
     result &= testSize(talk);
     // result &= testbreadthFirst(talk);
-    
 
     return result;
 }

@@ -2,6 +2,8 @@
 #define NODE_CPP
 
 #include <iostream>
+enum n {right, left};
+
 template <typename T>
 class BSTNode
 {
@@ -27,33 +29,34 @@ public:
 template <typename T>
 BSTNode<T>::BSTNode(T data)
 {
+    
     this->value = data;
-    children[0] = nullptr;
-    children[1] = nullptr;
+    children[right] = nullptr;
+    children[left] = nullptr;
 }
 
 template <typename T>
 BSTNode<T>::~BSTNode()
 {
-    delete children[0];
-    delete children[1];
+    delete children[right];
+    delete children[left];
 }
 template <typename T>
 BSTNode<T>::BSTNode(const BSTNode<T> &obj)
 {
     this->value = obj.value;
-    if (obj.children[0] != nullptr)
-        this->children[0] = new BSTNode<T>(*obj.children[0]);
-    if (obj.children[1] != nullptr)
-        this->children[1] = new BSTNode<T>(*obj.children[1]);
+    if (obj.children[right] != nullptr)
+        this->children[right] = new BSTNode<T>(*obj.children[right]);
+    if (obj.children[left] != nullptr)
+        this->children[left] = new BSTNode<T>(*obj.children[left]);
 }
 template <typename T>
 BSTNode<T>::BSTNode(const BSTNode<T> &&obj)
 {
     this->data = obj.value;
     this->children = obj.children;
-    obj.children[0] = nullptr;
-    obj.children[1] = nullptr;
+    obj.children[right] = nullptr;
+    obj.children[left] = nullptr;
     }
 template <typename T>
 void BSTNode<T>::put(T __data) // FIXME zmiana nazwy
@@ -79,17 +82,17 @@ T* BSTNode<T>::getDataPointer()
 template <typename T>
 bool BSTNode<T>::bothChildren()
 {
-    return (children[0] != nullptr && children[1] != nullptr);
+    return (children[right] != nullptr && children[left] != nullptr);
 }
 template <typename T>
 bool BSTNode<T>::oneChildren()
 {
-    return (children[0] != nullptr ^ children[1] != nullptr);
+    return (children[right] != nullptr ^ children[left] != nullptr);
 }
 template <typename T>
 bool BSTNode<T>::noChildren()
 {
-    return (children[0] == nullptr && children[1] == nullptr);
+    return (children[right] == nullptr && children[left] == nullptr);
 }
 template <typename T>
 int BSTNode<T>::whichChildren()
@@ -98,9 +101,9 @@ int BSTNode<T>::whichChildren()
         return 2;
     if (noChildren())
         return -1;
-    if (children[0] != nullptr)
+    if (children[right] != nullptr)
         return 0;
-    if (children[1] != nullptr)
+    if (children[left] != nullptr)
         return 1;
     return 6;
 }

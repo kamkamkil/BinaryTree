@@ -1,9 +1,9 @@
 
 
+main.exe : node.o BinaryTree.o printWinFun.o testBST.o
+	g++ main.cpp -o main.exe
 set.o :  node.o BinaryTree.o
 	g++ set.cpp -o set.exe -c
-main.exe : node.o BinaryTree.o printWinFun.o test.o
-	g++ main.cpp -o main.exe
 node.o : node.cpp
 	g++ node.cpp -c
 printWinFun.o : printWinFun.cpp	
