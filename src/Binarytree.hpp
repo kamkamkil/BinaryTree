@@ -9,6 +9,7 @@
 #include <iterator>
 #include <exception>
 #include <functional>
+#include <string>
 
 template <typename T>
 class Binarytree
@@ -16,27 +17,27 @@ class Binarytree
 
 private:
     BSTNode<T> *root;
-    void put(T data, BSTNode<T> *node);
-    void print(BSTNode<T> *root, int space);
     BSTNode<T> *searchNode(T value) const;
     BSTNode<T> *parentNode(BSTNode<T> *node);
     BSTNode<T> *successorNode(BSTNode<T> *node);
     BSTNode<T> *predecessorNode(BSTNode<T> *node);
     BSTNode<T> *maximum(BSTNode<T> *node);
     BSTNode<T> *minimum(BSTNode<T> *node);
+    void put(T data, BSTNode<T> *node);
     void preOrder(std::function<void(const T&)> f,BSTNode<T> *node)const ; 
+    void print(BSTNode<T> *root, int space);
     void inOrder (std::function<void(const T&)> f,BSTNode<T> *node) const; 
     void postOrder (std::function<void(const T&)> f, BSTNode<T> *node)const;
     bool testGoodTree(BSTNode<T> *node);
 
 public:
     Binarytree(T head);
-    Binarytree(T tab[],int size);
     Binarytree(const Binarytree<T> &obj);
     Binarytree( Binarytree<T> &&obj);
     Binarytree();
     ~Binarytree();
     void put(T data);
+    void put (T* data,int size);
     void print();
     void remove(T value);
     void breadthFirst(std::function<void(const T&)> f);
@@ -60,16 +61,6 @@ template <typename T>
 Binarytree<T>::Binarytree()
 {
     root = nullptr;
-}
-template <typename T>
-Binarytree<T>::Binarytree(T tab[],int size)
-{
-    for (size_t i = 0; i < size; i++)
-    {
-        std::cout << tab[i] << std::endl;
-        // put(tab[i]);
-    }
-    
 }
 template <typename T>
 Binarytree<T>::Binarytree(T head)
@@ -103,6 +94,16 @@ void Binarytree<T>::put(T data)
     {
         put(data, root);
     }
+}
+template <typename T>
+void Binarytree<T>::put(T* data,int size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        T temp = data[i];
+        put(temp);
+    }
+       
 }
 template <typename T>
 std::size_t  Binarytree<T>::size() const

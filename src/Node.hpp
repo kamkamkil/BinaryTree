@@ -30,7 +30,7 @@ template <typename T>
 BSTNode<T>::BSTNode(T data)
 {
     
-    this->value = value;
+    this->value = data;
     children[right] = nullptr;
     children[left] = nullptr;
 }
