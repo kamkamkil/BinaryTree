@@ -31,6 +31,8 @@ private:
 
 public:
     Binarytree(T head);
+    Binarytree(const Binarytree<T> &obj);
+    Binarytree(const Binarytree<T> &&obj);
     Binarytree();
     ~Binarytree();
     void put(T data);
@@ -61,6 +63,17 @@ template <typename T>
 Binarytree<T>::~Binarytree()
 {
     delete root;
+}
+template <typename T>
+Binarytree<T>::Binarytree(const Binarytree<T> &obj)
+{
+    this->root = new BSTNode<T>(*root);
+}
+template <typename T>
+Binarytree<T>::Binarytree(const Binarytree<T> &&obj)
+{
+    this->root = obj.root;
+    obj.root = nullptr;
 }
 template <typename T>
 void Binarytree<T>::put(T data)
@@ -210,8 +223,27 @@ void Binarytree<T>::remove(T value)
         delete toDelate;
         return;
     }
-    BSTNode<T> *pred = predecessorNode(toDelate);
     
+    BSTNode<T> *newNode = successorNode(toDelate);
+    BSTNode<T> *tempNode = new BSTNode<T>(newNode->getData());
+    std::cout << value << " -> "<<newNode->getData() << std::endl;
+    if(newNode != toDelate->getChildren()[0])
+    {
+        tempNode->getChildren()[0] = toDelate->getChildren()[0];
+        tempNode->getChildren()[1] = toDelate->getChildren()[1];
+    }else
+    {
+        tempNode->getChildren()[1] = toDelate->getChildren()[1];
+        tempNode->getChildren()[0] = newNode->getChildren()[0];
+    }
+    toDelate->getChildren()[0] = nullptr;
+    toDelate->getChildren()[1] = nullptr;
+    if(_parent->getChildren()[0] == toDelate)
+        _parent->getChildren()[0] = tempNode;
+    else
+        _parent->getChildren()[1] = tempNode;
+    remove(newNode->getData());
+    delete toDelate;    
     
 }
 template <typename T>
@@ -283,7 +315,7 @@ bool Binarytree<T>::testGoodTree(BSTNode<T> *node)
 {
     if (node == nullptr)
         return true;
-    if (node->bothChildren)
+    if (node->bothChildren())
     {
         if (node->getChildren()[1]->getData() < node->getChildren()[0]->getData())
         {

@@ -11,6 +11,7 @@ private:
 
 public:
     BSTNode(const BSTNode<T> &obj);
+    BSTNode(const BSTNode<T> &&obj);
     BSTNode(T value);
     ~BSTNode();
     void put(T value);
@@ -39,12 +40,20 @@ BSTNode<T>::~BSTNode()
 template <typename T>
 BSTNode<T>::BSTNode(const BSTNode<T> &obj)
 {
-    this->data = obj.data;
+    this->value = obj.value;
     if (obj.children[0] != nullptr)
         this->children[0] = new BSTNode<T>(*obj.children[0]);
     if (obj.children[1] != nullptr)
         this->children[1] = new BSTNode<T>(*obj.children[1]);
 }
+template <typename T>
+BSTNode<T>::BSTNode(const BSTNode<T> &&obj)
+{
+    this->data = obj.value;
+    this->children = obj.children;
+    obj.children[0] = nullptr;
+    obj.children[1] = nullptr;
+    }
 template <typename T>
 void BSTNode<T>::put(T __data) // FIXME zmiana nazwy
 {
