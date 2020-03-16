@@ -196,16 +196,16 @@ bool Binarytree<T>::contains(T value)
 template <typename T>
 void Binarytree<T>::remove(T value)
 {
-    BSTNode<T> *toDelate = searchNode(value);
-    BSTNode<T> *_parent = parentNode(toDelate);
-    if (!(toDelate->bothChildren()))
+    BSTNode<T> *toDelete = searchNode(value);
+    BSTNode<T> *_parent = parentNode(toDelete);
+    if (toDelete->noChildren())
     {
-        if (toDelate == root)
+        if (toDelete == root)
         {
             root = nullptr;
             return;
         }
-        if (_parent->getChildren()[0] == toDelate)
+        if (_parent->getChildren()[0] == toDelete)
         {
             _parent->getChildren()[0] = nullptr;
         }
@@ -213,65 +213,43 @@ void Binarytree<T>::remove(T value)
         {
             _parent->getChildren()[1] = nullptr;
         }
-        delete toDelate;
         return;
+        delete toDelete;
     }
 
-    if (toDelate->getChildren()[0] != nullptr && toDelate->getChildren()[1] == nullptr)
+    if(toDelete->oneChildren())
     {
-        if (_parent->getChildren()[0] == toDelate)
-        {
-            _parent->getChildren()[0] = toDelate->getChildren()[0];
-            toDelate->getChildren()[0] = nullptr;
-        }
-        else
-        {
-            _parent->getChildren()[1] = toDelate->getChildren()[0];
-            toDelate->getChildren()[0] = nullptr;
-        }
-        delete toDelate;
-        return;
+        int side = toDelete->whichChildren() ;
+        if(toDelete != root)
+            _parent->getChildren()[value < _parent->getData()] = toDelete->getChildren()[side];
+        else    
+            root = toDelete->getChildren()[side];
+         toDelete->getChildren()[side] = nullptr;
+         delete toDelete;
+         return;
     }
 
-    if (toDelate->getChildren()[0] == nullptr && toDelate->getChildren()[1] != nullptr)
-    {
-        if (_parent->getChildren()[0] == toDelate)
-        {
-            _parent->getChildren()[0] = toDelate->getChildren()[1];
-            toDelate->getChildren()[1] = nullptr;
-        }
-        else
-        {
-            _parent->getChildren()[1] == toDelate->getChildren()[1];
-            toDelate->getChildren()[1] = nullptr;
-        }
-
-        delete toDelate;
-        return;
-    }
-
-    BSTNode<T> *newNode = successorNode(toDelate);
+    BSTNode<T> *newNode = successorNode(toDelete);
     BSTNode<T> *tempNode = new BSTNode<T>(newNode->getData());
-    if (newNode != toDelate->getChildren()[0])
+    if (newNode != toDelete->getChildren()[0])
     {
-        tempNode->getChildren()[0] = toDelate->getChildren()[0];
-        tempNode->getChildren()[1] = toDelate->getChildren()[1];
+        tempNode->getChildren()[0] = toDelete->getChildren()[0];
+        tempNode->getChildren()[1] = toDelete->getChildren()[1];
         remove(newNode->getData());
     }
     else
     {
-        std::cout << "temp" << std::endl;
         tempNode->getChildren()[0] = newNode->getChildren()[0];
         newNode->getChildren()[0] = nullptr;
         delete newNode;
     }
-    toDelate->getChildren()[0] = nullptr;
-    toDelate->getChildren()[1] = nullptr;
-    if (_parent->getChildren()[0] == toDelate)
+    toDelete->getChildren()[0] = nullptr;
+    toDelete->getChildren()[1] = nullptr;
+    if (_parent->getChildren()[0] == toDelete)
         _parent->getChildren()[0] = tempNode;
     else
         _parent->getChildren()[1] = tempNode;
-    delete toDelate;
+    delete toDelete;
 }
 template <typename T>
 BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node)

@@ -20,7 +20,7 @@ public:
     bool bothChildren();
     bool oneChildren();
     bool noChildren();
-    int whichChilder();
+    int whichChildren();
 };
 
 template <typename T>
@@ -82,19 +82,20 @@ bool BSTNode<T>::oneChildren()
 template <typename T>
 bool BSTNode<T>::noChildren()
 {
-    return !(children[0] != nullptr || children[1] != nullptr);
+    return (children[0] == nullptr && children[1] == nullptr);
 }
 template <typename T>
-int BSTNode<T>::whichChilder()
+int BSTNode<T>::whichChildren()
 {
-    if (bothChildren)
+    if (bothChildren())
         return 2;
-    if (!oneChildren)
+    if (noChildren())
         return -1;
     if (children[0] != nullptr)
         return 0;
     if (children[1] != nullptr)
         return 1;
+    return 6;
 }
 
 #endif // !NODE_CPP

@@ -73,7 +73,6 @@ bool testRemove(bool talk)
     }
     else if (talk)
         std::cout << "test delate pass (one child, delated)" << std::endl;
-
     if (!tree.contains(10))
     {
         result = false;
@@ -208,10 +207,13 @@ bool testRemoveRoot(bool talk)
     }
     else if (talk)
         std::cout << "test remove root pass (root with single child)" << std::endl;
-    if(tree.size != 2)
-          if (talk)
-            cout
-    tree.print();
+    if (tree.size() != 2)
+    {
+        result = false;
+        if (talk)
+            std::cout << "test remove root fail (root with single child) wrong size should be : 2 but is : " << tree.size() << std::endl;
+    }else if (talk)
+        std::cout << "test remove root pass( with single child) right size" << std::endl;
     return result;
 }
 bool testMax(bool talk)
@@ -412,7 +414,7 @@ bool testAll(bool talk = true)
     bool result = true;
     // result &= testPrint(talk);
     // result &= testPutContain(talk);
-    // result &= testRemove(talk);
+    result &= testRemove(talk);
     // result &= testRemoveTwoChild(talk);
     result &= testRemoveRoot(talk);
     // result &= testMin(talk);
