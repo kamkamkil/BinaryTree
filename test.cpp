@@ -42,26 +42,59 @@ bool testDelete(bool talk)
 {
     bool result = true;
     Binarytree<int> tree;
-    tree.put(1);
-    tree.put(0);
-    tree.put(3);
+    tree.put(5);
+    tree.put(7);
     tree.put(4);
-    tree.put(9);
+    tree.put(14);
+    tree.put(13);
+    tree.put(6);
+    tree.put(2);
+    tree.put(11);
+    tree.put(8);
+    tree.put(1);
+    tree.put(3);
     tree.put(10);
-    tree.delate(10);
-    tree.delate(4);
-    if (tree.contains(10))
+    tree.remove(1);
+    if (tree.contains(1))
     {
-        std::cout << "delate test fail : tree shouldn't contain 10" << std::endl;
-        result == false;
-    }
-    if (tree.contains(4))
+        result = false;
+        if (talk)
+            std::cout << "test delate fail (leaf)" << std::endl;
+    }   else
     {
-        std::cout << "delate test fail : tree should contain 10" << std::endl;
-        result == false;
+        if(talk)
+            std::cout << "test delate pass(leaf) " << std::endl;
     }
-    if (talk && result)
-        std::cout << "delate test pass" << std::endl;
+    
+    tree.remove(8) ;
+    if (tree.contains(8))
+    {
+        result = false;
+        if (talk)
+            std::cout << "test delate fail (one child, still in tree)" << std::endl;
+    }else
+    {
+        if (talk)
+        {
+            std::cout << "test delate pass (one child, delated)" << std::endl;
+        }
+        
+    }
+    
+    if(!tree.contains(10))
+    {
+        result = false;
+        if (talk)
+            std::cout << "test delate fail (one child, delate too much)" << std::endl;
+    }else
+    {
+        if (talk)
+        {
+            std::cout << "test delate pass (one child, child remain)" << std::endl;
+        }
+        
+    }
+    
     return result;
 }
 bool testMax(bool talk)
@@ -231,13 +264,13 @@ bool testAll(bool talk = true)
 {
     bool result = true;
     // result &= testPrint(talk);
-    result &= testPutContain(talk);
-    // result &= testDelete(talk);
-    result &= testMin(talk);
-    result &= testMax(talk);
-    result &= testParent(talk);
-    result &= testSuccessor(talk);
-    result &= testPredecessor(talk);
+    // result &= testPutContain(talk);
+    result &= testDelete(talk);
+    // result &= testMin(talk);
+    // result &= testMax(talk);
+    // result &= testParent(talk);
+    // result &= testSuccessor(talk);
+    // result &= testPredecessor(talk);
 
     return result;
 }

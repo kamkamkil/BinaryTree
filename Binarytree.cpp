@@ -22,11 +22,12 @@ private:
     void print(BSTNode<T> *root, int space);
     BSTNode<T> *searchNode(T value);
     BSTNode<T> *parentNode(BSTNode<T> *node);
-    BSTNode<T> *successorNode(BSTNode<T> *node);   
-    BSTNode<T> *predecessorNode(BSTNode<T> *node); 
+    BSTNode<T> *successorNode(BSTNode<T> *node);
+    BSTNode<T> *predecessorNode(BSTNode<T> *node);
     BSTNode<T> *maximum(BSTNode<T> *node);
     BSTNode<T> *minimum(BSTNode<T> *node);
     void visit(T value);
+    bool testGoodTree(BSTNode<T> *node);
 
 public:
     Binarytree(T head);
@@ -37,10 +38,11 @@ public:
     void print();
     const T search(T value);
     bool contains(T value);
-    void delate(T value);
-    T parent(T value) {return parentNode(searchNode(value))->getData();};
-    T predecessor( T value) {return predecessorNode(searchNode(value))->getData();}
-    T successor(T value)  {return successorNode(searchNode(value))->getData();}
+    void remove(T value);
+    bool testGoodTree() { return testGoodTree(root); };
+    T parent(T value) { return parentNode(searchNode(value))->getData(); };
+    T predecessor(T value) { return predecessorNode(searchNode(value))->getData(); }
+    T successor(T value) { return successorNode(searchNode(value))->getData(); }
     T minimum() { return minimum(root)->getData(); };
     T maximum() { return maximum(root)->getData(); };
 };
@@ -110,6 +112,7 @@ int Binarytree<T>::hight()
 template <typename T>
 BSTNode<T> *Binarytree<T>::searchNode(T value)
 {
+
     BSTNode<T> *node = root;
     std::queue<BSTNode<T> *> q;
     q.push(node);
@@ -154,21 +157,24 @@ bool Binarytree<T>::contains(T value)
     return searchNode(value) != nullptr;
 }
 template <typename T>
-void Binarytree<T>::delate(T value)
+void Binarytree<T>::remove(T value)
 {
+    
     BSTNode<T> *toDelate = searchNode(value);
+
     BSTNode<T> *_parent = parentNode(toDelate);
     if (toDelate->getChildren()[0] == nullptr && toDelate->getChildren()[1] == nullptr)
     {
         if (_parent->getChildren()[0] == toDelate)
         {
-            _parent->getChildren()[0] == nullptr;
+            _parent->getChildren()[0] = nullptr;
         }
         else
         {
-            _parent->getChildren()[1] == nullptr;
+            _parent->getChildren()[1] = nullptr;
         }
         delete toDelate;
+
         return;
     }
 
@@ -176,11 +182,13 @@ void Binarytree<T>::delate(T value)
     {
         if (_parent->getChildren()[0] == toDelate)
         {
-            _parent->getChildren()[0] == toDelate->getChildren()[0];
+            _parent->getChildren()[0] = toDelate->getChildren()[0];
+            toDelate->getChildren()[0] = nullptr;
         }
         else
         {
-            _parent->getChildren()[1] == toDelate->getChildren()[0];
+            _parent->getChildren()[1] = toDelate->getChildren()[0];
+            toDelate->getChildren()[0] = nullptr;
         }
         delete toDelate;
         return;
@@ -190,22 +198,28 @@ void Binarytree<T>::delate(T value)
     {
         if (_parent->getChildren()[0] == toDelate)
         {
-            _parent->getChildren()[0] == toDelate->getChildren()[1];
+            _parent->getChildren()[0] = toDelate->getChildren()[1];
+            toDelate->getChildren()[1] = nullptr;
         }
         else
         {
             _parent->getChildren()[1] == toDelate->getChildren()[1];
+            toDelate->getChildren()[1] = nullptr;
         }
+        
         delete toDelate;
         return;
     }
+    BSTNode<T> *pred = predecessorNode(toDelate);
+    
+    
 }
 template <typename T>
 BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node)
 {
     if (node->getChildren()[1] != nullptr)
         return (maximum(node->getChildren()[1]));
-    BSTNode<T>* _parent = parentNode(node);
+    BSTNode<T> *_parent = parentNode(node);
     while (parentNode(node) != nullptr)
     {
         if (_parent->getChildren()[0] == node)
@@ -264,5 +278,25 @@ BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> *node)
     else
         return node;
 }
-
+template <typename T>
+bool Binarytree<T>::testGoodTree(BSTNode<T> *node)
+{
+    if (node == nullptr)
+        return true;
+    if (node->bothChildren)
+    {
+        if (node->getChildren()[1]->getData() < node->getChildren()[0]->getData())
+        {
+            return testGoodTree(node->getChildren()[1]) && testGoodTree(node->getChildren()[0]);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return testGoodTree(node->getChildren()[1]) && testGoodTree(node->getChildren()[0]);
+    }
+}
 #endif // !BINARYTREE_CPP
