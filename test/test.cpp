@@ -14,13 +14,13 @@ TEST_CASE("size_put_contain")
     REQUIRE(tree.contains(2));
 }
 
-TEST_CASE("tab_constructor", "constructor")
+TEST_CASE("tab_put")
 {
     int tab[] = {1, 4, 2, 6, 3, 7};
     Binarytree<int> tree;
     tree.put(tab, 6);
     REQUIRE(tree.size() == 6);
-    CHECK(tree.contains(1));
+    REQUIRE(tree.contains(1));
     REQUIRE(tree.contains(3));
     REQUIRE(tree.contains(2));
 }
@@ -30,11 +30,11 @@ TEST_CASE("remove_no/single_child", "[remove]")
     Binarytree<int> tree;
     tree.put(tab, 12);
     tree.remove(1);
-    CHECK_FALSE(tree.contains(1));
+    REQUIRE_FALSE(tree.contains(1));
     tree.remove(8);
-    CHECK_FALSE(tree.contains(8));
-    CHECK(tree.contains(10));
-    CHECK(tree.size() == 10);
+    REQUIRE_FALSE(tree.contains(8));
+    REQUIRE(tree.contains(10));
+    REQUIRE(tree.size() == 10);
 }
 TEST_CASE("remove_two_child", "[remove]")
 {
@@ -60,9 +60,9 @@ TEST_CASE("remove_two_child", "[remove]")
     SECTION("middle of tree2")
     {
         tree.remove(50);
-        CHECK_FALSE(tree.contains(50));
-        CHECK(tree.contains(52));
-        CHECK(tree.testGoodTree());
+        REQUIRE_FALSE(tree.contains(50));
+        REQUIRE(tree.contains(52));
+        REQUIRE(tree.testGoodTree());
     }
 }
 TEST_CASE("remove_root", "[remove]")
@@ -71,7 +71,7 @@ TEST_CASE("remove_root", "[remove]")
     SECTION("only root")
     {
         tree.remove(10);
-        CHECK(tree.size() == 0);
+        REQUIRE(tree.size() == 0);
     }
     tree.put(13);
     tree.put(15);
@@ -79,11 +79,11 @@ TEST_CASE("remove_root", "[remove]")
     SECTION("root with one leaf")
     {
         tree.remove(10);
-        CHECK(tree.testGoodTree());
-        CHECK_FALSE(tree.contains(10));
-        CHECK(tree.contains(13));
-        CHECK(tree.contains(15));
-        CHECK(tree.contains(12));
+        REQUIRE(tree.testGoodTree());
+        REQUIRE_FALSE(tree.contains(10));
+        REQUIRE(tree.contains(13));
+        REQUIRE(tree.contains(15));
+        REQUIRE(tree.contains(12));
     }
     tree.put(5);
     tree.put(1);
@@ -91,11 +91,51 @@ TEST_CASE("remove_root", "[remove]")
     SECTION("root with two leafs")
     {
         tree.remove(10);
-        CHECK(tree.testGoodTree());
-        CHECK_FALSE(tree.contains(10));
-        CHECK(tree.contains(13));
-        CHECK(tree.contains(15));
-        CHECK(tree.contains(5));
-        CHECK(tree.contains(1));
+        REQUIRE(tree.testGoodTree());
+        REQUIRE_FALSE(tree.contains(10));
+        REQUIRE(tree.contains(13));
+        REQUIRE(tree.contains(15));
+        REQUIRE(tree.contains(5));
+        REQUIRE(tree.contains(1));
     }
 }
+TEST_CASE("minimum")
+{
+    int tab[] = {1, 4, 2, 6, 3, 7};
+    Binarytree<int> tree;
+    tree.put(tab, 6);
+    REQUIRE(tree.minimum() == 1);
+}
+TEST_CASE("maximum")
+{
+    int tab[] = {1, 4, 2, 6, 3, 7};
+    Binarytree<int> tree;
+    tree.put(tab, 6);
+    REQUIRE(tree.maximum() == 7);
+}
+TEST_CASE("Successor")
+{
+    int tab[] = {5, 7, 4, 14, 13, 6, 2, 11, 8, 1, 3, 10};
+    Binarytree<int> tree;
+    tree.put(tab, 12);
+    REQUIRE(tree.successor(7) == 8);
+    REQUIRE(tree.successor(3) == 4);
+}
+TEST_CASE("Predecessor")
+{
+    int tab[] = {5, 7, 4, 14, 13, 6, 2, 11, 8, 1, 3, 10};
+    Binarytree<int> tree;
+    tree.put(tab, 12);
+    REQUIRE(tree.predecessor(4) == 3);
+    REQUIRE(tree.predecessor(8) == 7);
+}
+TEST_CASE("Parent")
+{
+    int tab[] = {1,0,3,4,9,10,-10,7};
+    Binarytree<int> tree;
+    tree.put(tab,8)
+    REQUIRE(tree.parent(-10) == 0);
+    REQUIRE(tree.parent(3) == 1);
+
+}
+
