@@ -240,15 +240,19 @@ void Binarytree<T>::remove(T value)
     else
     {
         tempNode->getChildren()[0] = newNode->getChildren()[0];
+        tempNode->getChildren()[1] = toDelete->getChildren()[1];
         newNode->getChildren()[0] = nullptr;
         delete newNode;
     }
     toDelete->getChildren()[0] = nullptr;
     toDelete->getChildren()[1] = nullptr;
+    if(toDelete != root){
     if (_parent->getChildren()[0] == toDelete)
         _parent->getChildren()[0] = tempNode;
     else
-        _parent->getChildren()[1] = tempNode;
+        _parent->getChildren()[1] = tempNode;}
+    else
+    root = tempNode;
     delete toDelete;
 }
 template <typename T>
