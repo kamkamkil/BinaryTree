@@ -1,9 +1,11 @@
 #ifndef TEST_BSTTREE
 #define TEST_BSTTREE
 #include "BinaryTree.cpp"
-#include "test.cpp"
 #include <iostream>
-
+void visit(int k)
+{
+    std::cout << "i'm in ->" << k << std::endl;
+}
 bool testPutContain(bool talk)
 {
     Binarytree<int> tree;
@@ -456,24 +458,24 @@ bool testbreadthFirst(bool talk)
     tree.put(13);
     tree.put(6);
     tree.put(2);
-        tree.breadthFirst();
+    tree.breadthFirst(visit);
     return true;
 }
 bool testAll(bool talk = true)
 {
     bool result = true;
     // result &= testPrint(talk);
-    // result &= testPutContain(talk);
-    // result &= testRemove(talk);
-    // result &= testRemoveTwoChild(talk);
-    // result &= testRemoveRoot(talk);
-    // result &= testMin(talk);
-    // result &= testMax(talk);
-    // result &= testParent(talk);
-    // result &= testSuccessor(talk);
-    // result &= testPredecessor(talk);
-    // result &= testSize(talk);
-    result &= testbreadthFirst(talk);
+    result &= testPutContain(talk);
+    result &= testRemove(talk);
+    result &= testRemoveTwoChild(talk);
+    result &= testRemoveRoot(talk);
+    result &= testMin(talk);
+    result &= testMax(talk);
+    result &= testParent(talk);
+    result &= testSuccessor(talk);
+    result &= testPredecessor(talk);
+    result &= testSize(talk);
+    // result &= testbreadthFirst(talk);
     
 
     return result;

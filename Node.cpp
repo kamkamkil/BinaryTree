@@ -17,6 +17,7 @@ public:
     void put(T value);
     BSTNode<T> **getChildren();
     T getData();
+    T* getDataPointer();
     bool bothChildren();
     bool oneChildren();
     bool noChildren();
@@ -68,6 +69,12 @@ template <typename T>
 T BSTNode<T>::getData()
 {
     return value;
+}
+
+template <typename T>
+T* BSTNode<T>::getDataPointer()
+{
+    return *value;
 }
 template <typename T>
 bool BSTNode<T>::bothChildren()

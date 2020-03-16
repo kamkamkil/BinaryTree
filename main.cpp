@@ -1,5 +1,5 @@
 #include "BinaryTree.cpp"
-#include "test.cpp"
+#include "testBST.cpp"
 int main(int argc, char const *argv[])
 {
     if (testAll())
