@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BinaryTree.cpp"
+#include "BinaryTree.hpp"
 
 #include <functional>
 
@@ -11,12 +11,12 @@ template <typename T>
 class Set
 {
 public:
-    Set();
-    Set(const Set<T> &source);
+    Set() = default;
+    Set(const Set<T> &source)= default;
     Set<T> &operator=(const Set<T> &source);
-    Set(Set<T> &&source);
+    Set(Set<T> &&source)= default;
     Set<T> &operator=(Set<T> &&source);
-    ~Set();
+    ~Set()= default;
 
 private:
     // drzewo BST
@@ -32,11 +32,10 @@ public:
     // wyszukuje element o podanej wartości - jeżeli element został znaleziony to zwraca wskaźnik do wyszukanego elementu, jeżeli nie to zwraca nullptr
     const T *find(const T &value) const;
     // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca true, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca false;
-    bool remove(const T &value) ;
+    bool remove(const T &value);
     // wykonuje f na każdym elemencie zbioru w kolejności inorder
     void inorder(std::function<void(const T &)> f) const;
 };
-
 template <typename T>
 const T * Set<T>::find(const T &value) const
 {
@@ -54,11 +53,11 @@ bool Set<T>::remove(const T &value)
 template <typename T>
 void Set<T>::inorder(std::function<void(const T &)> f) const
 {
-    bst_.inorder(f);
+    bst_.inOrder(f);
 }
 template <typename T>
 const T *Set<T>::insert(const T &value)
 {
     bst_.put(value);
-    return bst_.search(value)
+    return bst_.search(value);
 }

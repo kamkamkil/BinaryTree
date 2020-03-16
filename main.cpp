@@ -1,7 +1,9 @@
-#include "BinaryTree.cpp"
-#include "testBST.cpp"
+#include <iostream>
+#include "Binarytree.hpp"
+
 int main(int argc, char const *argv[])
 {
-       testAll();
-       return 0;
+    Binarytree<int> tree;
+    tree.put(1);
+    return 0;
 }

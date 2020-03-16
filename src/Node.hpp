@@ -30,7 +30,7 @@ template <typename T>
 BSTNode<T>::BSTNode(T data)
 {
     
-    this->value = data;
+    this->value = value;
     children[right] = nullptr;
     children[left] = nullptr;
 }
@@ -74,11 +74,7 @@ T BSTNode<T>::getValue()
     return value;
 }
 
-template <typename T>
-T* BSTNode<T>::getDataPointer()
-{
-    return *value;
-}
+
 template <typename T>
 bool BSTNode<T>::bothChildren()
 {

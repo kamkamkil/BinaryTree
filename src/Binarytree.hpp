@@ -2,7 +2,7 @@
 #ifndef BINARYTREE_CPP
 #define BINARYTREE_CPP
 
-#include "Node.cpp"
+#include "Node.hpp"
 #include <queue>
 #include <stack>
 #include <iostream>
@@ -18,37 +18,37 @@ private:
     BSTNode<T> *root;
     void put(T data, BSTNode<T> *node);
     void print(BSTNode<T> *root, int space);
-    BSTNode<T> *searchNode(T value);
+    BSTNode<T> *searchNode(T value) const;
     BSTNode<T> *parentNode(BSTNode<T> *node);
     BSTNode<T> *successorNode(BSTNode<T> *node);
     BSTNode<T> *predecessorNode(BSTNode<T> *node);
     BSTNode<T> *maximum(BSTNode<T> *node);
     BSTNode<T> *minimum(BSTNode<T> *node);
-    void preOrder(std::function<void(const T&)> f,BSTNode<T> *node); 
-    void inOrder (std::function<void(const T&)> f,BSTNode<T> *node); 
-    void postOrder (std::function<void(const T&)> f, BSTNode<T> *node);
+    void preOrder(std::function<void(const T&)> f,BSTNode<T> *node)const ; 
+    void inOrder (std::function<void(const T&)> f,BSTNode<T> *node) const; 
+    void postOrder (std::function<void(const T&)> f, BSTNode<T> *node)const;
     bool testGoodTree(BSTNode<T> *node);
 
 public:
     Binarytree(T head);
     Binarytree(T tab[],int size);
     Binarytree(const Binarytree<T> &obj);
-    Binarytree(const Binarytree<T> &&obj);
+    Binarytree( Binarytree<T> &&obj);
     Binarytree();
     ~Binarytree();
     void put(T data);
     void print();
     void remove(T value);
     void breadthFirst(std::function<void(const T&)> f);
-    void preOrder(std::function<void(const T&)> f){preOrder(f,root);}; 
-    void inOrder (std::function<void(const T&)> f){inOrder(f,root);};
-    void postOrder (std::function<void(const T&)> f){postOrder(f,root);};
+    void preOrder(std::function<void(const T&)> f)const{preOrder(f,root);}; 
+    void inOrder (std::function<void(const T&)> f)const{inOrder(f,root);} ;
+    void postOrder (std::function<void(const T&)> f)const{postOrder(f,root);};
     int hight(); //todo
-    std::size_t  size();
+    std::size_t  size() const;
     bool contains(T value);
     bool testGoodTree() { return testGoodTree(root); };
     bool empty() {return root == nullptr;};
-    T* search(T value);
+    T* search(T value)const;
     T parent(T value) { return parentNode(searchNode(value))->getValue(); };
     T predecessor(T value) { return predecessorNode(searchNode(value))->getValue(); }
     T successor(T value) { return successorNode(searchNode(value))->getValue(); }
@@ -87,7 +87,7 @@ Binarytree<T>::Binarytree(const Binarytree<T> &obj)
     this->root = new BSTNode<T>(*root);
 }
 template <typename T>
-Binarytree<T>::Binarytree(const Binarytree<T> &&obj)
+Binarytree<T>::Binarytree(Binarytree<T> &&obj)
 {
     this->root = obj.root;
     obj.root = nullptr;
@@ -105,7 +105,7 @@ void Binarytree<T>::put(T data)
     }
 }
 template <typename T>
-std::size_t  Binarytree<T>::size()
+std::size_t  Binarytree<T>::size() const
 {
     int result = 0;
     if (root == nullptr)
@@ -165,7 +165,7 @@ int Binarytree<T>::hight()
 }
 
 template <typename T>
-BSTNode<T> *Binarytree<T>::searchNode(T value)
+BSTNode<T> *Binarytree<T>::searchNode(T value) const
 {
     if (root == nullptr)
         return nullptr;
@@ -178,7 +178,7 @@ BSTNode<T> *Binarytree<T>::searchNode(T value)
 }
 
 template <typename T>
-T* Binarytree<T>::search(T value)
+T* Binarytree<T>::search(T value) const
 {
     return searchNode(value)->getDataPointer();
     
@@ -357,29 +357,29 @@ void Binarytree<T>::breadthFirst(std::function<void(const T&)> f)
     }
 }
 template <typename T> 
-void Binarytree<T>::preOrder(std::function<void(const T&)> f,BSTNode<T> *node) 
+void Binarytree<T>::preOrder(std::function<void(const T&)> f,BSTNode<T> *node)const
 {
         if(node == nullptr)
             return;
-        f(node->getValue);
+        f(node->getValue());
         preOrder(f,node->getChildren()[left]);
         preOrder(f,node->getChildren()[right]);
 }
 template <typename T> 
-void Binarytree<T>::inOrder(std::function<void(const T&)> f,BSTNode<T> *node) 
+void Binarytree<T>::inOrder(std::function<void(const T&)> f,BSTNode<T> *node) const
 {
         if(node == nullptr)
             return;
         preOrder(f,node->getChildren()[left]);
-        f(node->getValue);
+        f(node->getValue());
         preOrder(f,node->getChildren()[right]);
 }template <typename T> 
-void Binarytree<T>::postOrder(std::function<void(const T&)> f,BSTNode<T> *node) 
+void Binarytree<T>::postOrder(std::function<void(const T&)> f,BSTNode<T> *node)const
 {
         if(node == nullptr)
             return;
         preOrder(f,node->getChildren()[left]);
         preOrder(f,node->getChildren()[right]);
-        f(node->getValue);
+        f(node->getValue());
 }
 #endif // !BINARYTREE_CPP

@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
-#include "../lib/catch.hpp"
-#include "../Binarytree.cpp"
+#include "../lib/catch/catch.hpp"
+#include "../src/Binarytree.hpp"
 
 TEST_CASE( "size", "[single-file]" ) {
     Binarytree<int> tree;
@@ -11,6 +11,5 @@ TEST_CASE( "size", "[single-file]" ) {
     tree.put(3);
     REQUIRE(tree.size() == 3);
 }
-TEST_CASE( "predecessor", "[single-file]" ) {
-
+//
 

@@ -12,8 +12,7 @@ void printSetSizeAndElems(const Set<T> &s)
     s.inorder([](const T &e) { std::cout << e << ", "; });
     std::cout << std::endl;
 }
-
-int main()
+int main(int argc, const char** argv)
 {
     Set<int> s;
     {
