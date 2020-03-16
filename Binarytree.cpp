@@ -23,7 +23,7 @@ private:
     BSTNode<T> *predecessorNode(BSTNode<T> *node);
     BSTNode<T> *maximum(BSTNode<T> *node);
     BSTNode<T> *minimum(BSTNode<T> *node);
-    void visit(T value);
+    void visit(BSTNode<T> *node);
     bool testGoodTree(BSTNode<T> *node);
 
 public:
@@ -33,13 +33,14 @@ public:
     Binarytree();
     ~Binarytree();
     void put(T data);
+    void print();
+    void remove(T value);
+    void breadthFirst();
     int hight(); //todo
     int size();
-    void print();
-    const T search(T value);
     bool contains(T value);
-    void remove(T value);
     bool testGoodTree() { return testGoodTree(root); };
+    const T search(T value);
     T parent(T value) { return parentNode(searchNode(value))->getData(); };
     T predecessor(T value) { return predecessorNode(searchNode(value))->getData(); }
     T successor(T value) { return successorNode(searchNode(value))->getData(); }
@@ -173,9 +174,9 @@ BSTNode<T> *Binarytree<T>::searchNode(T value)
     return nullptr;
 }
 template <typename T>
-void Binarytree<T>::visit(T value)
+void Binarytree<T>::visit(BSTNode<T> *node)
 {
-    std::cout << "i'm in node : " << value << std::endl;
+    std::cout << "i'm in node : " << node->getData() << std::endl;
 }
 template <typename T>
 const T Binarytree<T>::search(T value)
@@ -217,16 +218,16 @@ void Binarytree<T>::remove(T value)
         delete toDelete;
     }
 
-    if(toDelete->oneChildren())
+    if (toDelete->oneChildren())
     {
-        int side = toDelete->whichChildren() ;
-        if(toDelete != root)
+        int side = toDelete->whichChildren();
+        if (toDelete != root)
             _parent->getChildren()[value < _parent->getData()] = toDelete->getChildren()[side];
-        else    
+        else
             root = toDelete->getChildren()[side];
-         toDelete->getChildren()[side] = nullptr;
-         delete toDelete;
-         return;
+        toDelete->getChildren()[side] = nullptr;
+        delete toDelete;
+        return;
     }
 
     BSTNode<T> *newNode = successorNode(toDelete);
@@ -246,13 +247,15 @@ void Binarytree<T>::remove(T value)
     }
     toDelete->getChildren()[0] = nullptr;
     toDelete->getChildren()[1] = nullptr;
-    if(toDelete != root){
-    if (_parent->getChildren()[0] == toDelete)
-        _parent->getChildren()[0] = tempNode;
+    if (toDelete != root)
+    {
+        if (_parent->getChildren()[0] == toDelete)
+            _parent->getChildren()[0] = tempNode;
+        else
+            _parent->getChildren()[1] = tempNode;
+    }
     else
-        _parent->getChildren()[1] = tempNode;}
-    else
-    root = tempNode;
+        root = tempNode;
     delete toDelete;
 }
 template <typename T>
@@ -338,6 +341,25 @@ bool Binarytree<T>::testGoodTree(BSTNode<T> *node)
     else
     {
         return testGoodTree(node->getChildren()[1]) && testGoodTree(node->getChildren()[0]);
+    }
+}
+template <typename T>
+void Binarytree<T>::breadthFirst()
+{
+    if (root == nullptr)
+        return;
+    BSTNode<T> *node = root;
+    std::queue<BSTNode<T> *> s;
+    s.push(node);
+    while (!s.empty())
+    {
+        node = s.front();
+        s.pop();
+        visit(node);
+        if (node->getChildren()[1] != nullptr)
+            s.push(node->getChildren()[1]);
+        if (node->getChildren()[0] != nullptr)
+            s.push(node->getChildren()[0]);
     }
 }
 #endif // !BINARYTREE_CPP

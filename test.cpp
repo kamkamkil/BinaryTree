@@ -446,6 +446,19 @@ bool testSize(bool talk)
         std::cout << "size test pass" << std::endl;
     return result;
 }
+bool testbreadthFirst(bool talk)
+{
+    Binarytree<int> tree;
+    tree.put(5);
+    tree.put(7);
+    tree.put(4);
+    tree.put(14);
+    tree.put(13);
+    tree.put(6);
+    tree.put(2);
+        tree.breadthFirst();
+    return true;
+}
 bool testAll(bool talk = true)
 {
     bool result = true;
@@ -460,6 +473,8 @@ bool testAll(bool talk = true)
     // result &= testSuccessor(talk);
     // result &= testPredecessor(talk);
     // result &= testSize(talk);
+    result &= testbreadthFirst(talk);
+    
 
     return result;
 }
