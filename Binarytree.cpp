@@ -90,13 +90,15 @@ int Binarytree<T>::size()
 {
     int result = 0;
     if (root == nullptr)
-        return 0;
+        return result;
     BSTNode<T> *node = root;
     std::queue<BSTNode<T> *> q;
     q.push(node);
     while (!q.empty())
     {
-        size++;
+        result++;
+        node = q.front();
+        q.pop();
         if (node->getChildren()[0] != nullptr)
         {
             q.push(node->getChildren()[0]);

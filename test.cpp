@@ -188,8 +188,8 @@ bool testRemoveRoot(bool talk)
     Binarytree<int> tree;
     tree.put(1);
     tree.remove(1);
-    if(tree.contains(1))
-        {
+    if (tree.contains(1))
+    {
         result = false;
         if (talk)
             std::cout << "test remove root fail (only one leaf in tree)" << std::endl;
@@ -200,14 +200,17 @@ bool testRemoveRoot(bool talk)
     tree.put(2);
     tree.put(3);
     tree.remove(1);
-        if(tree.contains(1))
-        {
+    if (tree.contains(1))
+    {
         result = false;
         if (talk)
             std::cout << "test remove root fail (root with single child)" << std::endl;
     }
     else if (talk)
         std::cout << "test remove root pass (root with single child)" << std::endl;
+    if(tree.size != 2)
+          if (talk)
+            cout
     tree.print();
     return result;
 }
@@ -379,25 +382,30 @@ bool testSize(bool talk)
 {
     bool result = true;
     Binarytree<int> tree;
-    if(tree.size != 0)
+    if (tree.size() != 0)
     {
         result = false;
-        if(talk)
+        if (talk)
             std::cout << "size test fail (empty)" << std::endl;
     }
+    else
+    {
+        std::cout << "size test pass (empty)" << std::endl;
+    }
+
     tree.put(1);
     tree.put(3);
     tree.put(0);
     tree.put(2);
-    if(tree.size != 4)
+    if (tree.size() != 4)
     {
         result = false;
-        if(talk)
-            std::cout << "size test fail" << std::endl;
+        if (talk)
+            std::cout << "size test fail should be 4 but it is : " << tree.size() << std::endl;
     }
-    if(result && talk)
+    if (result && talk)
         std::cout << "size test pass" << std::endl;
-    return 
+    return result;
 }
 bool testAll(bool talk = true)
 {
@@ -412,6 +420,7 @@ bool testAll(bool talk = true)
     // result &= testParent(talk);
     // result &= testSuccessor(talk);
     // result &= testPredecessor(talk);
+    // result &= testSize(talk);
 
     return result;
 }
