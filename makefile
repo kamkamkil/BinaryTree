@@ -14,4 +14,4 @@ run:
 	./main.exe
 .PHONY : clear
 clear:
-	rm *.exe
+	-rm *.exe

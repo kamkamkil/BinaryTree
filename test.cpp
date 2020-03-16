@@ -121,33 +121,33 @@ bool testRemoveTwoChild(bool talk)
     }
     else
         std::cout << "test delate pass (two child,single successor as leaf and child),good tree" << std::endl;
-    // Binarytree<int> tree2;
-    // tree2.put(20);
-    // tree2.put(10);
-    // tree2.put(5);
-    // tree2.put(7);
-    // tree2.put(3);
-    // tree2.put(1);
-    // tree2.put(2);
-    // tree2.put(8);
-    // tree2.put(9);
-    // tree2.remove(5);
-    // if (tree2.contains(5))
-    // {
-    //     result = false;
-    //     if (talk)
-    //         std::cout << "test delate fail (two child,couple node in row )" << std::endl;
-    // }
-    // else if (talk)
-    //     std::cout << "test delate pass (two child,couple node in row)" << std::endl;
-    // if (!tree2.testGoodTree())
-    // {
-    //     result = false;
-    //     if (talk)
-    //         std::cout << "test delate fail (two child,couple node in row) bad tree" << std::endl;
-    // }
-    // else if (talk)
-    //     std::cout << "test delate pass (two child,couple node in row) good tree" << std::endl;
+    Binarytree<int> tree2;
+    tree2.put(20);
+    tree2.put(10);
+    tree2.put(5);
+    tree2.put(7);
+    tree2.put(3);
+    tree2.put(1);
+    tree2.put(2);
+    tree2.put(8);
+    tree2.put(9);
+    tree2.remove(5);
+    if (tree2.contains(5))
+    {
+        result = false;
+        if (talk)
+            std::cout << "test delate fail (two child,couple node in row )" << std::endl;
+    }
+    else if (talk)
+        std::cout << "test delate pass (two child,couple node in row)" << std::endl;
+    if (!tree2.testGoodTree())
+    {
+        result = false;
+        if (talk)
+            std::cout << "test delate fail (two child,couple node in row) bad tree" << std::endl;
+    }
+    else if (talk)
+        std::cout << "test delate pass (two child,couple node in row) good tree" << std::endl;
     Binarytree<int> tree3;
     tree3.put(100);
     tree3.put(50);
@@ -180,6 +180,35 @@ bool testRemoveTwoChild(bool talk)
     else if (talk)
         std::cout << "test delate pass (two child) good tree" << std::endl;
 
+    return result;
+}
+bool testRemoveRoot(bool talk)
+{
+    bool result = true;
+    Binarytree<int> tree;
+    tree.put(1);
+    tree.remove(1);
+    if(tree.contains(1))
+        {
+        result = false;
+        if (talk)
+            std::cout << "test remove root fail (only one leaf in tree)" << std::endl;
+    }
+    else if (talk)
+        std::cout << "test remove root pass (only one leaf in tree)" << std::endl;
+    tree.put(1);
+    tree.put(2);
+    tree.put(3);
+    tree.remove(1);
+        if(tree.contains(1))
+        {
+        result = false;
+        if (talk)
+            std::cout << "test remove root fail (root with single child)" << std::endl;
+    }
+    else if (talk)
+        std::cout << "test remove root pass (root with single child)" << std::endl;
+    tree.print();
     return result;
 }
 bool testMax(bool talk)
@@ -327,6 +356,7 @@ bool testPredecessor(bool talk)
     tree.put(1);
     tree.put(3);
     tree.put(10);
+
     if (tree.predecessor(4) != 3)
     {
         result = false;
@@ -345,18 +375,43 @@ bool testPredecessor(bool talk)
 
     return result;
 }
+bool testSize(bool talk)
+{
+    bool result = true;
+    Binarytree<int> tree;
+    if(tree.size != 0)
+    {
+        result = false;
+        if(talk)
+            std::cout << "size test fail (empty)" << std::endl;
+    }
+    tree.put(1);
+    tree.put(3);
+    tree.put(0);
+    tree.put(2);
+    if(tree.size != 4)
+    {
+        result = false;
+        if(talk)
+            std::cout << "size test fail" << std::endl;
+    }
+    if(result && talk)
+        std::cout << "size test pass" << std::endl;
+    return 
+}
 bool testAll(bool talk = true)
 {
     bool result = true;
     // result &= testPrint(talk);
-    result &= testPutContain(talk);
-    result &= testRemove(talk);
-    result &= testRemoveTwoChild(talk);
-    result &= testMin(talk);
-    result &= testMax(talk);
-    result &= testParent(talk);
-    result &= testSuccessor(talk);
-    result &= testPredecessor(talk);
+    // result &= testPutContain(talk);
+    // result &= testRemove(talk);
+    // result &= testRemoveTwoChild(talk);
+    result &= testRemoveRoot(talk);
+    // result &= testMin(talk);
+    // result &= testMax(talk);
+    // result &= testParent(talk);
+    // result &= testSuccessor(talk);
+    // result &= testPredecessor(talk);
 
     return result;
 }

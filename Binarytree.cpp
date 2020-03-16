@@ -8,9 +8,6 @@
 #include <iostream>
 #include <iterator>
 #include <exception>
-//to nie działa na linux
-// #include "printWinFun.cpp"//!!
-//
 
 template <typename T>
 class Binarytree
@@ -37,6 +34,7 @@ public:
     ~Binarytree();
     void put(T data);
     int hight(); //todo
+    int size();
     void print();
     const T search(T value);
     bool contains(T value);
@@ -88,6 +86,29 @@ void Binarytree<T>::put(T data)
     }
 }
 template <typename T>
+int Binarytree<T>::size()
+{
+    int result = 0;
+    if (root == nullptr)
+        return 0;
+    BSTNode<T> *node = root;
+    std::queue<BSTNode<T> *> q;
+    q.push(node);
+    while (!q.empty())
+    {
+        size++;
+        if (node->getChildren()[0] != nullptr)
+        {
+            q.push(node->getChildren()[0]);
+        }
+        if (node->getChildren()[1] != nullptr)
+        {
+            q.push(node->getChildren()[1]);
+        }
+    }
+    return result;
+}
+template <typename T>
 void Binarytree<T>::put(T data, BSTNode<T> *node)
 {
     while (node->getChildren()[data < (node->getData())] != nullptr)
@@ -125,7 +146,8 @@ int Binarytree<T>::hight()
 template <typename T>
 BSTNode<T> *Binarytree<T>::searchNode(T value)
 {
-
+    if (root == nullptr)
+        return nullptr;
     BSTNode<T> *node = root;
     std::queue<BSTNode<T> *> q;
     q.push(node);
@@ -172,12 +194,15 @@ bool Binarytree<T>::contains(T value)
 template <typename T>
 void Binarytree<T>::remove(T value)
 {
-    
     BSTNode<T> *toDelate = searchNode(value);
-
     BSTNode<T> *_parent = parentNode(toDelate);
-    if (toDelate->getChildren()[0] == nullptr && toDelate->getChildren()[1] == nullptr)
+    if (!(toDelate->bothChildren()))
     {
+        if (toDelate == root)
+        {
+            root = nullptr;
+            return;
+        }
         if (_parent->getChildren()[0] == toDelate)
         {
             _parent->getChildren()[0] = nullptr;
@@ -187,7 +212,6 @@ void Binarytree<T>::remove(T value)
             _parent->getChildren()[1] = nullptr;
         }
         delete toDelate;
-
         return;
     }
 
@@ -219,32 +243,33 @@ void Binarytree<T>::remove(T value)
             _parent->getChildren()[1] == toDelate->getChildren()[1];
             toDelate->getChildren()[1] = nullptr;
         }
-        
+
         delete toDelate;
         return;
     }
-    
+
     BSTNode<T> *newNode = successorNode(toDelate);
     BSTNode<T> *tempNode = new BSTNode<T>(newNode->getData());
-    std::cout << value << " -> "<<newNode->getData() << std::endl;
-    if(newNode != toDelate->getChildren()[0])
+    if (newNode != toDelate->getChildren()[0])
     {
         tempNode->getChildren()[0] = toDelate->getChildren()[0];
         tempNode->getChildren()[1] = toDelate->getChildren()[1];
-    }else
+        remove(newNode->getData());
+    }
+    else
     {
-        tempNode->getChildren()[1] = toDelate->getChildren()[1];
+        std::cout << "temp" << std::endl;
         tempNode->getChildren()[0] = newNode->getChildren()[0];
+        newNode->getChildren()[0] = nullptr;
+        delete newNode;
     }
     toDelate->getChildren()[0] = nullptr;
     toDelate->getChildren()[1] = nullptr;
-    if(_parent->getChildren()[0] == toDelate)
+    if (_parent->getChildren()[0] == toDelate)
         _parent->getChildren()[0] = tempNode;
     else
         _parent->getChildren()[1] = tempNode;
-    remove(newNode->getData());
-    delete toDelate;    
-    
+    delete toDelate;
 }
 template <typename T>
 BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node)
