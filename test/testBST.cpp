@@ -1,5 +1,6 @@
 #ifndef TEST_BSTTREE
 #define TEST_BSTTREE
+#define CATCH_CONFIG_MAIN
 #include "BinaryTree.cpp"
 #include <iostream>
 void visit(int k)
@@ -461,22 +462,28 @@ bool testbreadthFirst(bool talk)
     tree.breadthFirst(visit);
     return true;
 }
+bool testTab()
+{
+    int tab[]= {1,2,3,4,5};
+    Binarytree<int> tree(tab,5);
+    tree.print();
+}
 bool testAll(bool talk = true)
 {
     bool result = true;
     // result &= testPrint(talk);
-    result &= testPutContain(talk);
-    result &= testRemove(talk);
-    result &= testRemoveTwoChild(talk);
-    result &= testRemoveRoot(talk);
-    result &= testMin(talk);
-    result &= testMax(talk);
-    result &= testParent(talk);
-    result &= testSuccessor(talk);
-    result &= testPredecessor(talk);
-    result &= testSize(talk);
+    // result &= testPutContain(talk);
+    // result &= testRemove(talk);
+    // result &= testRemoveTwoChild(talk);
+    // result &= testRemoveRoot(talk);
+    // result &= testMin(talk);
+    // result &= testMax(talk);
+    // result &= testParent(talk);
+    // result &= testSuccessor(talk);
+    // result &= testPredecessor(talk);
+    // result &= testSize(talk);
     // result &= testbreadthFirst(talk);
-
+    testTab();
     return result;
 }
 #endif // !TEST_BSTTREE

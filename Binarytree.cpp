@@ -31,6 +31,7 @@ private:
 
 public:
     Binarytree(T head);
+    Binarytree(T tab[],int size);
     Binarytree(const Binarytree<T> &obj);
     Binarytree(const Binarytree<T> &&obj);
     Binarytree();
@@ -48,17 +49,27 @@ public:
     bool testGoodTree() { return testGoodTree(root); };
     bool empty() {return root == nullptr;};
     T* search(T value);
-    T parent(T value) { return parentNode(searchNode(value))->getData(); };
-    T predecessor(T value) { return predecessorNode(searchNode(value))->getData(); }
-    T successor(T value) { return successorNode(searchNode(value))->getData(); }
-    T minimum() { return minimum(root)->getData(); };
-    T maximum() { return maximum(root)->getData(); };
+    T parent(T value) { return parentNode(searchNode(value))->getValue(); };
+    T predecessor(T value) { return predecessorNode(searchNode(value))->getValue(); }
+    T successor(T value) { return successorNode(searchNode(value))->getValue(); }
+    T minimum() { return minimum(root)->getValue(); };
+    T maximum() { return maximum(root)->getValue(); };
 };
 
 template <typename T>
 Binarytree<T>::Binarytree()
 {
     root = nullptr;
+}
+template <typename T>
+Binarytree<T>::Binarytree(T tab[],int size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        std::cout << tab[i] << std::endl;
+        // put(tab[i]);
+    }
+    
 }
 template <typename T>
 Binarytree<T>::Binarytree(T head)
@@ -121,9 +132,9 @@ std::size_t  Binarytree<T>::size()
 template <typename T>
 void Binarytree<T>::put(T data, BSTNode<T> *node)
 {
-    while (node->getChildren()[data < (node->getData())] != nullptr)
+    while (node->getChildren()[data < (node->getValue())] != nullptr)
     {
-        node = node->getChildren()[data < node->getData()];
+        node = node->getChildren()[data < node->getValue()];
     }
     node->put(data);
 }
@@ -138,7 +149,7 @@ void Binarytree<T>::print(BSTNode<T> *root, int space)
     std::cout << std::endl;
     for (int i = gap; i < space; i++)
         std::cout << " ";
-    std::cout << root->getData() << std::endl;
+    std::cout << root->getValue() << std::endl;
     print(root->getChildren()[left], space);
 }
 
@@ -159,9 +170,9 @@ BSTNode<T> *Binarytree<T>::searchNode(T value)
     if (root == nullptr)
         return nullptr;
     BSTNode<T> *node = root;
-    while(node != nullptr && node->getData() != value)
+    while(node != nullptr && node->getValue() != value)
     {
-        node = node->getChildren()[value < node->getData()];
+        node = node->getChildren()[value < node->getValue()];
     }
     return node;
 }
@@ -205,7 +216,7 @@ void Binarytree<T>::remove(T value)
     {
         int side = toDelete->whichChildren();
         if (toDelete != root)
-            _parent->getChildren()[value < _parent->getData()] = toDelete->getChildren()[side];
+            _parent->getChildren()[value < _parent->getValue()] = toDelete->getChildren()[side];
         else
             root = toDelete->getChildren()[side];
         toDelete->getChildren()[side] = nullptr;
@@ -214,12 +225,12 @@ void Binarytree<T>::remove(T value)
     }
 
     BSTNode<T> *newNode = successorNode(toDelete);
-    BSTNode<T> *tempNode = new BSTNode<T>(newNode->getData());
+    BSTNode<T> *tempNode = new BSTNode<T>(newNode->getValue());
     if (newNode != toDelete->getChildren()[right])
     {
         tempNode->getChildren()[right] = toDelete->getChildren()[right];
         tempNode->getChildren()[left] = toDelete->getChildren()[left];
-        remove(newNode->getData());
+        remove(newNode->getValue());
     }
     else
     {
@@ -278,11 +289,11 @@ BSTNode<T> *Binarytree<T>::parentNode(BSTNode<T> *node)
         return nullptr;
     BSTNode<T> *parent = root;
     BSTNode<T> *temp = root;
-    temp = temp->getChildren()[node->getData() < temp->getData()];
+    temp = temp->getChildren()[node->getValue() < temp->getValue()];
     while (temp != node)
     {
         parent = temp;
-        temp = temp->getChildren()[node->getData() < temp->getData()];
+        temp = temp->getChildren()[node->getValue() < temp->getValue()];
         if (temp == nullptr)
             return nullptr;
     }
@@ -312,7 +323,7 @@ bool Binarytree<T>::testGoodTree(BSTNode<T> *node)
         return true;
     if (node->bothChildren())
     {
-        if (node->getChildren()[left]->getData() < node->getChildren()[right]->getData())
+        if (node->getChildren()[left]->getValue() < node->getChildren()[right]->getValue())
         {
             return testGoodTree(node->getChildren()[left]) && testGoodTree(node->getChildren()[right]);
         }
@@ -338,7 +349,7 @@ void Binarytree<T>::breadthFirst(std::function<void(const T&)> f)
     {
         node = s.front();
         s.pop();
-        f(node->getData());
+        f(node->getValue());
         if (node->getChildren()[left] != nullptr)
             s.push(node->getChildren()[left]);
         if (node->getChildren()[right] != nullptr)
@@ -350,7 +361,7 @@ void Binarytree<T>::preOrder(std::function<void(const T&)> f,BSTNode<T> *node)
 {
         if(node == nullptr)
             return;
-        f(node->getData);
+        f(node->getValue);
         preOrder(f,node->getChildren()[left]);
         preOrder(f,node->getChildren()[right]);
 }
@@ -360,7 +371,7 @@ void Binarytree<T>::inOrder(std::function<void(const T&)> f,BSTNode<T> *node)
         if(node == nullptr)
             return;
         preOrder(f,node->getChildren()[left]);
-        f(node->getData);
+        f(node->getValue);
         preOrder(f,node->getChildren()[right]);
 }template <typename T> 
 void Binarytree<T>::postOrder(std::function<void(const T&)> f,BSTNode<T> *node) 
@@ -369,6 +380,6 @@ void Binarytree<T>::postOrder(std::function<void(const T&)> f,BSTNode<T> *node)
             return;
         preOrder(f,node->getChildren()[left]);
         preOrder(f,node->getChildren()[right]);
-        f(node->getData);
+        f(node->getValue);
 }
 #endif // !BINARYTREE_CPP

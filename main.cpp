@@ -2,8 +2,6 @@
 #include "testBST.cpp"
 int main(int argc, char const *argv[])
 {
-    if (testAll())
-        std::cout << "==============="<< std::endl<<"all tests pass" << std::endl;
-    
+       testAll();
        return 0;
 }
