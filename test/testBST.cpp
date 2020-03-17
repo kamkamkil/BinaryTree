@@ -2,7 +2,8 @@
 
 #include "../lib/catch/catch.hpp"
 #include "../src/Binarytree.hpp"
-//test about sie
+#include <iterator>
+#include <iostream>
 TEST_CASE("size_put_contain")
 {
     Binarytree<int> tree;
@@ -133,9 +134,44 @@ TEST_CASE("Parent")
 {
     int tab[] = {1,0,3,4,9,10,-10,7};
     Binarytree<int> tree;
-    tree.put(tab,8)
+    tree.put(tab,8);
     REQUIRE(tree.parent(-10) == 0);
     REQUIRE(tree.parent(3) == 1);
 
 }
-
+TEST_CASE("Copy_Constructor","[Constructor]")
+{
+    int tab[] = {1,0,3,4,9,10,-10,7};
+    Binarytree<int> tree;
+    tree.put(12);
+    Binarytree<int> copyTree(tree);
+    // REQUIRE(tree == copyTree);
+}
+TEST_CASE("move_constructor","[Constructor]")
+{
+    int tab[] = {1,0,3,4,9,10,-10,7};
+    Binarytree<int> tree;
+    tree.put(tab,12);
+    Binarytree<int> moveTree = std::move(tree) ;
+    REQUIRE(tree.empty());
+    REQUIRE(moveTree.size() == 12);
+    REQUIRE(moveTree.contains(3));
+}
+TEST_CASE("==_operator","[operator]")
+{
+    int tab[] = {1,0,3,4,9,10,-10,7};
+    Binarytree<int> tree;
+    tree.put(tab,12);
+    Binarytree<int> tree2;
+    tree2.put(tab,12);
+    REQUIRE(tree == tree2);
+}
+TEST_CASE("iterator","[iterator]")
+{
+    int tab[] = {1,0,3,4,9,10,-10,7};
+    Binarytree<int> tree;
+    for ( Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++) 
+    { 
+        std::cout << *iterator << " "; 
+    } 
+}

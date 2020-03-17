@@ -8,12 +8,11 @@ template <typename T>
 class BSTNode
 {
 private:
-    T value;
     BSTNode<T> *children[2];
-
+    T value;
 public:
     BSTNode(const BSTNode<T> &obj);
-    BSTNode(const BSTNode<T> &&obj);
+    BSTNode( BSTNode<T> &&obj);
     BSTNode(T value);
     ~BSTNode();
     void put(T value);
@@ -24,6 +23,7 @@ public:
     bool oneChildren();
     bool noChildren();
     int whichChildren();
+    bool operator==(const BSTNode<T>& node) const;
 };
 
 template <typename T>
@@ -44,14 +44,17 @@ BSTNode<T>::~BSTNode()
 template <typename T>
 BSTNode<T>::BSTNode(const BSTNode<T> &obj)
 {
-    this->value = obj.value;
-    if (obj.children[right] != nullptr)
-        this->children[right] = new BSTNode<T>(*obj.children[right]);
-    if (obj.children[left] != nullptr)
-        this->children[left] = new BSTNode<T>(*obj.children[left]);
+    std::cout << "temp" << std::endl;
+    value = obj.value;
+        children[right] = nullptr;
+    children[left] = nullptr;
+    // if (obj.children[right] != nullptr)
+    //     this->children[right] = new BSTNode<T>(*obj.children[right]);
+    // if (obj.children[left] != nullptr)
+    //     this->children[left] = new BSTNode<T>(*obj.children[left]);
 }
 template <typename T>
-BSTNode<T>::BSTNode(const BSTNode<T> &&obj)
+BSTNode<T>::BSTNode( BSTNode<T> &&obj)
 {
     this->data = obj.value;
     this->children = obj.children;
@@ -83,7 +86,7 @@ bool BSTNode<T>::bothChildren()
 template <typename T>
 bool BSTNode<T>::oneChildren()
 {
-    return (children[right] != nullptr ^ children[left] != nullptr);
+    return ((children[right] != nullptr) ^ (children[left] != nullptr));
 }
 template <typename T>
 bool BSTNode<T>::noChildren()
@@ -103,5 +106,14 @@ int BSTNode<T>::whichChildren()
         return 1;
     return 6;
 }
+template <typename T>
+bool BSTNode<T>::operator==(const BSTNode<T>& node) const
+{
+    if(value == node.value)
+        return (*children[0] == *(node.children[0]) && *children[1] == *(node.children[1])); 
+    else
+        return false;
+}
+
 
 #endif // !NODE_CPP
