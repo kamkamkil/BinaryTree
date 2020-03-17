@@ -48,10 +48,10 @@ BSTNode<T>::BSTNode(const BSTNode<T> &obj)
     value = obj.value;
         children[right] = nullptr;
     children[left] = nullptr;
-    // if (obj.children[right] != nullptr)
-    //     this->children[right] = new BSTNode<T>(*obj.children[right]);
-    // if (obj.children[left] != nullptr)
-    //     this->children[left] = new BSTNode<T>(*obj.children[left]);
+    if (obj.children[right] != nullptr)
+        this->children[right] = new BSTNode<T>(*obj.children[right]);
+    if (obj.children[left] != nullptr)
+        this->children[left] = new BSTNode<T>(*obj.children[left]);
 }
 template <typename T>
 BSTNode<T>::BSTNode( BSTNode<T> &&obj)
