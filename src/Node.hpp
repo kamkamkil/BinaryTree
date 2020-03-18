@@ -5,7 +5,8 @@
 enum n
 {
     right,
-    left
+    left,
+    both
 };
 
 template <typename T>
@@ -66,7 +67,7 @@ BSTNode<T>::BSTNode(BSTNode<T> &&obj)
     obj.children[left] = nullptr;
 }
 template <typename T>
-void BSTNode<T>::put(T __data) // FIXME zmiana nazwy
+void BSTNode<T>::put(T __data)
 {
     children[__data < this->value] = new BSTNode<T>(__data);
 }
@@ -100,14 +101,14 @@ template <typename T>
 int BSTNode<T>::whichChildren()
 {
     if (bothChildren())
-        return 2;
+        return both;
     if (noChildren())
         return -1;
     if (children[right] != nullptr)
-        return 0;
+        return right;
     if (children[left] != nullptr)
-        return 1;
-    return 6;
+        return left;
+    return -1;
 }
 template <typename T>
 bool BSTNode<T>::operator==(const BSTNode<T> &node) const
