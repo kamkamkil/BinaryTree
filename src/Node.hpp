@@ -49,7 +49,6 @@ BSTNode<T>::~BSTNode()
 template <typename T>
 BSTNode<T>::BSTNode(const BSTNode<T> &obj)
 {
-    std::cout << "temp" << std::endl;
     value = obj.value;
     children[right] = nullptr;
     children[left] = nullptr;

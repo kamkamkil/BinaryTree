@@ -140,7 +140,6 @@ TEST_CASE("Parent")
 }
 TEST_CASE("Copy_Constructor", "[Constructor]")
 {
-    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
     SECTION("empty tree")
     {
@@ -150,8 +149,10 @@ TEST_CASE("Copy_Constructor", "[Constructor]")
     }
     SECTION("full tree")
     {
-        tree.put(12);
+        int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+        tree.put(tab,8);
         Binarytree<int> copyTree(tree);
+        REQUIRE(copyTree.size() == 8);
         REQUIRE(tree == copyTree);
     }
 }
@@ -200,6 +201,7 @@ TEST_CASE("iterator", "[iterator]")
 {
     int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
+    tree.put(tab,8);
     for (Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++)
     {
         std::cout << *iterator << " ";

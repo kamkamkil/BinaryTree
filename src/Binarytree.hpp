@@ -120,9 +120,12 @@ Binarytree<T>::~Binarytree()
 template <typename T>
 Binarytree<T>::Binarytree(const Binarytree<T> &obj)
 {
-    if(root == nullptr)
-    this->root = nullptr;
-    this->root = new BSTNode<T>(*root);
+    if(obj.root == nullptr)
+    {
+        this->root = nullptr;
+        return;
+    }
+    this->root = new BSTNode<T>(*obj.root);
 }
 template <typename T>
 Binarytree<T>::Binarytree(Binarytree<T> &&obj)
