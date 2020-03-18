@@ -20,13 +20,15 @@ public:
     class iterator : public std::iterator<std::input_iterator_tag, const T>
     {
     public:
-        iterator() = default;
+        iterator()
+        {
+            queue = new std::queue<T>;
+        };
         iterator(Binarytree<T> &tree);
         ~iterator();
         iterator(T value);
         void iteratorBack()
         {
-            delete queue;
             queue = new std::queue<T>;
         }
         iterator &operator++()
@@ -38,7 +40,7 @@ public:
         {
             iterator iterator = *this;
             ++*this;
-            return iterator;
+            return *this;
         }
         bool operator==(const iterator &rhs);
         bool operator!=(const iterator &rhs);
@@ -92,13 +94,15 @@ public:
     bool operator==(const Binarytree<T> &tree) const;
     iterator begin()
     {
+        if(root == nullptr)
+            throw "empty_tree_iterator_is_impossible";
         return iterator(*this);
     }
     iterator end()
     {
-        iterator i;
-        i.iteratorBack();
-        return i;
+        if(root == nullptr)
+            throw "empty_tree_iterator_is_impossible";
+        return iterator();
     }
 };
 
@@ -120,7 +124,7 @@ Binarytree<T>::~Binarytree()
 template <typename T>
 Binarytree<T>::Binarytree(const Binarytree<T> &obj)
 {
-    if(obj.root == nullptr)
+    if (obj.root == nullptr)
     {
         this->root = nullptr;
         return;
@@ -444,10 +448,11 @@ bool Binarytree<T>::operator==(const Binarytree<T> &tree) const
     else
         return *root == *(tree.root);
 }
+//!!-----------iterator--------------
 template <typename T>
 Binarytree<T>::iterator::~iterator()
 {
-    delete queue;
+    // delete queue; // FIXME wyciek pamięci ??
 }
 template <typename T>
 Binarytree<T>::iterator::iterator(T value)
@@ -461,11 +466,6 @@ Binarytree<T>::iterator::iterator(Binarytree<T> &tree)
 {
     queue = getQueue(tree);
 }
-// template <typename T>
-// Binarytree<T>::iterator &Binarytree<T>::iterator::operator++()
-
-// template <typename T>
-// iterator Binarytree<T>::iterator::operator++(int)
 
 template <typename T>
 int &Binarytree<T>::iterator::operator*()
@@ -474,13 +474,17 @@ int &Binarytree<T>::iterator::operator*()
 }
 
 template <typename T>
-bool Binarytree<T>::iterator::operator==(const iterator &it)
+bool Binarytree<T>::iterator::operator==(const iterator &it) //todo naprawić
 {
     return queue->front() == it.queue->front();
 }
 template <typename T>
-bool Binarytree<T>::iterator::operator!=(const iterator &it)
+bool Binarytree<T>::iterator::operator!=(const iterator &it) // todo naprawić 
 {
+    if((queue->empty() && !it.queue->empty()) || (!queue->empty() && it.queue->empty()))
+        return true;
+    else if ((queue->empty() && it.queue->empty()))
+        return false;
     return queue->front() != it.queue->front();
 }
 template <typename T>
@@ -498,21 +502,10 @@ std::queue<T> *Binarytree<T>::iterator::getQueue(Binarytree<T> &tree)
             node = node->getChildren()[left];
         }
         result->push(s.top()->getValue());
-        node = s.top();
+        node = s.top()->getChildren()[right];
         s.pop();
-    } while (!s.empty() || node == nullptr);
+    } while (!s.empty() || node != nullptr);
     return result;
 }
-// template <typename T>
-// Binarytree<T>::iterator Binarytree<T>::end()
-// {
-//     return iterator(nullptr_t);
-// }
-
-// template <typename T>
-// Binarytree<T>::iterator Binarytree<T>::begin()
-// {
-//     return iterator(root);
-// }
 
 #endif // !BINARYTREE_CPP

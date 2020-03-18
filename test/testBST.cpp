@@ -200,10 +200,14 @@ TEST_CASE("==_operator_diffrent_tree", "[operator]")
 TEST_CASE("iterator", "[iterator]")
 {
     int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+    int correct[] = {-10,0,1,3,4,7,9,10};
     Binarytree<int> tree;
+    
     tree.put(tab,8);
+    int n = 0;
     for (Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++)
     {
-        std::cout << *iterator << " ";
+        REQUIRE(*iterator == correct[n]);
+        n++;
     }
 }
