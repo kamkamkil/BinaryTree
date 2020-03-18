@@ -132,46 +132,76 @@ TEST_CASE("Predecessor")
 }
 TEST_CASE("Parent")
 {
-    int tab[] = {1,0,3,4,9,10,-10,7};
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
-    tree.put(tab,8);
+    tree.put(tab, 8);
     REQUIRE(tree.parent(-10) == 0);
     REQUIRE(tree.parent(3) == 1);
-
 }
-TEST_CASE("Copy_Constructor","[Constructor]")
+TEST_CASE("Copy_Constructor", "[Constructor]")
 {
-    int tab[] = {1,0,3,4,9,10,-10,7};
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
-    tree.put(12);
-    Binarytree<int> copyTree(tree);
-    // REQUIRE(tree == copyTree);
+    SECTION("empty tree")
+    {
+        Binarytree<int> copyTree(tree);
+        REQUIRE(copyTree.size() == 0);
+        REQUIRE(tree == copyTree);
+    }
+    SECTION("full tree")
+    {
+        tree.put(12);
+        Binarytree<int> copyTree(tree);
+        REQUIRE(tree == copyTree);
+    }
 }
-TEST_CASE("move_constructor","[Constructor]")
+TEST_CASE("move_constructor", "[Constructor]")
 {
-    int tab[] = {1,0,3,4,9,10,-10,7};
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
-    tree.put(tab,12);
-    Binarytree<int> moveTree = std::move(tree) ;
+    tree.put(tab, 12);
+    Binarytree<int> moveTree = std::move(tree);
     REQUIRE(tree.empty());
     REQUIRE(moveTree.size() == 12);
     REQUIRE(moveTree.contains(3));
 }
-TEST_CASE("==_operator","[operator]")
+TEST_CASE("==_operator_same_tree", "[operator]")
 {
-    int tab[] = {1,0,3,4,9,10,-10,7};
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
-    tree.put(tab,12);
     Binarytree<int> tree2;
-    tree2.put(tab,12);
+    REQUIRE(tree == tree2);
+    tree.put(tab, 8);
+    tree2.put(tab, 8);
     REQUIRE(tree == tree2);
 }
-TEST_CASE("iterator","[iterator]")
+TEST_CASE("==_operator_diffrent_tree", "[operator]")
 {
-    int tab[] = {1,0,3,4,9,10,-10,7};
     Binarytree<int> tree;
-    for ( Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++) 
-    { 
-        std::cout << *iterator << " "; 
-    } 
+    Binarytree<int> tree2;
+    SECTION("same tree shuffle order")
+    {
+        int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+        int tab2[] = {0, 1, 4, 3, -10, 10, 7, 1};
+        tree.put(tab, 8);
+        tree2.put(tab2, 8);
+        REQUIRE_FALSE(tree == tree2);
+    }
+    SECTION("completely diffrent tree")
+    {
+        int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+        int tab2[] = {6, 3, 2, 9, 10, 22, -10, -5, 30, 12, 100};
+        tree.put(tab, 8);
+        tree2.put(tab, 11);
+        REQUIRE_FALSE(tree == tree2);
+    }
+}
+TEST_CASE("iterator", "[iterator]")
+{
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+    Binarytree<int> tree;
+    for (Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++)
+    {
+        std::cout << *iterator << " ";
+    }
 }

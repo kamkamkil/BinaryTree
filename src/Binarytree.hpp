@@ -120,6 +120,8 @@ Binarytree<T>::~Binarytree()
 template <typename T>
 Binarytree<T>::Binarytree(const Binarytree<T> &obj)
 {
+    if(root == nullptr)
+    this->root = nullptr;
     this->root = new BSTNode<T>(*root);
 }
 template <typename T>
@@ -430,7 +432,14 @@ void Binarytree<T>::postOrder(std::function<void(const T &)> f, BSTNode<T> *node
 template <typename T>
 bool Binarytree<T>::operator==(const Binarytree<T> &tree) const
 {
-    return *root == *(tree.root);
+    if (root == nullptr && tree.root == nullptr)
+    {
+        return true;
+    }
+    else if ((root == nullptr && tree.root != nullptr) || (root != nullptr && tree.root == nullptr))
+        return false;
+    else
+        return *root == *(tree.root);
 }
 template <typename T>
 Binarytree<T>::iterator::~iterator()
