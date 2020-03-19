@@ -60,6 +60,7 @@ public:
     T maximum() { return maximum(root)->getValue(); };
     bool operator==(const Binarytree<T> &tree) const;
     Binarytree<T> &operator=(const Binarytree<T> &other);
+    Binarytree<T> &operator=(Binarytree<T> &&other);
     iterator begin()
     {
         if (root == nullptr)
@@ -73,6 +74,14 @@ public:
         return iterator();
     }
 };
+
+template <typename T>
+Binarytree<T> &Binarytree<T>::operator=(Binarytree<T> &&other)
+{
+    this->root = other.root;
+    other.root = nullptr;
+    return *this;
+}
 template <typename T>
 Binarytree<T> &Binarytree<T>::operator=(const Binarytree<T> &other)
 {
@@ -213,6 +222,8 @@ template <typename T>
 void Binarytree<T>::remove(T value)
 {
     BSTNode<T> *toDelete = searchNode(value);
+    if(toDelete == nullptr)
+        throw "deleting_non_existing_object" ;// todo add test
     BSTNode<T> *parent = parentNode(toDelete);
     if (toDelete->noChildren())
     {

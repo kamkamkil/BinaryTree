@@ -197,13 +197,14 @@ TEST_CASE("==_operator_diffrent_tree", "[operator]")
         REQUIRE_FALSE(tree == tree2);
     }
 }
-TEST_CASE("&=_operato", "[operator]")
+TEST_CASE("&=_operator", "[operator]")
 {
     int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
     Binarytree<int> tree2;
     SECTION("empty tree")
     {
+        tree2 = tree;
         REQUIRE(tree == tree2);
     }
     SECTION("first tree full")
@@ -222,12 +223,55 @@ TEST_CASE("&=_operato", "[operator]")
     }
     SECTION("both tree full")
     {
-        int tab2[] = {5, 7, 3, 1, 2, 5, -1, 21, 4} ;
+        int tab2[] = {5, 7, 3, 1, 2, 5, -1, 21, 4};
         tree.put(tab, 8);
-        tree.put(tab2, 9);
+        tree2.put(tab2, 9);
         tree2 = tree;
         tree2.remove(10);
         REQUIRE(tree.contains(10));
+    }
+}
+TEST_CASE("&&=_operator", "[operator]")
+{
+
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+    Binarytree<int> tree;
+    Binarytree<int> tree2;
+    SECTION("empty tree")
+    {
+        tree = std::move(tree2);
+        REQUIRE(tree2.size() == 0);
+    }
+    SECTION("first tree full")
+    {
+        tree.put(tab, 8);
+        tree2 = std::move(tree);
+        REQUIRE(tree.size() == 0);
+        REQUIRE(tree2.size()== 8);
+        for (size_t i = 0; i < 8; i++)
+        {
+            REQUIRE(tree2.contains(tab[i]));
+        }
+    }
+    SECTION("secont tree full")
+    {
+        tree2.put(tab, 8);
+        tree2 = std::move(tree);
+        REQUIRE(tree.empty());
+        REQUIRE(tree2.empty());
+    }
+    SECTION("both tree full")
+    {
+        int tab2[] = {5, 7, 3, 1, 2, 5, -1, 21, 4};
+        tree.put(tab, 8);
+        tree2.put(tab2, 9);
+        tree2 = std::move(tree);
+        REQUIRE(tree.empty());
+        REQUIRE(tree2.size()== 8);
+        for (size_t i = 0; i < 8; i++)
+        {
+            REQUIRE(tree2.contains(tab[i]));
+        }
     }
 }
 TEST_CASE("iterator", "[iterator]")
