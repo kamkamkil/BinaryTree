@@ -42,7 +42,7 @@ public:
     void inorder(std::function<void(const T &)> f) const;
     iterator begin() const
     {
-        return iterator();
+        return iterator(bst_.begin());
     }
     iterator end() const
     {

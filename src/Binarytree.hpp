@@ -214,7 +214,11 @@ BSTNode<T> *Binarytree<T>::searchNode(T value) const
 template <typename T>
 T *Binarytree<T>::search(T value) const
 {
-    return searchNode(value)->getDataPointer();
+    BSTNode<T> *node = searchNode(value);
+    if(node != nullptr)
+        return searchNode(value)->getDataPointer();
+    else
+        return nullptr;
 }
 template <typename T>
 bool Binarytree<T>::contains(T value) const 
