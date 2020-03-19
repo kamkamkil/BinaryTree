@@ -19,7 +19,6 @@ target_link_libraries(main BinaryTree)
 add_executable(testBST test/testBST.cpp )
 target_link_libraries(testBST BinaryTree)
 
-add_executable(testSet test/testSet.cpp )
-target_link_libraries(testSet treeSet)
+add_executable(testSet test/testSet_.cpp src/treeSet.hpp)
 
 

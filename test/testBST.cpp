@@ -14,7 +14,16 @@ TEST_CASE("size_put_contain")
     REQUIRE(tree.size() == 3);
     REQUIRE(tree.contains(2));
 }
+TEST_CASE("search")
+{
+    int tab[] = {1, 4, 2, 6, 3, 7};
+    Binarytree<int> tree;
+    tree.put(tab, 6);
+    REQUIRE(*tree.search(1) == 1);
+    REQUIRE(*tree.search(4) == 4);
+    REQUIRE(*tree.search(6) == 6);
 
+}
 TEST_CASE("tab_put")
 {
     int tab[] = {1, 4, 2, 6, 3, 7};

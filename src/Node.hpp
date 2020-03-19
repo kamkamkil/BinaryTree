@@ -1,5 +1,6 @@
 #ifndef NODE_CPP
 #define NODE_CPP
+#pragma once
 
 #include <iostream>
 enum n
@@ -24,7 +25,7 @@ public:
     void put(T value);
     BSTNode<T> **getChildren();
     T getValue();
-    T *getDataPointer();
+    T *getDataPointer(); //todo
     bool bothChildren();
     bool oneChildren();
     bool noChildren();
@@ -81,7 +82,11 @@ T BSTNode<T>::getValue()
 {
     return value;
 }
-
+template <typename T>
+T* BSTNode<T>::getDataPointer()
+{
+    return &value;
+}
 template <typename T>
 bool BSTNode<T>::bothChildren()
 {
