@@ -62,18 +62,18 @@ public:
     bool operator==(const Binarytree<T> &tree) const ;
     Binarytree<T> &operator=(const Binarytree<T> &other);
     Binarytree<T> &operator=(Binarytree<T> &&other);
-    iterator begin()
+    iterator begin() const
     {
         if (root == nullptr)
             throw "empty_tree_iterator_is_impossible";
         return iterator(*this);
-    }
-    iterator end()
+    };
+    iterator end() const
     {
         if (root == nullptr)
             throw "empty_tree_iterator_is_impossible";
         return iterator();
-    }
+    };
 };
 
 template <typename T>
@@ -159,13 +159,13 @@ std::size_t Binarytree<T>::size() const
         result++;
         node = q.front();
         q.pop();
-        if (node->getChildren()[right] != nullptr)
+        if (node->getChildren()[rightCH] != nullptr)
         {
-            q.push(node->getChildren()[right]);
+            q.push(node->getChildren()[rightCH]);
         }
-        if (node->getChildren()[left] != nullptr)
+        if (node->getChildren()[leftCH] != nullptr)
         {
-            q.push(node->getChildren()[left]);
+            q.push(node->getChildren()[leftCH]);
         }
     }
     return result;
@@ -186,12 +186,12 @@ void Binarytree<T>::print(BSTNode<T> *root, int space) const
     if (root == NULL)
         return;
     space += gap;
-    print(root->getChildren()[right], space);
+    print(root->getChildren()[rightCH], space);
     std::cout << std::endl;
     for (int i = gap; i < space; i++)
         std::cout << " ";
     std::cout << root->getValue() << std::endl;
-    print(root->getChildren()[left], space);
+    print(root->getChildren()[leftCH], space);
 }
 
 template <typename T>
@@ -235,10 +235,10 @@ void Binarytree<T>::remove(T value)
             root = nullptr;
             return;
         }
-        if (parent->getChildren()[right] == toDelete)
-            parent->getChildren()[right] = nullptr;
+        if (parent->getChildren()[rightCH] == toDelete)
+            parent->getChildren()[rightCH] = nullptr;
         else
-            parent->getChildren()[left] = nullptr;
+            parent->getChildren()[leftCH] = nullptr;
         return;
         delete toDelete;
     }
@@ -257,27 +257,27 @@ void Binarytree<T>::remove(T value)
 
     BSTNode<T> *newNode = successorNode(toDelete);
     BSTNode<T> *tempNode = new BSTNode<T>(newNode->getValue());
-    if (newNode != toDelete->getChildren()[right])
+    if (newNode != toDelete->getChildren()[rightCH])
     {
-        tempNode->getChildren()[right] = toDelete->getChildren()[right];
-        tempNode->getChildren()[left] = toDelete->getChildren()[left];
+        tempNode->getChildren()[rightCH] = toDelete->getChildren()[rightCH];
+        tempNode->getChildren()[leftCH] = toDelete->getChildren()[leftCH];
         remove(newNode->getValue());
     }
     else
     {
-        tempNode->getChildren()[right] = newNode->getChildren()[right];
-        tempNode->getChildren()[left] = toDelete->getChildren()[left];
-        newNode->getChildren()[right] = nullptr;
+        tempNode->getChildren()[rightCH] = newNode->getChildren()[rightCH];
+        tempNode->getChildren()[leftCH] = toDelete->getChildren()[leftCH];
+        newNode->getChildren()[rightCH] = nullptr;
         delete newNode;
     }
-    toDelete->getChildren()[right] = nullptr;
-    toDelete->getChildren()[left] = nullptr;
+    toDelete->getChildren()[rightCH] = nullptr;
+    toDelete->getChildren()[leftCH] = nullptr;
     if (toDelete != root)
     {
-        if (parent->getChildren()[right] == toDelete)
-            parent->getChildren()[right] = tempNode;
+        if (parent->getChildren()[rightCH] == toDelete)
+            parent->getChildren()[rightCH] = tempNode;
         else
-            parent->getChildren()[left] = tempNode;
+            parent->getChildren()[leftCH] = tempNode;
     }
     else
         root = tempNode;
@@ -286,12 +286,12 @@ void Binarytree<T>::remove(T value)
 template <typename T>
 BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node) const 
 {
-    if (node->getChildren()[left] != nullptr)
-        return (maximum(node->getChildren()[left]));
+    if (node->getChildren()[leftCH] != nullptr)
+        return (maximum(node->getChildren()[leftCH]));
     BSTNode<T> *parent = parentNode(node);
     while (parentNode(node) != nullptr)
     {
-        if (parent->getChildren()[right] == node)
+        if (parent->getChildren()[rightCH] == node)
             return parent;
         node = parent;
         parent = parentNode(node);
@@ -301,12 +301,12 @@ BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node) const
 template <typename T>
 BSTNode<T> *Binarytree<T>::successorNode(BSTNode<T> *node) const 
 {
-    if (node->getChildren()[right] != nullptr)
-        return (minimum(node->getChildren()[right]));
+    if (node->getChildren()[rightCH] != nullptr)
+        return (minimum(node->getChildren()[rightCH]));
     BSTNode<T> *parent = parentNode(node);
     while (parentNode(node) != nullptr)
     {
-        if (parent->getChildren()[left] == node)
+        if (parent->getChildren()[leftCH] == node)
             return parent;
         node = parent;
         parent = parentNode(node);
@@ -334,16 +334,16 @@ BSTNode<T> *Binarytree<T>::parentNode(BSTNode<T> *node) const
 template <typename T>
 BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> *node) const 
 {
-    if (node->getChildren()[right] != nullptr)
-        return maximum(node->getChildren()[right]);
+    if (node->getChildren()[rightCH] != nullptr)
+        return maximum(node->getChildren()[rightCH]);
     else
         return node;
 }
 template <typename T>
 BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> *node) const 
 {
-    if (node->getChildren()[left] != nullptr)
-        return minimum(node->getChildren()[left]);
+    if (node->getChildren()[leftCH] != nullptr)
+        return minimum(node->getChildren()[leftCH]);
     else
         return node;
 }
@@ -354,13 +354,13 @@ bool Binarytree<T>::testGoodTree(BSTNode<T> *node) const
         return true;
     if (node->bothChildren())
     {
-        if (node->getChildren()[left]->getValue() < node->getChildren()[right]->getValue())
-            return testGoodTree(node->getChildren()[left]) && testGoodTree(node->getChildren()[right]);
+        if (node->getChildren()[leftCH]->getValue() < node->getChildren()[rightCH]->getValue())
+            return testGoodTree(node->getChildren()[leftCH]) && testGoodTree(node->getChildren()[rightCH]);
         else
             return false;
     }
     else
-        return testGoodTree(node->getChildren()[left]) && testGoodTree(node->getChildren()[right]);
+        return testGoodTree(node->getChildren()[leftCH]) && testGoodTree(node->getChildren()[rightCH]);
 }
 template <typename T>
 void Binarytree<T>::breadthFirst(std::function<void(const T &)> f) const 
@@ -375,10 +375,10 @@ void Binarytree<T>::breadthFirst(std::function<void(const T &)> f) const
         node = s.front();
         s.pop();
         f(node->getValue());
-        if (node->getChildren()[left] != nullptr)
-            s.push(node->getChildren()[left]);
-        if (node->getChildren()[right] != nullptr)
-            s.push(node->getChildren()[right]);
+        if (node->getChildren()[leftCH] != nullptr)
+            s.push(node->getChildren()[leftCH]);
+        if (node->getChildren()[rightCH] != nullptr)
+            s.push(node->getChildren()[rightCH]);
     }
 }
 template <typename T>
@@ -387,25 +387,25 @@ void Binarytree<T>::preOrder(std::function<void(const T &)> f, BSTNode<T> *node)
     if (node == nullptr)
         return;
     f(node->getValue());
-    preOrder(f, node->getChildren()[left]);
-    preOrder(f, node->getChildren()[right]);
+    preOrder(f, node->getChildren()[leftCH]);
+    preOrder(f, node->getChildren()[rightCH]);
 }
 template <typename T>
 void Binarytree<T>::inOrder(std::function<void(const T &)> f, BSTNode<T> *node) const
 {
     if (node == nullptr)
         return;
-    inOrder(f, node->getChildren()[left]);
+    inOrder(f, node->getChildren()[leftCH]);
     f(node->getValue());
-    inOrder(f, node->getChildren()[right]);
+    inOrder(f, node->getChildren()[rightCH]);
 }
 template <typename T>
 void Binarytree<T>::postOrder(std::function<void(const T &)> f, BSTNode<T> *node) const
 {
     if (node == nullptr)
         return;
-    postOrder(f, node->getChildren()[left]);
-    postOrder(f, node->getChildren()[right]);
+    postOrder(f, node->getChildren()[leftCH]);
+    postOrder(f, node->getChildren()[rightCH]);
     f(node->getValue());
 }
 template <typename T>
@@ -420,15 +420,19 @@ bool Binarytree<T>::operator==(const Binarytree<T> &tree) const
     else
         return *root == *(tree.root);
 }
+
+
+
+
 //!!-----------iterator--------------
 template <typename T>
 class Binarytree<T>::iterator : public std::iterator<std::input_iterator_tag, const T>
 {
 public:
-    iterator();
-    iterator(Binarytree<T> &tree);
+    iterator() ;
+    iterator(Binarytree<T>const &tree);
     ~iterator();
-    iterator(T value);
+    iterator(T value) ;
     iterator &operator++()
     {
         queue->pop();
@@ -440,17 +444,17 @@ public:
         ++*this;
         return iterator;
     }
-    bool operator==(const iterator &rhs);
-    bool operator!=(const iterator &rhs);
+    bool operator==(const iterator &rhs) const;
+    bool operator!=(const iterator &rhs) const;
     int &operator*();
-    std::queue<T> *getQueue(Binarytree<T> &tree);
+    std::queue<T> *getQueue(const Binarytree<T> &tree) const ;
 
 private:
     std::queue<T> *queue;
 };
 
 template <typename T>
-Binarytree<T>::iterator::iterator()
+Binarytree<T>::iterator::iterator() 
 {
     queue = new std::queue<T>;
 }
@@ -460,14 +464,14 @@ Binarytree<T>::iterator::~iterator()
     // delete queue; // FIXME wyciek pamięci ??
 }
 template <typename T>
-Binarytree<T>::iterator::iterator(T value)
+Binarytree<T>::iterator::iterator(T value) 
 {
     queue = getQueue();
     while (queue->front() != value && !queue->empty)
         queue->pop();
 }
 template <typename T>
-Binarytree<T>::iterator::iterator(Binarytree<T> &tree)
+Binarytree<T>::iterator::iterator(Binarytree<T> const &tree) 
 {
     queue = getQueue(tree);
 }
@@ -479,12 +483,12 @@ int &Binarytree<T>::iterator::operator*()
 }
 
 template <typename T>
-bool Binarytree<T>::iterator::operator==(const iterator &it)
+bool Binarytree<T>::iterator::operator==(const iterator &it) const
 {
     return !(*this != it);
 }
 template <typename T>
-bool Binarytree<T>::iterator::operator!=(const iterator &it)
+bool Binarytree<T>::iterator::operator!=(const iterator &it) const 
 {
     if ((queue->empty() && !it.queue->empty()) || (!queue->empty() && it.queue->empty()))
         return true;
@@ -493,7 +497,7 @@ bool Binarytree<T>::iterator::operator!=(const iterator &it)
     return queue->front() != it.queue->front();
 }
 template <typename T>
-std::queue<T> *Binarytree<T>::iterator::getQueue(Binarytree<T> &tree)
+std::queue<T> *Binarytree<T>::iterator::getQueue(const Binarytree<T> &tree) const
 {
     std::stack<BSTNode<T> *> s;
     std::queue<T> *result = new std::queue<T>();
@@ -504,10 +508,10 @@ std::queue<T> *Binarytree<T>::iterator::getQueue(Binarytree<T> &tree)
         while (node != nullptr)
         {
             s.push(node);
-            node = node->getChildren()[left];
+            node = node->getChildren()[leftCH];
         }
         result->push(s.top()->getValue());
-        node = s.top()->getChildren()[right];
+        node = s.top()->getChildren()[rightCH];
         s.pop();
     } while (!s.empty() || node != nullptr);
     return result;

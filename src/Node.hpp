@@ -5,8 +5,8 @@
 #include <iostream>
 enum n
 {
-    right,
-    left,
+    rightCH,
+    leftCH,
     both
 };
 
@@ -38,34 +38,34 @@ BSTNode<T>::BSTNode(T data)
 {
 
     this->value = data;
-    children[right] = nullptr;
-    children[left] = nullptr;
+    children[rightCH] = nullptr;
+    children[leftCH] = nullptr;
 }
 
 template <typename T>
 BSTNode<T>::~BSTNode()
 {
-    delete children[right];
-    delete children[left];
+    delete children[rightCH];
+    delete children[leftCH];
 }
 template <typename T>
 BSTNode<T>::BSTNode(const BSTNode<T> &obj)
 {
     value = obj.value;
-    children[right] = nullptr;
-    children[left] = nullptr;
-    if (obj.children[right] != nullptr)
-        this->children[right] = new BSTNode<T>(*obj.children[right]);
-    if (obj.children[left] != nullptr)
-        this->children[left] = new BSTNode<T>(*obj.children[left]);
+    children[rightCH] = nullptr;
+    children[leftCH] = nullptr;
+    if (obj.children[rightCH] != nullptr)
+        this->children[rightCH] = new BSTNode<T>(*obj.children[rightCH]);
+    if (obj.children[leftCH] != nullptr)
+        this->children[leftCH] = new BSTNode<T>(*obj.children[leftCH]);
 }
 template <typename T>
 BSTNode<T>::BSTNode(BSTNode<T> &&obj)
 {
     this->data = obj.value;
     this->children = obj.children;
-    obj.children[right] = nullptr;
-    obj.children[left] = nullptr;
+    obj.children[rightCH] = nullptr;
+    obj.children[leftCH] = nullptr;
 }
 template <typename T>
 void BSTNode<T>::put(T __data)
@@ -90,17 +90,17 @@ T* BSTNode<T>::getDataPointer()
 template <typename T>
 bool BSTNode<T>::bothChildren()
 {
-    return (children[right] != nullptr && children[left] != nullptr);
+    return (children[rightCH] != nullptr && children[leftCH] != nullptr);
 }
 template <typename T>
 bool BSTNode<T>::oneChildren()
 {
-    return ((children[right] != nullptr) ^ (children[left] != nullptr));
+    return ((children[rightCH] != nullptr) ^ (children[leftCH] != nullptr));
 }
 template <typename T>
 bool BSTNode<T>::noChildren()
 {
-    return (children[right] == nullptr && children[left] == nullptr);
+    return (children[rightCH] == nullptr && children[leftCH] == nullptr);
 }
 template <typename T>
 int BSTNode<T>::whichChildren()
@@ -109,27 +109,32 @@ int BSTNode<T>::whichChildren()
         return both;
     if (noChildren())
         return -1;
-    if (children[right] != nullptr)
-        return right;
-    if (children[left] != nullptr)
-        return left;
+    if (children[rightCH] != nullptr)
+        return rightCH;
+    if (children[leftCH] != nullptr)
+        return leftCH;
     return -1;
 }
 template <typename T>
 bool BSTNode<T>::operator==(const BSTNode<T> &node) const
 {
-    if ((children[right] != nullptr && node.children[right] == nullptr) || (children[right] == nullptr && node.children[right] != nullptr))
+    if ((children[rightCH] != nullptr && node.children[rightCH] == nullptr) || (children[rightCH] == nullptr && node.children[rightCH] != nullptr))
         return false;
-    if ((children[left] != nullptr && node.children[left] == nullptr) || (children[left] == nullptr && node.children[left] != nullptr))
+
+    if ((children[leftCH] != nullptr && node.children[leftCH] == nullptr) || (children[leftCH] == nullptr && node.children[leftCH] != nullptr))
         return false;
-    else if (children[right] == nullptr && node.children[right] == nullptr && children[1] == nullptr && node.children[1] == nullptr)
+
+    else if (children[rightCH] == nullptr && node.children[rightCH] == nullptr && children[1] == nullptr && node.children[1] == nullptr)
         return true;
-    else if (children[right] == nullptr && node.children[right] == nullptr)
-        return *children[left] == *(node.children[left]);
-    else if (children[left] == nullptr && node.children[left] == nullptr)
-        return *children[right] == *(node.children[right]);
+
+    else if (children[rightCH] == nullptr && node.children[rightCH] == nullptr)
+        return *children[leftCH] == *(node.children[leftCH]);
+    
+    else if (children[leftCH] == nullptr && node.children[leftCH] == nullptr)
+        return *children[rightCH] == *(node.children[rightCH]);
+    
     else if (value == node.value)
-        return (*children[right] == *(node.children[right]) && *children[left] == *(node.children[left]));
+        return (*children[rightCH] == *(node.children[rightCH]) && *children[leftCH] == *(node.children[leftCH]));
     else
         return false;
 }

@@ -19,7 +19,7 @@ void printDebugInfo(const Iter &find_info)
 
 void printDebugInfo(bool removed)
 {
-    std::cout << (removed ? "Usunięto" : "Nie usunięto") << std::endl;
+    std::cout << (removed ? "Usunieto" : "Nie usunieto") << std::endl;
 }
 
 template <typename T>

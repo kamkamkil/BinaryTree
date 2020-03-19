@@ -22,7 +22,6 @@ TEST_CASE("search")
     REQUIRE(*tree.search(1) == 1);
     REQUIRE(*tree.search(4) == 4);
     REQUIRE(*tree.search(6) == 6);
-
 }
 TEST_CASE("tab_put")
 {
@@ -169,10 +168,10 @@ TEST_CASE("move_constructor", "[Constructor]")
 {
     int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
     Binarytree<int> tree;
-    tree.put(tab, 12);
+    tree.put(tab, 8);
     Binarytree<int> moveTree = std::move(tree);
     REQUIRE(tree.empty());
-    REQUIRE(moveTree.size() == 12);
+    REQUIRE(moveTree.size() == 8);
     REQUIRE(moveTree.contains(3));
 }
 TEST_CASE("==_operator_same_tree", "[operator]")
@@ -256,7 +255,7 @@ TEST_CASE("&&=_operator", "[operator]")
         tree.put(tab, 8);
         tree2 = std::move(tree);
         REQUIRE(tree.size() == 0);
-        REQUIRE(tree2.size()== 8);
+        REQUIRE(tree2.size() == 8);
         for (size_t i = 0; i < 8; i++)
         {
             REQUIRE(tree2.contains(tab[i]));
@@ -276,7 +275,7 @@ TEST_CASE("&&=_operator", "[operator]")
         tree2.put(tab2, 9);
         tree2 = std::move(tree);
         REQUIRE(tree.empty());
-        REQUIRE(tree2.size()== 8);
+        REQUIRE(tree2.size() == 8);
         for (size_t i = 0; i < 8; i++)
         {
             REQUIRE(tree2.contains(tab[i]));
@@ -294,6 +293,12 @@ TEST_CASE("iterator", "[iterator]")
     for (Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++)
     {
         REQUIRE(*iterator == correct[n]);
+        n++;
+    }
+    n = 0;
+    for (const auto &e : tree)
+    {
+        REQUIRE(e == correct[n]);
         n++;
     }
 }

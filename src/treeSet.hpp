@@ -40,13 +40,13 @@ public:
     bool remove(const T &value);
     // wykonuje f na każdym elemencie zbioru w kolejności inorder
     void inorder(std::function<void(const T &)> f) const;
-    iterator begin()
+    iterator begin() const
     {
-     return bst_.begin();
+        return iterator();
     }
-    iterator end()
+    iterator end() const
     {
-        return bst_.end();
+        return iterator(bst_.end());
     }
 };
 template <typename T>
@@ -57,12 +57,11 @@ const T *Set<T>::find(const T &value) const
 template <typename T>
 bool Set<T>::remove(const T &value)
 {
-    if(bst_.search(value))
+    if (bst_.contains(value))
         bst_.remove(value);
     else
         return false;
     return true;
-    
 }
 template <typename T>
 void Set<T>::inorder(std::function<void(const T &)> f) const
@@ -72,20 +71,23 @@ void Set<T>::inorder(std::function<void(const T &)> f) const
 template <typename T>
 const T *Set<T>::insert(const T &value)
 {
-    bst_.put(value);
+    if (!bst_.contains(value))
+        bst_.put(value);
     return bst_.search(value);
 }
+
+//!---------iterator----------
 template <typename T>
 class Set<T>::iterator : public std::iterator<std::input_iterator_tag, const T>
 {
 public:
     iterator();
-    
+    iterator(typename Binarytree<T>::iterator it_) { it = it_; };
     ~iterator();
     iterator &operator++()
     {
         it++;
-        return it;
+        return *this;
     }
     iterator operator++(int)
     {
@@ -103,6 +105,10 @@ private:
 
 template <typename T>
 Set<T>::iterator::iterator()
+{
+}
+template <typename T>
+Set<T>::iterator::~iterator()
 {
 }
 
