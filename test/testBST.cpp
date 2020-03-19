@@ -150,7 +150,7 @@ TEST_CASE("Copy_Constructor", "[Constructor]")
     SECTION("full tree")
     {
         int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
-        tree.put(tab,8);
+        tree.put(tab, 8);
         Binarytree<int> copyTree(tree);
         REQUIRE(copyTree.size() == 8);
         REQUIRE(tree == copyTree);
@@ -197,13 +197,46 @@ TEST_CASE("==_operator_diffrent_tree", "[operator]")
         REQUIRE_FALSE(tree == tree2);
     }
 }
+TEST_CASE("&=_operato", "[operator]")
+{
+    int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
+    Binarytree<int> tree;
+    Binarytree<int> tree2;
+    SECTION("empty tree")
+    {
+        REQUIRE(tree == tree2);
+    }
+    SECTION("first tree full")
+    {
+        tree.put(tab, 8);
+        tree2 = tree;
+        REQUIRE(tree == tree2);
+        tree2.remove(10);
+        REQUIRE(tree.contains(10));
+    }
+    SECTION("secont tree full")
+    {
+        tree2.put(tab, 8);
+        tree2 = tree;
+        REQUIRE(tree == tree2);
+    }
+    SECTION("both tree full")
+    {
+        int tab2[] = {5, 7, 3, 1, 2, 5, -1, 21, 4} ;
+        tree.put(tab, 8);
+        tree.put(tab2, 9);
+        tree2 = tree;
+        tree2.remove(10);
+        REQUIRE(tree.contains(10));
+    }
+}
 TEST_CASE("iterator", "[iterator]")
 {
     int tab[] = {1, 0, 3, 4, 9, 10, -10, 7};
-    int correct[] = {-10,0,1,3,4,7,9,10};
+    int correct[] = {-10, 0, 1, 3, 4, 7, 9, 10};
     Binarytree<int> tree;
     REQUIRE_THROWS(tree.begin());
-    tree.put(tab,8);
+    tree.put(tab, 8);
     int n = 0;
     for (Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++)
     {

@@ -59,6 +59,7 @@ public:
     T minimum() { return minimum(root)->getValue(); };
     T maximum() { return maximum(root)->getValue(); };
     bool operator==(const Binarytree<T> &tree) const;
+    Binarytree<T> &operator=(const Binarytree<T> &other);
     iterator begin()
     {
         if (root == nullptr)
@@ -72,7 +73,18 @@ public:
         return iterator();
     }
 };
-
+template <typename T>
+Binarytree<T> &Binarytree<T>::operator=(const Binarytree<T> &other)
+{
+    if (&other == this)
+        return *this;
+    delete this->root;
+    if (other.root == nullptr)
+        this->root = nullptr;
+    else
+        this->root = new BSTNode<T>(*other.root);
+    return *this;
+}
 template <typename T>
 Binarytree<T>::Binarytree()
 {
@@ -427,7 +439,7 @@ template <typename T>
 Binarytree<T>::iterator::iterator()
 {
     queue = new std::queue<T>;
-} 
+}
 template <typename T>
 Binarytree<T>::iterator::~iterator()
 {
