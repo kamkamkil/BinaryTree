@@ -7,7 +7,7 @@
 TEST_CASE("size_put_contain")
 {
     Binarytree<int> tree;
-    REQUIRE(tree.size() == 0);
+    REQUIRE(tree.size() == 0); 
     tree.put(1);
     tree.put(2);
     tree.put(3);
@@ -45,7 +45,7 @@ TEST_CASE("remove_no/single_child", "[remove]")
     REQUIRE(tree.contains(10));
     REQUIRE(tree.size() == 10);
 }
-TEST_CASE("remove_two_child", "[remove]")
+TEST_CASE("remove_two_child", "[remove]")  
 {
     int tab[] = {0, 10, 30, 5, 35, 2, 7, 32, 36, 50, 51, 52, 40, 41};
     Binarytree<int> tree;

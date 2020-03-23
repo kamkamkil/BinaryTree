@@ -32,10 +32,28 @@ public:
     std::size_t size() const { return bst_.size(); };
     // zwraca true gdy zbiór jest pusty, lub false w innym przypadku
     bool empty() const { return bst_.empty(); };
-    // dodaje element - zwraca adres dodanego, lub istniejącego elementu
-    const T *insert(const T &value);
-    // wyszukuje element o podanej wartości - jeżeli element został znaleziony to zwraca wskaźnik do wyszukanego elementu, jeżeli nie to zwraca nullptr
-    const T *find(const T &value) const;
+    // dodaje element - zwraca iterator do dodanego elementu i true, lub iterator do istniejącego elementu i false, jeżeli z jakiegoś powodu nie udało się dodać/znaleźć to zwraca false i to samo co end()
+    std::pair<iterator, bool> insert(const T &value)
+    {
+        bool temp = false;
+        std::pair<typename Set<T>::iterator, bool> p;
+        if (!bst_.contains(value))
+        {
+            bst_.put(value);
+            temp = false;
+        }
+        p.first = iterator(bst_.valIt(value));
+        p.second = temp;
+        return p;
+    }
+    // wyszukuje element o podanej wartości - jeżeli element został znaleziony to zwraca iterator do wyszukanego elementu, jeżeli nie to zwraca to samo co end()
+    iterator find(const T &value) const
+    {
+        if (bst_.contains(value))
+            return iterator(bst_.valIt(value));
+        else
+            end();
+    }
     // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca true, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca false;
     bool remove(const T &value);
     // wykonuje f na każdym elemencie zbioru w kolejności inorder
@@ -49,11 +67,7 @@ public:
         return iterator(bst_.end());
     }
 };
-template <typename T>
-const T *Set<T>::find(const T &value) const
-{
-    return (bst_.search(value));
-}
+
 template <typename T>
 bool Set<T>::remove(const T &value)
 {
@@ -67,13 +81,6 @@ template <typename T>
 void Set<T>::inorder(std::function<void(const T &)> f) const
 {
     bst_.inOrder(f);
-}
-template <typename T>
-const T *Set<T>::insert(const T &value)
-{
-    if (!bst_.contains(value))
-        bst_.put(value);
-    return bst_.search(value);
 }
 
 //!---------iterator----------
