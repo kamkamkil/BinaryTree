@@ -24,10 +24,6 @@ private:
     Binarytree<T> bst_;
 
 public:
-    void print()
-    {
-        bst_.print();
-    }
     // zwraca ilość elementów
     std::size_t size() const { return bst_.size(); };
     // zwraca true gdy zbiór jest pusty, lub false w innym przypadku
@@ -40,7 +36,7 @@ public:
         if (!bst_.contains(value))
         {
             bst_.put(value);
-            temp = false;
+            temp = true;
         }
         p.first = iterator(bst_.valIt(value));
         p.second = temp;
@@ -50,9 +46,9 @@ public:
     iterator find(const T &value) const
     {
         if (bst_.contains(value))
-            return iterator(bst_.valIt(value));
+            return begin();
         else
-            end();
+            return end();
     }
     // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca true, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca false;
     bool remove(const T &value);
@@ -104,7 +100,7 @@ public:
     }
     bool operator==(const iterator &rhs);
     bool operator!=(const iterator &rhs);
-    int &operator*();
+    int &operator*() const ;
 
 private:
     typename Binarytree<T>::iterator it;
@@ -120,7 +116,7 @@ Set<T>::iterator::~iterator()
 }
 
 template <typename T>
-int &Set<T>::iterator::operator*()
+int &Set<T>::iterator::operator*() const
 {
     return *it;
 }

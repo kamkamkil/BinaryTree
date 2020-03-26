@@ -76,7 +76,7 @@ public:
     };
     iterator valIt(const T value) const
     {
-       return iterator();
+       return iterator(searchNode(value));
     }
 };
 
@@ -445,7 +445,6 @@ public:
         }
     }
     iterator() = default;
-    iterator(const T value,const Binarytree<T> &tree) ;
     iterator &operator++()
     {
         if(st.empty())
@@ -471,7 +470,7 @@ public:
     }
     bool operator==(const iterator &rhs) const;
     bool operator!=(const iterator &rhs) const;
-    int &operator*();
+    int &operator*() const ;
     std::queue<T> *getQueue(const Binarytree<T> &tree  ) const ;
 
 private:
@@ -479,8 +478,11 @@ private:
 };
 
 template <typename T>
-int &Binarytree<T>::iterator::operator*()  
+int &Binarytree<T>::iterator::operator*() const
 { 
+    // if(st.empty())
+        // return nullptr;
+        //  error C2440: 'return': cannot convert from 'nullptr' to 'int &'
     return  *st.top()->getDataPointer();
 }
 
