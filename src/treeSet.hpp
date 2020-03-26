@@ -46,7 +46,7 @@ public:
     iterator find(const T &value) const
     {
         if (bst_.contains(value))
-            return begin();
+            return iterator(bst_.valIt(value));
         else
             return end();
     }
