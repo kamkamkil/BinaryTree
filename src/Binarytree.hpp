@@ -500,4 +500,10 @@ bool Binarytree<T>::iterator::operator!=(const iterator &it) const
         return false;
     return st.top() != it.st.top();
 }
+template <typename T>
+Binarytree<T>::iterator::operator bool() const
+{
+    return(st.empty);
+}
+
 #endif // !BINARYTREE_CPP
