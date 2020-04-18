@@ -90,7 +90,7 @@ public:
         std::pair<Iterator, bool> result;
 
         constPair<K, V> pair(key_value);
-        if (tree.contais(pair))
+        if (tree.contains(pair))
         {
             tree.search(pair)->setValue(pair.value);
             result.second = false;
