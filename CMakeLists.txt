@@ -13,6 +13,12 @@ target_include_directories(BinaryTree INTERFACE
   $<INSTALL_INTERFACE:include/treeSet>
 )
 
+add_library(map INTERFACE)
+target_include_directories(BinaryTree INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:include/map>
+)
+
 add_executable(main main.cpp)
 target_link_libraries(main BinaryTree)
 
@@ -28,3 +34,5 @@ target_link_libraries(testSetZajecia1  treeSet)
 add_executable(testSetZajecia2 test/testSetZajecia2.cpp )
 target_link_libraries(testSetZajecia2  treeSet)
 
+add_executable(testMap test/testMap.cpp)
+target_link_libraries(testMap map)
