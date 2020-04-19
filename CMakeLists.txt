@@ -36,3 +36,6 @@ target_link_libraries(testSetZajecia2  treeSet)
 
 add_executable(testMap test/testMap.cpp)
 target_link_libraries(testMap map)
+
+add_executable(testMapZajecia test/testMapZajecia.cpp)
+target_link_libraries(testMapZajecia map)

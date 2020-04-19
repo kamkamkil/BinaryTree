@@ -1,5 +1,5 @@
 #pragma once
-//todo refractoring 
+//todo refractoring
 #include <cstdint>
 #include <utility>
 #include <iterator>
@@ -14,14 +14,15 @@ class Map
 {
 private:
     Binarytree<constPair<K, V>> tree;
+
 public:
     class Iterator;
     class ConstIterator;
-    Map() : tree() {};
-    Map(const Map<K, V> &source);
-    Map<K, V> &operator=(const Map<K, V> &source);
-    Map(Map<K, V> &&source);
-    Map<K, V> &operator=(Map<K, V> &&source);
+    Map() = default;
+    Map(const Map<K, V> &source) = default;
+    Map<K, V> &operator=(const Map<K, V> &source) = default;
+    Map(Map<K, V> &&source) = default;
+    Map<K, V> &operator=(Map<K, V> &&source) = default;
     // zwraca ilość elementów
     std::size_t size() const { return tree.size(); };
     // dodaje klucz i wartość - zwraca "Iterator" do dodanej wartości i true, lub "Iterator" do istniejącej wartości i false, jeżeli z jakiegoś powodu nie udało się dodać/znaleźć to zwraca false i to samo co end()
@@ -63,7 +64,7 @@ public:
     }
     // wyszukuje element o podanym kluczu - jeżeli element został znaleziony to zwraca "Iterator" do znalezionej wartości, jeżeli nie to zwraca to samo co end()
     Iterator find(const K &key)
-        {
+    {
         constPair<V, K> pair(key);
         if (tree.contains(pair))
         {
@@ -75,76 +76,108 @@ public:
         }
     }
     // wyszukuje element o podanym kluczu - jeżeli element został znaleziony to zwraca referencję do znalezionej (stałej) wartości, jeżeli nie to dodaje nowy element o podanym kluczu i domyślnej wartości V() i zwraca referencję do wartości
-    const V &operator[](const K &key) const;
+    const V &operator[](const K &key) const
+    {
+        if (tree.contains(key))
+            return tree.search(key)->value;
+        V v;
+        std::pair<K, V> pair(key, v);
+        insert(pair);
+    };
     // wyszukuje element o podanym kluczu - jeżeli element został znaleziony to zwraca referencję do znalezionej wartości, jeżeli nie to dodaje nowy element o podanym kluczu i domyślnej wartości V() i zwraca referencję do wartości
     //pamiętać o rzuceniu wyjątku
-    V &operator[](const K &key);
-    // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca "Iterator" na kolejny element, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca to samo co "end()"
-    Iterator remove(const K &key);
-    // usuwa wszystkie elementy
-    void clear();
+    V &operator[](const K &key)
+    {
+        if (tree.contains(key))
+            return tree.search(key)->value;
+        V v;
+        std::pair<K, V> pair(key, v);
+        insert(pair);
+    };
 
+    // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca "Iterator" na kolejny element, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca to samo co "end()"
+    Iterator remove(const K &key)
+    {
+        if (tree.contains(key))
+        {
+            Iterator it(tree.valIt(key));
+            it++;
+            tree.remove(key);
+            return it;
+        }
+        else
+        {
+            return end();
+        }
+    };
+    // usuwa wszystkie elementy
+    void clear() { tree.clear(); };
     // zwraca "ConstIterator" na pierwszy element
-    ConstIterator begin() const;
+    ConstIterator begin() const { return ConstIterator(tree.begin()); };
     // zwraca "Iterator" na pierwszy element
-    Iterator begin();
+    Iterator begin() { return Iterator(tree.begin()); };
     // zwraca "ConstIterator" "za ostatni" element
-    ConstIterator end() const;
+    ConstIterator end() const { return ConstIterator(tree.end()); };
     // zwraca "Iterator" "za ostatni" element
-    Iterator end();
+    Iterator end() { return Iterator(tree.end()); };
 };
+
+
+
+
+
 
 //!----------------iterator------------------------//
 template <typename K, typename V>
-class Map<K,V>::Iterator
+class Map<K, V>::Iterator
 {
-    public:
-        Iterator(){};
-        Iterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
-        bool operator==(const Iterator &it_) const { return it == it_.it; };
-        bool operator!=(const Iterator &it_) const { return it != it_.it; };
-        Iterator &operator++()
-        {
-            it++;
-            return *this;
-        }
-        Iterator operator++(int)
-        {
-            Iterator iterator = *this;
-            ++*this;
-            return iterator;
-        }
-        V &operator*() const { return *it; };
-        V *operator->() const;
-        operator bool() const;
+public:
+    Iterator()= default;;
+    Iterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
+    bool operator==(const Iterator &it_) const { return it == it_.it; };
+    bool operator!=(const Iterator &it_) const { return it != it_.it; };
+    Iterator &operator++()
+    {
+        it++;
+        return *this;
+    }
+    Iterator operator++(int)
+    {
+        Iterator iterator = *this;
+        ++*this;
+        return iterator;
+    }
+    V &operator*() const { return *it; };
+    V *operator->() const;//todo
+    operator bool() const { return (it == true); };
 
-    private:
-        typename Binarytree<constPair<K, V>>::iterator it;
-    };
+private:
+    typename Binarytree<constPair<K, V>>::iterator it;
+};
 //!-------------constiterator------------------------//
 template <typename K, typename V>
-class Map<K,V>::ConstIterator
+class Map<K, V>::ConstIterator
 {
-    public:
-        ConstIterator(){};
-        ConstIterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
-        bool operator==(const ConstIterator &it_) const { return it == it_.it; }
-        bool operator!=(const ConstIterator &it_) const { return it != it_.it; }
-        ConstIterator &operator++()
-        {
-            it++;
-            return *this;
-        }
-        ConstIterator operator++(int)
-        {
-            Iterator iterator = *this;
-            ++*this;
-            return iterator;
-        }
-        const V &operator*() const;
-        const V *operator->() const;
-        operator bool() const;
+public:
+    ConstIterator()= default;;
+    ConstIterator(typename Binarytree<constPair<K, V>>::iterator it_) : it(it_){};
+    bool operator==(const ConstIterator &it_) const { return it == it_.it; }
+    bool operator!=(const ConstIterator &it_) const { return it != it_.it; }
+    ConstIterator &operator++()
+    {
+        it++;
+        return *this;
+    }
+    ConstIterator operator++(int)
+    {
+        Iterator iterator = *this;
+        ++*this;
+        return iterator;
+    }
+    const V &operator*() const { return *it; };
+    const V *operator->() const;//todo
+    operator bool() const { return (it == true); };
 
-    private:
-        typename Binarytree<constPair<K, V>>::iterator it;
-    };
+private:
+    typename Binarytree<constPair<K, V>>::iterator it;
+};

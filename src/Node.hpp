@@ -34,10 +34,8 @@ public:
 };
 
 template <typename T>
-BSTNode<T>::BSTNode(T data)
+BSTNode<T>::BSTNode(T data) : value(data)
 {
-
-    this->value = data;
     children[rightCH] = nullptr;
     children[leftCH] = nullptr;
 }

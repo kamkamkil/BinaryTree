@@ -40,6 +40,7 @@ public:
     Binarytree(Binarytree<T> &&obj);
     Binarytree();
     ~Binarytree();
+    void clear(){delete root;};
     void put(T data);
     void put(T *data, int size);
     void print() const;
@@ -472,6 +473,7 @@ public:
     bool operator!=(const iterator &rhs) const;
     int &operator*() const ;
     std::queue<T> *getQueue(const Binarytree<T> &tree  ) const ;
+    operator bool() const;
 
 private:
     std::stack<BSTNode<T> *> st;
@@ -503,7 +505,7 @@ bool Binarytree<T>::iterator::operator!=(const iterator &it) const
 template <typename T>
 Binarytree<T>::iterator::operator bool() const
 {
-    return(st.empty);
+    return(st.empty());
 }
 
 #endif // !BINARYTREE_CPP

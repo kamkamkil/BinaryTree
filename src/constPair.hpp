@@ -6,34 +6,24 @@ class constPair
 public:
     const K key;
     V value;
-    constPair(K key_)
-    {
-        key = key_;
-    }
-    constPair(K key_, V value_)
-    {
-        key = key_;
-        value = value_;
-    }
-    constPair(const std::pair<K, V> &obj)
-    {
-        key = obj.first;
-        value = obj.secont;
-    } //FIXME
+    constPair(K key_) : key(key_) {};
+    constPair(K key_, V value_)  : key(key_), value(value_) {};
+    constPair(const std::pair<K, V> obj) : key(obj.first), value(obj.second) {};
     void setValue(V value_)
     {
         value = value_;
     }
 
-private:
     bool operator>(constPair const &obj) const { return key > obj.key; };
     bool operator<(constPair const &obj) const { return key < obj.key; };
     bool operator<=(constPair const &obj) const { return key <= obj.key; };
     bool operator>=(constPair const &obj) const { return key >= obj.key; };
     bool operator==(constPair const &obj) const { return key == obj.key; };
-    ostream &operator<<(ostream &os, const constPair<K,V> &dt)
+    bool operator!=(constPair const &obj) const { return key != obj.key; };
+    void operator=(V const &obj) {value = obj; };
+    friend std::ostream & operator << (std::ostream &os, const constPair<K,V> &dt)
     {
-        os << "[ " << K << ", " << V  << " ]";
+        os << "[ " << dt.key << ", " << dt.value << " ]";
         return os;
     }
 };
