@@ -1,5 +1,5 @@
 #pragma once
-
+//todo refractoring 
 #include <cstdint>
 #include <utility>
 #include <iterator>
@@ -14,74 +14,14 @@ class Map
 {
 private:
     Binarytree<constPair<K, V>> tree;
-
 public:
-    class Iterator
-    {
-        // ...
-
-    public:
-        Iterator(){};
-        Iterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
-        bool operator==(const Iterator &it_) const { return it == it_.it; };
-        bool operator!=(const Iterator &it_) const { return it != it_.it; };
-        Iterator &operator++()
-        {
-            it++;
-            return *this;
-        }
-        Iterator operator++(int)
-        {
-            Iterator iterator = *this;
-            ++*this;
-            return iterator;
-        }
-        V &operator*() const { return *it; };
-        V *operator->() const;
-        operator bool() const;
-
-    private:
-        typename Binarytree<constPair<K, V>>::iterator it;
-    };
-
-    class ConstIterator
-    {
-        // ...
-
-    public:
-        ConstIterator(){};
-        ConstIterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
-        bool operator==(const ConstIterator &it_) const { return it == it_.it; }
-        bool operator!=(const ConstIterator &it_) const { return it != it_.it; }
-        ConstIterator &operator++()
-        {
-            it++;
-            return *this;
-        }
-        ConstIterator operator++(int)
-        {
-            Iterator iterator = *this;
-            ++*this;
-            return iterator;
-        }
-        const V &operator*() const;
-        const V *operator->() const;
-        operator bool() const;
-
-    private:
-        typename Binarytree<constPair<K, V>>::iterator it;
-    };
-
-    // ...
-
-public:
-    Map();
+    class Iterator;
+    class ConstIterator;
+    Map() : tree() {};
     Map(const Map<K, V> &source);
     Map<K, V> &operator=(const Map<K, V> &source);
     Map(Map<K, V> &&source);
     Map<K, V> &operator=(Map<K, V> &&source);
-    ~Map();
-
     // zwraca ilość elementów
     std::size_t size() const { return tree.size(); };
     // dodaje klucz i wartość - zwraca "Iterator" do dodanej wartości i true, lub "Iterator" do istniejącej wartości i false, jeżeli z jakiegoś powodu nie udało się dodać/znaleźć to zwraca false i to samo co end()
@@ -153,3 +93,58 @@ public:
     // zwraca "Iterator" "za ostatni" element
     Iterator end();
 };
+
+//!----------------iterator------------------------//
+template <typename K, typename V>
+class Map<K,V>::Iterator
+{
+    public:
+        Iterator(){};
+        Iterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
+        bool operator==(const Iterator &it_) const { return it == it_.it; };
+        bool operator!=(const Iterator &it_) const { return it != it_.it; };
+        Iterator &operator++()
+        {
+            it++;
+            return *this;
+        }
+        Iterator operator++(int)
+        {
+            Iterator iterator = *this;
+            ++*this;
+            return iterator;
+        }
+        V &operator*() const { return *it; };
+        V *operator->() const;
+        operator bool() const;
+
+    private:
+        typename Binarytree<constPair<K, V>>::iterator it;
+    };
+//!-------------constiterator------------------------//
+template <typename K, typename V>
+class Map<K,V>::ConstIterator
+{
+    public:
+        ConstIterator(){};
+        ConstIterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
+        bool operator==(const ConstIterator &it_) const { return it == it_.it; }
+        bool operator!=(const ConstIterator &it_) const { return it != it_.it; }
+        ConstIterator &operator++()
+        {
+            it++;
+            return *this;
+        }
+        ConstIterator operator++(int)
+        {
+            Iterator iterator = *this;
+            ++*this;
+            return iterator;
+        }
+        const V &operator*() const;
+        const V *operator->() const;
+        operator bool() const;
+
+    private:
+        typename Binarytree<constPair<K, V>>::iterator it;
+    };
