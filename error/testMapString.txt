@@ -1,0 +1,106 @@
+In file included from .\test\TestMap.cpp:3:
+.\test\../src/Map.hpp: In instantiation of 'Map<K, V>::Iterator Map<K, V>::find(const K&) [with K = int; V = std::__cxx11::basic_string<char>]':
+.\test\TestMap.cpp:31:9:   required from here
+.\test\../src/Map.hpp:68:25: error: no matching function for call to 'constPair<std::__cxx11::basic_string<char>, int>::constPair(const int&)'
+         constPair<V, K> pair(key);
+                         ^~~~
+In file included from .\test\../src/Map.hpp:7,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/constPair.hpp:12:5: note: candidate: 'constPair<K, V>::constPair(std::pair<_T1, _T2>) [with K = std::__cxx11::basic_string<char>; V = int]'
+     constPair(const std::pair<K, V> obj) : key(obj.first), value(obj.second){};
+     ^~~~~~~~~
+.\test\../src/constPair.hpp:12:5: note:   no known conversion for argument 1 from 'const int' to 'std::pair<std::__cxx11::basic_string<char>, int>'
+.\test\../src/constPair.hpp:11:5: note: candidate: 'constPair<K, V>::constPair(K, V) [with K = std::__cxx11::basic_string<char>; V = int]'
+     constPair(K key_, V value_) : key(key_), value(value_){};
+     ^~~~~~~~~
+.\test\../src/constPair.hpp:11:5: note:   candidate expects 2 arguments, 1 provided
+.\test\../src/constPair.hpp:10:5: note: candidate: 'constPair<K, V>::constPair(K) [with K = std::__cxx11::basic_string<char>; V 
+= int]'
+     constPair(K key_) : key(key_){};
+     ^~~~~~~~~
+.\test\../src/constPair.hpp:10:5: note:   no known conversion for argument 1 from 'const int' to 'std::__cxx11::basic_string<char>'
+.\test\../src/constPair.hpp:5:7: note: candidate: 'constPair<std::__cxx11::basic_string<char>, int>::constPair(const constPair<std::__cxx11::basic_string<char>, int>&)'
+ class constPair
+       ^~~~~~~~~
+.\test\../src/constPair.hpp:5:7: note:   no known conversion for argument 1 from 'const int' to 'const constPair<std::__cxx11::basic_string<char>, int>&'
+.\test\../src/constPair.hpp:5:7: note: candidate: 'constPair<std::__cxx11::basic_string<char>, int>::constPair(constPair<std::__cxx11::basic_string<char>, int>&&)'
+.\test\../src/constPair.hpp:5:7: note:   no known conversion for argument 1 from 'const int' to 'constPair<std::__cxx11::basic_string<char>, int>&&'
+In file included from .\test\TestMap.cpp:3:
+.\test\../src/Map.hpp:69:9: error: no matching function for call to 'Binarytree<constPair<int, std::__cxx11::basic_string<char> 
+> >::contains(constPair<std::__cxx11::basic_string<char>, int>&)'
+         if (tree.contains(pair))
+         ^~
+In file included from .\test\../src/Map.hpp:6,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/Binarytree.hpp:229:6: note: candidate: 'bool Binarytree<T>::contains(T) const [with T = constPair<int, std::__cxx11::basic_string<char> >]'
+ bool Binarytree<T>::contains(T value) const
+      ^~~~~~~~~~~~~
+.\test\../src/Binarytree.hpp:229:6: note:   no known conversion for argument 1 from 'constPair<std::__cxx11::basic_string<char> 
+int>' to 'constPair<int,std::__cxx11::basic_string<char>>'
+In file included from .\test\TestMap.cpp:3:
+.\test\../src/Map.hpp:71:20: error: no matching function for call to 'Binarytree<constPair<int, std::__cxx11::basic_string<char> > >::valIt(constPair<std::__cxx11::basic_string<char>, int>&)'
+             return Iterator(tree.valIt(pair));
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from .\test\../src/Map.hpp:6,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/Binarytree.hpp:78:14: note: candidate: 'Binarytree<T>::iterator Binarytree<T>::valIt(T) const [with T = constPair<int, std::__cxx11::basic_string<char> >]'
+     iterator valIt(const T value) const
+              ^~~~~
+.\test\../src/Binarytree.hpp:78:14: note:   no known conversion for argument 1 from 'constPair<std::__cxx11::basic_string<char> 
+int>' to 'constPair<int,std::__cxx11::basic_string<char>>'
+In file included from .\test\TestMap.cpp:3:
+.\test\../src/Map.hpp: In instantiation of 'V& Map<K, V>::Iterator::operator*() const [with K = int; V = std::__cxx11::basic_string<char>]':
+.\test\TestMap.cpp:31:9:   required from here
+.\test\../src/Map.hpp:146:36: error: invalid initialization of reference of type 'std::__cxx11::basic_string<char>&' from expression of type 'int'
+     V &operator*() const { return *it; };
+                                    ^~
+.\test\../src/Map.hpp: In instantiation of 'Map<K, V>::Iterator Map<K, V>::find(const K&) [with K = char; V = int]':
+.\test\TestMap.cpp:115:9:   required from here
+.\test\../src/Map.hpp:69:9: error: no matching function for call to 'Binarytree<constPair<char, int> >::contains(constPair<int, 
+char>&)'
+         if (tree.contains(pair))
+         ^~
+In file included from .\test\../src/Map.hpp:6,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/Binarytree.hpp:229:6: note: candidate: 'bool Binarytree<T>::contains(T) const [with T = constPair<char, int>]'    
+ bool Binarytree<T>::contains(T value) const
+      ^~~~~~~~~~~~~
+.\test\../src/Binarytree.hpp:229:6: note:   no known conversion for argument 1 from 'constPair<int,char>' to 'constPair<char,in 
+>'
+In file included from .\test\TestMap.cpp:3:
+.\test\../src/Map.hpp:71:20: error: no matching function for call to 'Binarytree<constPair<char, int> >::valIt(constPair<int, char>&)'
+             return Iterator(tree.valIt(pair));
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from .\test\../src/Map.hpp:6,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/Binarytree.hpp:78:14: note: candidate: 'Binarytree<T>::iterator Binarytree<T>::valIt(T) const [with T = constPair<char, int>]'
+     iterator valIt(const T value) const
+              ^~~~~
+.\test\../src/Binarytree.hpp:78:14: note:   no known conversion for argument 1 from 'constPair<int,char>' to 'constPair<char,in 
+>'
+In file included from .\test\TestMap.cpp:3:
+.\test\../src/Map.hpp: In instantiation of 'V& Map<K, V>::operator[](const K&) [with K = int; V = int]':
+.\test\TestMap.cpp:151:5:   required from here
+.\test\../src/Map.hpp:94:11: warning: reference to local variable 'v' returned [-Wreturn-local-addr]
+         V v;
+           ^
+In file included from .\test\../src/Map.hpp:6,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/Binarytree.hpp: In instantiation of 'int& Binarytree<T>::iterator::operator*() const [with T = constPair<int, std::__cxx11::basic_string<char> >]':
+.\test\../src/Map.hpp:146:35:   required from 'V& Map<K, V>::Iterator::operator*() const [with K = int; V = std::__cxx11::basic_string<char>]'
+.\test\TestMap.cpp:31:9:   required from here
+.\test\../src/Binarytree.hpp:485:39: error: invalid user-defined conversion from 'constPair<int, std::__cxx11::basic_string<char> >' to 'int&' [-fpermissive]
+     return  *st.top()->getDataPointer();
+                                       ^
+In file included from .\test\../src/Map.hpp:7,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/constPair.hpp:27:5: note: candidate is: 'constPair<K, V>::operator V*() const [with K = int; V = std::__cxx11::basic_string<char>]' <near match>
+     operator V*() const { return &value; };
+     ^~~~~~~~
+.\test\../src/constPair.hpp:27:5: note:   no known conversion from 'std::__cxx11::basic_string<char>*' to 'int'
+In file included from .\test\../src/Map.hpp:6,
+                 from .\test\TestMap.cpp:3:
+.\test\../src/Binarytree.hpp:485:39: error: invalid conversion from 'std::__cxx11::basic_string<char>*' to 'int' [-fpermissive] 
+     return  *st.top()->getDataPointer();
+                                       ^
+.\test\../src/Binarytree.hpp:485:39: error: conversion to non-const reference type 'int&' from rvalue of type 'std::__cxx11::basic_string<char>*' [-fpermissive]

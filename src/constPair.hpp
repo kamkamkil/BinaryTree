@@ -25,9 +25,9 @@ public:
     operator V() const { return value; };
     operator V&()  { return value; };
     operator V*() const { return &value; };
-    friend std::ostream &operator<<(std::ostream &os, const constPair<K, V> &dt)
-    {
-        os << "[ " << dt.key << ", " << dt.value << " ]";
-        return os;
-    }
+    // friend std::ostream &operator<<(std::ostream &os, const constPair<K, V> &dt)
+    // {
+    //     os << "[ " << dt.key << ", " << dt.value << " ]";
+    //     return os;
+    // }
 };
