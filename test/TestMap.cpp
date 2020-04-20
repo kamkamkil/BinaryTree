@@ -60,7 +60,7 @@ TEST_CASE("remove")
     REQUIRE(map.size() == 1);
 }
 
-TEST_CASE("[]")
+TEST_CASE("operator")
 {
     Map<int, int> map;
     std::pair<int, int> p1(1, 2);
@@ -71,7 +71,15 @@ TEST_CASE("[]")
     map.insert(p2);
     map.insert(p3);
     map.insert(p4);
-    
+    REQUIRE(map[1] == 2);
+    REQUIRE(map[2] == 6);
+    REQUIRE(map[3] == 5);
+    REQUIRE(map[4] == 4);
+    map[1] = 1;
+    REQUIRE(map[1] == 1);
+    map[5] = 10;
+    map[5] = 10;
+    REQUIRE(map[5] == 10);
 }
 TEST_CASE("constIterator", "[iterator]")
 {
@@ -89,6 +97,28 @@ TEST_CASE("constIterator", "[iterator]")
     for (const auto &e : map)
     {
         REQUIRE(e == n[i]);
+        i++;
+    }
+}
+
+TEST_CASE("Iterator", "[iterator]")
+{
+    Map<int, int> map;
+    std::pair<int, int> p1(1, 2);
+    std::pair<int, int> p2(2, 6);
+    std::pair<int, int> p3(3, 5);
+    std::pair<int, int> p4(4, 4);
+    map.insert(p1);
+    map.insert(p2);
+    map.insert(p3);
+    map.insert(p4);
+    int i = 0;
+    int n[] = {2, 6, 5, 4};
+    for ( auto &e : map)
+    {
+        REQUIRE(e == n[i]);
+        e = 1;
+        REQUIRE(e == 1);
         i++;
     }
 }
