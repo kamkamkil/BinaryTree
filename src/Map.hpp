@@ -83,6 +83,7 @@ public:
         V v;
         std::pair<K, V> pair(key, v);
         insert(pair);
+        return find(key);
     };
     // wyszukuje element o podanym kluczu - jeżeli element został znaleziony to zwraca referencję do znalezionej wartości, jeżeli nie to dodaje nowy element o podanym kluczu i domyślnej wartości V() i zwraca referencję do wartości
     //pamiętać o rzuceniu wyjątku
@@ -93,6 +94,7 @@ public:
         V v;
         std::pair<K, V> pair(key, v);
         insert(pair);
+        return find(key);
     };
 
     // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca "Iterator" na kolejny element, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca to samo co "end()"
