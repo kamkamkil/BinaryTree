@@ -482,9 +482,6 @@ private:
 template <typename T>
 int &Binarytree<T>::iterator::operator*() const
 { 
-    // if(st.empty())
-        // return nullptr;
-        //  error C2440: 'return': cannot convert from 'nullptr' to 'int &'
     return  *st.top()->getDataPointer();
 }
 

@@ -96,18 +96,16 @@ public:
     };
 
     // usuwa element o podanej wartości - jeżeli element został usunięty to zwraca "Iterator" na kolejny element, jeżeli elementu o podanej wartości nie udało się odnaleźć to zwraca to samo co "end()"
-    Iterator remove(const K &key)
+    bool remove(const K &key)
     {
         if (tree.contains(key))
         {
-            Iterator it(tree.valIt(key));
-            it++;
             tree.remove(key);
-            return it;
+            return true;
         }
         else
         {
-            return end();
+            return false;
         }
     };
     // usuwa wszystkie elementy
@@ -122,17 +120,13 @@ public:
     Iterator end() { return Iterator(tree.end()); };
 };
 
-
-
-
-
-
 //!----------------iterator------------------------//
 template <typename K, typename V>
 class Map<K, V>::Iterator
 {
 public:
-    Iterator()= default;;
+    Iterator() = default;
+
     Iterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
     bool operator==(const Iterator &it_) const { return it == it_.it; };
     bool operator!=(const Iterator &it_) const { return it != it_.it; };
@@ -159,7 +153,7 @@ template <typename K, typename V>
 class Map<K, V>::ConstIterator
 {
 public:
-    ConstIterator()= default;;
+    ConstIterator() = default;
     ConstIterator(typename Binarytree<constPair<K, V>>::iterator it_) : it(it_){};
     bool operator==(const ConstIterator &it_) const { return it == it_.it; }
     bool operator!=(const ConstIterator &it_) const { return it != it_.it; }
@@ -175,7 +169,7 @@ public:
         return iterator;
     }
     const V &operator*() const { return *it; };
-    const V *operator->() const;//todo
+    const V *operator->() const; //todo
     operator bool() const { return (it == true); };
 
 private:

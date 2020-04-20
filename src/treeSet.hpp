@@ -100,7 +100,7 @@ public:
     }
     bool operator==(const iterator &rhs);
     bool operator!=(const iterator &rhs);
-    int &operator*() const ;
+    int &operator*() const;
 
 private:
     typename Binarytree<T>::iterator it;
