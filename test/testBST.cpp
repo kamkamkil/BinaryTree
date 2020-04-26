@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-
+#define CATCH_CONFIG_CONSOLE_WIDTH 300
 #include "../lib/catch/catch.hpp"
 #include "../src/Binarytree.hpp"
 #include <iterator>
@@ -7,8 +7,8 @@
 TEST_CASE("size_put_contain")
 {
     Binarytree<int> tree;
-    REQUIRE(tree.size() == 0); 
-    tree.put(1);k
+    REQUIRE(tree.size() == 0);
+    tree.put(1);
     tree.put(2);
     tree.put(3);
     REQUIRE(tree.size() == 3);
@@ -45,7 +45,7 @@ TEST_CASE("remove_no/single_child", "[remove]")
     REQUIRE(tree.contains(10));
     REQUIRE(tree.size() == 10);
 }
-TEST_CASE("remove_two_child", "[remove]")  
+TEST_CASE("remove_two_child", "[remove]")
 {
     int tab[] = {0, 10, 30, 5, 35, 2, 7, 32, 36, 50, 51, 52, 40, 41};
     Binarytree<int> tree;
@@ -272,7 +272,7 @@ TEST_CASE("&&=_operator", "[operator]")
     {
         int tab2[] = {5, 7, 3, 1, 2, 5, -1, 21, 4};
         tree.put(tab, 8);
-        tree2.put(tab2, 9);
+        tree2.put(tab2, 9); //
         tree2 = std::move(tree);
         REQUIRE(tree.empty());
         REQUIRE(tree2.size() == 8);
@@ -290,11 +290,9 @@ TEST_CASE("iterator", "[iterator]")
     REQUIRE_THROWS(tree.begin());
     tree.put(tab, 8);
     int n = 0;
-    tree.print ();
     for (Binarytree<int>::iterator iterator = tree.begin(); iterator != tree.end(); iterator++)
     {
-        std::cout << *iterator << std::endl;
-       // REQUIRE(*iterator == correct[n]);
+        REQUIRE(*iterator == correct[n]);
         n++;
     }
     n = 0;
@@ -302,5 +300,14 @@ TEST_CASE("iterator", "[iterator]")
     {
         REQUIRE(e == correct[n]);
         n++;
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        n = i;
+        for (Binarytree<int>::iterator iterator = tree.valIt(correct[i]); iterator != tree.end(); iterator++)
+        {
+            REQUIRE(*iterator == correct[n]);
+            n++;
+        }
     }
 }

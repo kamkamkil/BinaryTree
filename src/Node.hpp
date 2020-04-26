@@ -47,9 +47,9 @@ BSTNode<T>::~BSTNode()
     delete children[leftCH];
 }
 template <typename T>
-BSTNode<T>::BSTNode(const BSTNode<T> &obj)
+BSTNode<T>::BSTNode(const BSTNode<T> &obj) : value(obj.value)
 {
-    value = obj.value;
+    // value = obj.value;
     children[rightCH] = nullptr;
     children[leftCH] = nullptr;
     if (obj.children[rightCH] != nullptr)

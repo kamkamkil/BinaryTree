@@ -59,8 +59,8 @@ int main()
         vs = vs2;
         vs2.clear();
         const auto s2 = std::move(vs.front());
-        if (auto f = s2.find(5))
-            std::cout << "Found: " << *f << std::endl;
+        // if (auto f = s2.find(5))
+        //     std::cout << "Found: " << *f << std::endl;
         auto s3 = s2;
         printSetSizeAndElems(s3);
         s = s3;

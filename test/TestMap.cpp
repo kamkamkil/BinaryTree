@@ -1,4 +1,5 @@
 #define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_CONSOLE_WIDTH 300
 #include "../lib/catch/catch.hpp"
 #include "../src/Map.hpp"
 #include <iterator>
@@ -10,27 +11,66 @@
 TEST_CASE("string")
 {
     Map<int, std::string> m;
-    m.insert({8, "eight"});
-    m.insert({4, "four"});
-    m.insert({10, "ten"});
-    m.insert({10, "2nd ten"});
-    m.insert({2, "two"});
-    m.insert({5, "five"});
-    m.insert({9, "nine"});
-    m.insert({12, "twelve"});
-    m.insert({12, "2nd twelve"});
-    m.insert({1, "one"});
-    m.insert({14, "fourteen"});
-    m.insert({7, "seven"});
+    std::pair<Map<int,std::string>::Iterator,bool> pair(m.insert({8, "eight"}));
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) == "eight");
+
+    pair = m.insert({4, "four"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "four");
+    
+    pair = m.insert({10, "ten"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "ten");
+    
+    pair = m.insert({10, "2nd ten"});
+    REQUIRE (pair.second == false);
+    REQUIRE(*(pair.first) ==  "2nd ten");
+    
+    pair = m.insert({2, "two"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "two");
+
+    pair = m.insert({5, "five"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "five");
+
+    pair = m.insert({9, "nine"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "nine");
+
+    pair = m.insert({12, "twelve"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "twelve");
+
+    pair = m.insert({12, "2nd twelve"});
+    REQUIRE (pair.second == false);
+    REQUIRE(*(pair.first) ==  "2nd twelve");
+    
+    pair = m.insert({1, "one"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "one");
+
+    pair = m.insert({14, "fourteen"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "fourteen");
+    
+    pair = m.insert({7, "seven"});
+    REQUIRE (pair.second == true);
+    REQUIRE(*(pair.first) ==  "seven");
+    
     SECTION("size")
     {
         REQUIRE(m.size() == 10);
     }
     SECTION("find")
     {
-        REQUIRE(*m.find((1)) == "one");
-        REQUIRE(*m.find((2)) == "two");
-        REQUIRE(*m.find((7)) == "seven");
+        CHECK(*m.find(2) == "two");
+        CHECK(*m.find(7) == "seven");
+        CHECK(*m.find(14) == "fourteen");
+        CHECK(*m.find(10) == "2nd ten");
+        CHECK(*m.find(1) == "one");
+        CHECK(*m.find(12) == "2nd twelve");
     }
     SECTION("remove")
     {
@@ -42,18 +82,18 @@ TEST_CASE("string")
         REQUIRE(m.remove(20) == false);
         REQUIRE(m.remove(1) == false);
     }
-    SECTION("printing")
-    {
-        for (auto it = m.begin(); it != m.end(); ++it)
-        {
-            std::cout << *it << ", ";
-        }
-        std::cout << std::endl;
-        for (auto &e : m)
-        {
-            std::cout << e << ", ";
-        }
-    }
+    // SECTION("printing")
+    // {
+    //     for (auto it = m.begin(); it != m.end(); ++it)
+    //     {
+    //         std::cout << *it << ", ";
+    //     }
+    //     std::cout << std::endl;
+    //     for (auto &e : m)
+    //     {
+    //         std::cout << e << ", ";
+    //     }
+    // }
 }
 TEST_CASE("insert")
 {

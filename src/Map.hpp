@@ -52,7 +52,7 @@ public:
     // wyszukuje element o podanym kluczu - jeżeli element został znaleziony to zwraca "ConstIterator" do znalezionej wartości, jeżeli nie to zwraca to samo co end()
     ConstIterator find(const K &key) const
     {
-        constPair<V, K> pair(key);
+        constPair<K, V> pair(key);
         if (tree.contains(pair))
         {
             return ConstIterator(tree.valIt(pair));
@@ -65,10 +65,10 @@ public:
     // wyszukuje element o podanym kluczu - jeżeli element został znaleziony to zwraca "Iterator" do znalezionej wartości, jeżeli nie to zwraca to samo co end()
     Iterator find(const K &key)
     {
-        constPair<V, K> pair(key);
+        constPair<K, V> const pair(key);
         if (tree.contains(pair))
         {
-            return Iterator(tree.valIt(pair));
+            return Iterator(tree.valIt(*(tree.search(pair))));
         }
         else
         {
@@ -129,7 +129,7 @@ class Map<K, V>::Iterator
 public:
     Iterator() = default;
 
-    Iterator(typename Binarytree<constPair<K, V>>::iterator it_) { it = it_; };
+    Iterator(typename Binarytree<constPair<K, V>>::iterator it_) : it(it_){};
     bool operator==(const Iterator &it_) const { return it == it_.it; };
     bool operator!=(const Iterator &it_) const { return it != it_.it; };
     Iterator &operator++()
@@ -143,8 +143,16 @@ public:
         ++*this;
         return iterator;
     }
-    V &operator*() const { return *it; };
-    V *operator->() const { return *it; }; //todo
+    V &operator*() const
+    {
+        constPair<K, V> *pair = &(*it);
+        return pair->value;
+    };
+    V *operator->() const
+    {
+        constPair<K, V> *pair = &(*it);
+        return pair->value;
+    }; //todo
     operator bool() const { return (it == true); };
 
 private:
@@ -170,8 +178,16 @@ public:
         ++*this;
         return iterator;
     }
-    const V &operator*() const { return *it; };
-    const V *operator->() const { return *it; }; //todo
+    const V &operator*() const
+    {
+        constPair<K, V> *pair = &(*it);
+        return pair->value;
+    };
+    const V *operator->() const
+    {
+        constPair<K, V> *pair = &(*it);
+        return pair->value;
+    }; //todo
     operator bool() const { return (it == true); };
 
 private:

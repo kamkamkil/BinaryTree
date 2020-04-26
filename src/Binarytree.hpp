@@ -15,24 +15,6 @@
 template <typename T>
 class Binarytree
 {
-public:
-    class iterator;
-    friend class iterator;
-
-private:
-    BSTNode<T> *root;
-    BSTNode<T> *searchNode(T value) const;
-    BSTNode<T> *parentNode(BSTNode<T> *node) const ;
-    BSTNode<T> *successorNode(BSTNode<T> *node) const ;
-    BSTNode<T> *predecessorNode(BSTNode<T> *node)const ;
-    BSTNode<T> *maximum(BSTNode<T> *node) const ;
-    BSTNode<T> *minimum(BSTNode<T> *node) const ;
-    void put(T data, BSTNode<T> *node);
-    void preOrder(std::function<void(const T &)> f, BSTNode<T> *node) const;
-    void print(BSTNode<T> *root, int space) const ;
-    void inOrder(std::function<void(const T &)> f, BSTNode<T> *node) const;
-    void postOrder(std::function<void(const T &)> f, BSTNode<T> *node) const;
-    bool testGoodTree(BSTNode<T> *node) const ;
 
 public:
     Binarytree(T head);
@@ -40,7 +22,26 @@ public:
     Binarytree(Binarytree<T> &&obj);
     Binarytree();
     ~Binarytree();
-    void clear(){delete root;};
+    class iterator;
+    friend class iterator;
+
+private:
+    BSTNode<T> *root;
+    BSTNode<T> *searchNode(T value) const;
+    BSTNode<T> *parentNode(BSTNode<T> *node) const;
+    BSTNode<T> *successorNode(BSTNode<T> *node) const;
+    BSTNode<T> *predecessorNode(BSTNode<T> *node) const;
+    BSTNode<T> *maximum(BSTNode<T> *node) const;
+    BSTNode<T> *minimum(BSTNode<T> *node) const;
+    void put(T data, BSTNode<T> *node);
+    void preOrder(std::function<void(const T &)> f, BSTNode<T> *node) const;
+    void print(BSTNode<T> *root, int space) const;
+    void inOrder(std::function<void(const T &)> f, BSTNode<T> *node) const;
+    void postOrder(std::function<void(const T &)> f, BSTNode<T> *node) const;
+    bool testGoodTree(BSTNode<T> *node) const;
+
+public:
+    void clear() { delete root; };
     void put(T data);
     void put(T *data, int size);
     void print() const;
@@ -51,23 +52,23 @@ public:
     void postOrder(std::function<void(const T &)> f) const { postOrder(f, root); };
     int hight(); //todo
     std::size_t size() const;
-    bool contains(T value) const;
-    bool testGoodTree()const { return testGoodTree(root); } ;
-    bool empty() const{ return root == nullptr; } ;
+    bool contains(const T value) const;
+    bool testGoodTree() const { return testGoodTree(root); };
+    bool empty() const { return root == nullptr; };
     T *search(T value) const;
-    T parent(T value) const{ return parentNode(searchNode(value))->getValue(); } ;
-    T predecessor(T value) const { return predecessorNode(searchNode(value))->getValue(); } 
-    T successor(T value) const { return successorNode(searchNode(value))->getValue(); } 
+    T parent(T value) const { return parentNode(searchNode(value))->getValue(); };
+    T predecessor(T value) const { return predecessorNode(searchNode(value))->getValue(); }
+    T successor(T value) const { return successorNode(searchNode(value))->getValue(); }
     T minimum() const { return minimum(root)->getValue(); };
     T maximum() const { return maximum(root)->getValue(); };
-    bool operator==(const Binarytree<T> &tree) const ;
+    bool operator==(const Binarytree<T> &tree) const;
     Binarytree<T> &operator=(const Binarytree<T> &other);
     Binarytree<T> &operator=(Binarytree<T> &&other);
     iterator begin() const
     {
         if (root == nullptr)
             throw "empty_tree_iterator_is_impossible";
-        return iterator(root);
+        return iterator(searchNode(minimum()), root);
     };
     iterator end() const
     {
@@ -77,7 +78,7 @@ public:
     };
     iterator valIt(const T value) const
     {
-       return iterator(searchNode(value));
+        return iterator(searchNode(value), root);
     }
 };
 
@@ -134,7 +135,7 @@ Binarytree<T>::Binarytree(Binarytree<T> &&obj)
 template <typename T>
 void Binarytree<T>::put(T data)
 {
-    if(contains(data))
+    if (contains(data))
         return;
     if (root == nullptr)
         root = new BSTNode<T>(data);
@@ -185,7 +186,7 @@ void Binarytree<T>::put(T data, BSTNode<T> *node)
     node->put(data);
 }
 template <typename T>
-void Binarytree<T>::print(BSTNode<T> *root, int space) const 
+void Binarytree<T>::print(BSTNode<T> *root, int space) const
 {
     const int gap = 5;
     if (root == NULL)
@@ -220,22 +221,22 @@ template <typename T>
 T *Binarytree<T>::search(T value) const
 {
     BSTNode<T> *node = searchNode(value);
-    if(node != nullptr)
+    if (node != nullptr)
         return searchNode(value)->getDataPointer();
     else
         return nullptr;
 }
 template <typename T>
-bool Binarytree<T>::contains(T value) const 
+bool Binarytree<T>::contains(const T value) const
 {
     return searchNode(value) != nullptr;
 }
 template <typename T>
-void Binarytree<T>::remove(T value) 
+void Binarytree<T>::remove(T value)
 {
     BSTNode<T> *toDelete = searchNode(value);
-    if(toDelete == nullptr)
-        throw "deleting_non_existing_object" ;// todo add test
+    if (toDelete == nullptr)
+        throw "deleting_non_existing_object"; // todo add test
     BSTNode<T> *parent = parentNode(toDelete);
     if (toDelete->noChildren())
     {
@@ -293,7 +294,7 @@ void Binarytree<T>::remove(T value)
     delete toDelete;
 }
 template <typename T>
-BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node) const  
+BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node) const
 {
     if (node->getChildren()[leftCH] != nullptr)
         return (maximum(node->getChildren()[leftCH]));
@@ -306,9 +307,9 @@ BSTNode<T> *Binarytree<T>::predecessorNode(BSTNode<T> *node) const
         parent = parentNode(node);
     }
     return nullptr;
-} 
-template <typename T>  
-BSTNode<T> *Binarytree<T>::successorNode(BSTNode<T> *node) const 
+}
+template <typename T>
+BSTNode<T> *Binarytree<T>::successorNode(BSTNode<T> *node) const
 {
     if (node->getChildren()[rightCH] != nullptr)
         return (minimum(node->getChildren()[rightCH]));
@@ -341,7 +342,7 @@ BSTNode<T> *Binarytree<T>::parentNode(BSTNode<T> *node) const
 }
 
 template <typename T>
-BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> *node) const 
+BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> *node) const
 {
     if (node->getChildren()[rightCH] != nullptr)
         return maximum(node->getChildren()[rightCH]);
@@ -349,7 +350,7 @@ BSTNode<T> *Binarytree<T>::maximum(BSTNode<T> *node) const
         return node;
 }
 template <typename T>
-BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> *node) const 
+BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> *node) const
 {
     if (node->getChildren()[leftCH] != nullptr)
         return minimum(node->getChildren()[leftCH]);
@@ -357,7 +358,7 @@ BSTNode<T> *Binarytree<T>::minimum(BSTNode<T> *node) const
         return node;
 }
 template <typename T>
-bool Binarytree<T>::testGoodTree(BSTNode<T> *node) const 
+bool Binarytree<T>::testGoodTree(BSTNode<T> *node) const
 {
     if (node == nullptr)
         return true;
@@ -372,7 +373,7 @@ bool Binarytree<T>::testGoodTree(BSTNode<T> *node) const
         return testGoodTree(node->getChildren()[leftCH]) && testGoodTree(node->getChildren()[rightCH]);
 }
 template <typename T>
-void Binarytree<T>::breadthFirst(std::function<void(const T &)> f) const 
+void Binarytree<T>::breadthFirst(std::function<void(const T &)> f) const
 {
     if (root == nullptr)
         return;
@@ -430,32 +431,38 @@ bool Binarytree<T>::operator==(const Binarytree<T> &tree) const
         return *root == *(tree.root);
 }
 
-
-
 //!!-----------iterator--------------
 template <typename T>
 class Binarytree<T>::iterator : public std::iterator<std::input_iterator_tag, const T>
 {
 public:
-    iterator(BSTNode<T> *node)
+    iterator(BSTNode<T> *node, BSTNode<T> *root)
     {
-        while(node != nullptr)
+        BSTNode<T> *node_temp = root;
+        while (node != node_temp && node_temp != nullptr)
         {
-            st.push(node);
-            node = node->getChildren()[leftCH];
+            st.push(node_temp);
+            node_temp = node_temp->getChildren()[leftCH];
         }
+        if (node == node_temp)
+        {
+            st.push(node_temp);
+            return;
+        }
+        while (st.top() != node && !st.empty())
+            operator++();
     }
     iterator() = default;
     iterator &operator++()
     {
-        if(st.empty())
+        if (st.empty())
             return *this;
         BSTNode<T> *node = st.top();
         st.pop();
-        if(node->getChildren()[rightCH] != nullptr)
+        if (node->getChildren()[rightCH] != nullptr)
         {
             node = node->getChildren()[rightCH];
-            while(node != nullptr)
+            while (node != nullptr)
             {
                 st.push(node);
                 node = node->getChildren()[leftCH];
@@ -471,8 +478,8 @@ public:
     }
     bool operator==(const iterator &rhs) const;
     bool operator!=(const iterator &rhs) const;
-    int &operator*() const ;
-    std::queue<T> *getQueue(const Binarytree<T> &tree  ) const ;
+    T &operator*() const;
+    // std::queue<T> *getQueue(const Binarytree<T> &tree  ) const ;
     operator bool() const;
 
 private:
@@ -480,9 +487,9 @@ private:
 };
 
 template <typename T>
-int &Binarytree<T>::iterator::operator*() const
-{ 
-    return  *st.top()->getDataPointer();
+T &Binarytree<T>::iterator::operator*() const
+{
+    return *st.top()->getDataPointer();
 }
 
 template <typename T>
@@ -491,7 +498,7 @@ bool Binarytree<T>::iterator::operator==(const iterator &it) const
     return !(*this != it);
 }
 template <typename T>
-bool Binarytree<T>::iterator::operator!=(const iterator &it) const 
+bool Binarytree<T>::iterator::operator!=(const iterator &it) const
 {
     if ((st.empty() && !it.st.empty()) || (!st.empty() && it.st.empty()))
         return true;
@@ -502,7 +509,7 @@ bool Binarytree<T>::iterator::operator!=(const iterator &it) const
 template <typename T>
 Binarytree<T>::iterator::operator bool() const
 {
-    return(st.empty());
+    return (!st.empty());
 }
 
 #endif // !BINARYTREE_CPP
