@@ -8,7 +8,7 @@ TEST_CASE("size_put_contain")
 {
     Binarytree<int> tree;
     REQUIRE(tree.size() == 0); 
-    tree.put(1);
+    tree.put(1);k
     tree.put(2);
     tree.put(3);
     REQUIRE(tree.size() == 3);
