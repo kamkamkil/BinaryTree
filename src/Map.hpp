@@ -33,7 +33,7 @@ public:
         constPair<K, V> pair(key_value);
         if (tree.contains(pair))
         {
-            tree.search(pair)->setValue(pair.value);
+            // tree.search(pair)->setValue(pair.value);
             result.second = false;
             result.first = Iterator(tree.valIt(pair));
             return result;

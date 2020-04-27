@@ -20,7 +20,7 @@ void printDebugInfo(const Iter &find_info)
 
 void printDebugInfo(bool removed)
 {
-    std::cout << (removed ? "Usunięto" : "Nie usunięto") << std::endl;
+    std::cout << (removed ? "Usunieto" : "Nie usunieto") << std::endl;
 }
 
 template <typename K, typename V>
@@ -91,7 +91,6 @@ int main()
         printDebugInfo(m.remove(8));
         printSetSizeAndElems(m);
         std::cout << std::endl;
-
         std::vector<Map<int, std::string>> vm, vm2;
         vm.resize(1000);
         for (auto &e : vm)

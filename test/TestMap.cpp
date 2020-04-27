@@ -25,7 +25,7 @@ TEST_CASE("string")
     
     pair = m.insert({10, "2nd ten"});
     REQUIRE (pair.second == false);
-    REQUIRE(*(pair.first) ==  "2nd ten");
+    REQUIRE(*(pair.first) ==  "ten");
     
     pair = m.insert({2, "two"});
     REQUIRE (pair.second == true);
@@ -45,7 +45,7 @@ TEST_CASE("string")
 
     pair = m.insert({12, "2nd twelve"});
     REQUIRE (pair.second == false);
-    REQUIRE(*(pair.first) ==  "2nd twelve");
+    REQUIRE(*(pair.first) ==  "twelve");
     
     pair = m.insert({1, "one"});
     REQUIRE (pair.second == true);
@@ -68,9 +68,9 @@ TEST_CASE("string")
         CHECK(*m.find(2) == "two");
         CHECK(*m.find(7) == "seven");
         CHECK(*m.find(14) == "fourteen");
-        CHECK(*m.find(10) == "2nd ten");
+        CHECK(*m.find(10) == "ten");
         CHECK(*m.find(1) == "one");
-        CHECK(*m.find(12) == "2nd twelve");
+        CHECK(*m.find(12) == "twelve");
     }
     SECTION("remove")
     {
@@ -141,7 +141,7 @@ TEST_CASE("find")
         map.insert(p5);
         constPair<int, int> pair1(1, 3);
         constPair<int, int> pair2(2, 6);
-        REQUIRE(*map.find(1) == 3);
+        REQUIRE(*map.find(1) == 2);
         REQUIRE(*map.find(2) == 6);
     }
     SECTION("int,char")

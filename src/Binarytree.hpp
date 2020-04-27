@@ -145,7 +145,7 @@ void Binarytree<T>::put(T data)
 template <typename T>
 void Binarytree<T>::put(T *data, int size)
 {
-    for (size_t i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
     {
         T temp = data[i];
         put(temp);
@@ -188,6 +188,7 @@ void Binarytree<T>::put(T data, BSTNode<T> *node)
 template <typename T>
 void Binarytree<T>::print(BSTNode<T> *root, int space) const
 {
+
     const int gap = 5;
     if (root == NULL)
         return;
@@ -439,6 +440,10 @@ public:
     iterator(BSTNode<T> *node, BSTNode<T> *root)
     {
         BSTNode<T> *node_temp = root;
+        while (node_temp->getValue() < node->getValue())
+        {
+            node_temp = node_temp->getChildren()[rightCH];
+        }
         while (node != node_temp && node_temp != nullptr)
         {
             st.push(node_temp);
