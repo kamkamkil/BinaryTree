@@ -161,5 +161,17 @@ std::pair<typename Graph<V, E>::EdgesIterator, bool> Graph<V, E>::insertEdge(std
 template <typename V, typename E>
 typename Graph<V, E>::VerticesIterator Graph<V, E>::removeVertex(std::size_t vertex_id)
 {
-    
+    for (size_t i = 0; i < valueList.size(); i++)
+    {
+        if(matrix[id][i] || matrix[i][id])
+            verticesAmount--;
+    }
+    matrix.erase(matrix.begin() + vertex_id);
+    for (auto &&verse : matrix)
+    {
+        verse.erase(verse.begin() + vertex_id);
+    }
+    valueList.erase(valueList.begin() + vertex_id);
+    return VerticesIterator(); //TODO return value 
 }
+
