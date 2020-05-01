@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(DataStructures VERSION 1.0.0)
 
+include(CTest)
+enable_testing()
+
+
 add_library(BinaryTree INTERFACE)
 target_include_directories(BinaryTree INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -51,3 +55,11 @@ target_link_libraries(testMapZajecia map)
 
 add_executable(testGraph test/testGraph.cpp)
 target_link_libraries(testGraph graph)
+
+add_test(testGraph testGraph)
+
+add_test(testMap testMap)
+
+add_test(testSet testSet)
+
+add_test(testBST testBST)
