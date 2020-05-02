@@ -54,26 +54,26 @@ public:
     class EdgesIterator
     {
     public:
-        EdgesIterator(std::vector<std::vector<std::optional<E>>> *matrix_) : v1id_val(0), v2id_val(0), matrix(matrix_)
+        EdgesIterator(Graph<V, E> *graph_) : v1id_val(0), v2id_val(0), graph(graph_)
         {
-            if (!(matrix->at(0)).at(0))
+            if (graph->edgeExist(v1id_val, v2id_val))
                 ++*this;
         };
-        EdgesIterator(size_t v1id_val_, size_t v2id_val_, std::vector<std::vector<std::optional<E>>> *matrix_) : v1id_val(v1id_val_), v2id_val(v2id_val_), matrix(matrix_){};
+        EdgesIterator(size_t v1id_val_, size_t v2id_val_, Graph<V, E> *graph_) : v1id_val(v1id_val_), v2id_val(v2id_val_), graph(graph_){};
         bool operator==(const EdgesIterator &ei) const { return v1id_val == ei.v1id_val && v2id_val == ei.v2id_val; };
         bool operator!=(const EdgesIterator &ei) const { return v1id_val != ei.v1id_val && v2id_val != ei.v2id_val; };
         EdgesIterator &operator++()
         {
-            while ((matrix->at(v1id_val)).at(v2id_val))
+            while (graph->edgeExist(v1id_val, v2id_val))
             {
-                if (v1id_val < matrix->size())
+                if (v1id_val < graph->nrOfVertices())
                     v2id_val++;
                 else
                 {
                     v1id_val++;
                     v2id_val = 0;
                 }
-                if (v1id_val == matrix->size() && v2id_val == matrix->size())
+                if (v1id_val == graph->nrOfVertices() && v2id_val == graph->nrOfVertices())
                     break;
             }
             return *this;
@@ -84,7 +84,7 @@ public:
             ++*this;
             return iterator;
         };
-        E &operator*() const {return &(matrix->at(v1id_val)).at(v2id_val)};
+        E &operator*() const { return graph->edgeLabel(v1id_val, v2id_val); };
         E *operator->() const;
         // zwraca id wierzchołka startowego
         std::size_t v1id() const { return v1id_val; };
@@ -94,7 +94,7 @@ public:
     private:
         size_t v1id_val;
         size_t v2id_val;
-        std::vector<std::vector<std::optional<E>>> *matrix;
+        Graph<V, E> *graph;
     };
     // ...
 
@@ -119,7 +119,10 @@ public:
     ;
     // zwraca true jeśli istnieje krawędź między wierzchołkami o podanych id, false w przeciwnym razie
     // O(1)
-    bool edgeExist(std::size_t vertex1_id, std::size_t vertex2_id) const { return matrix[vertex1_id][vertex2_id]; };
+    bool edgeExist(std::size_t vertex1_id, std::size_t vertex2_id) const
+    {
+        return vertex1_id < matrix.size() && vertex2_id < matrix.size() && matrix[vertex1_id][vertex2_id];
+    };
     ;
     // zwraca ilość wierzchołków w grafie
     // O(1)
@@ -136,17 +139,17 @@ public:
     const V &vertexData(std::size_t vertex_id) const {return valueList[vertex_id]};
     ;
     // zwraca referencję do danych wierzchołka o podanym id
-    V &vertexData(std::size_t vertex_id){return valueList[vertex_id]};
-    ; 
+    V &vertexData(std::size_t vertex_id) { return valueList[vertex_id]; };
+    ;
     // zwraca "EdgesIterator" do krawędzi pomiędzy wierzchołkami o podanych id, lub to samo co "endEdges()" w przypadku braku krawędzi między wierzchołkami o podanych id
     EdgesIterator edge(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id] ? EdgesIterator(vertex1_id, vertex2_id, &matrix); };
-    ; 
+    ;
     // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
     const E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) const { return matrix[vertex1_id][vertex2_id].value(); };
-    ; 
+    ;
     // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
     E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id].value(); };
-    ; 
+    ;
     VerticesIterator begin() { return beginVertices(); };
     VerticesIterator end() { return endVertices(); };
     // zwraca "VerticesIterator" na pierwszy wierzchołek (o najmniejszym id)
@@ -159,7 +162,7 @@ public:
     EdgesIterator beginEdges() { return EdgesIterator(0, 0, &matrix); };
     ;
     // zwraca "EdgesIterator" "za ostatnią" krawędz
-    EdgesIterator endEdges() { return EdgesIterator(matrix.size() + 1, matrix.size() + 1, &matrix); }; 
+    EdgesIterator endEdges() { return EdgesIterator(matrix.size() + 1, matrix.size() + 1, &matrix); };
     ;
 
 private:
@@ -190,20 +193,20 @@ std::pair<typename Graph<V, E>::EdgesIterator, bool> Graph<V, E>::insertEdge(std
         if (replace)
         {
             matrix[vertex1_id][vertex2_id] = label;
-            return {EdgesIterator((vertex1_id, vertex2_id, &matrix)), true};
+            return {EdgesIterator((vertex1_id, vertex2_id, this)), true};
 
             verticesAmount++;
         }
-        return {EdgesIterator((vertex1_id, vertex2_id, &matrix)), false};
+        return {EdgesIterator((vertex1_id, vertex2_id, this)), false};
     }
     else
     {
         matrix[vertex1_id][vertex2_id] = label;
         verticesAmount++;
 
-        return {EdgesIterator((vertex1_id, vertex2_id, &matrix)), true};
+        return {EdgesIterator((vertex1_id, vertex2_id, this)), true};
     }
-    return {EdgesIterator((vertex1_id, vertex2_id, &matrix)), false};
+    return {EdgesIterator((vertex1_id, vertex2_id, this)), false};
 }
 
 template <typename V, typename E>
