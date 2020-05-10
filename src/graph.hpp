@@ -6,7 +6,7 @@
 #include <vector>
 #include <stack>
 #include <queue>
-#include <queue>
+#include <stack>
 #include <iostream>
 
 // Uwaga! Kod powinien być odporny na błędy i każda z metod jeżeli zachodzi niebezpieczeństwo wywołania z niepoprawnymi parametrami powinna zgłaszac odpowiednie wyjątki!
@@ -22,8 +22,6 @@ public:
     // iterator po wierzchołkach (rosnąco po id wierzchołków)
     class VerticesIterator
     {
-        // ...
-
     public:
         VerticesIterator(std::vector<V> *valueList_) : idVal(0), valueList(valueList_){};
         VerticesIterator(size_t id_, std::vector<V> *valueList_) : idVal(id_), valueList(valueList_){};
@@ -31,7 +29,7 @@ public:
         bool operator!=(const VerticesIterator &vi2) const { return idVal != vi2.idVal; };
         VerticesIterator &operator++()
         {
-            id++;
+            idVal++;
             return *this;
         };
         VerticesIterator operator++(int)
@@ -40,13 +38,14 @@ public:
             ++*this;
             return iterator;
         };
-        V &operator*() { return valueList->at(idVal); } // const;
+        V &operator*() const { return valueList->at(idVal); };
         V *operator->() const;
         // zwraca id aktualnego wierzchołka
         int id() const { return idVal; };
+        operator bool() const { return idVal < valueList->size(); };
 
     private:
-        int idVal;
+        size_t idVal;
         std::vector<V> *valueList;
     };
 
@@ -56,26 +55,26 @@ public:
     public:
         EdgesIterator(Graph<V, E> *graph_) : v1id_val(0), v2id_val(0), graph(graph_)
         {
-            if (graph->edgeExist(v1id_val, v2id_val))
+            if (!graph->edgeExist(v1id_val, v2id_val))
                 ++*this;
         };
         EdgesIterator(size_t v1id_val_, size_t v2id_val_, Graph<V, E> *graph_) : v1id_val(v1id_val_), v2id_val(v2id_val_), graph(graph_){};
         bool operator==(const EdgesIterator &ei) const { return v1id_val == ei.v1id_val && v2id_val == ei.v2id_val; };
-        bool operator!=(const EdgesIterator &ei) const { return v1id_val != ei.v1id_val && v2id_val != ei.v2id_val; };
+        bool operator!=(const EdgesIterator &ei) const { return v1id_val != ei.v1id_val || v2id_val != ei.v2id_val; };
         EdgesIterator &operator++()
         {
-            while (graph->edgeExist(v1id_val, v2id_val))
+            do
             {
-                if (v1id_val < graph->nrOfVertices())
+                if (v2id_val < graph->nrOfVertices())
                     v2id_val++;
                 else
                 {
                     v1id_val++;
                     v2id_val = 0;
                 }
-                if (v1id_val == graph->nrOfVertices() && v2id_val == graph->nrOfVertices())
+                if (v1id_val >= graph->nrOfVertices())
                     break;
-            }
+            } while (!graph->edgeExist(v1id_val, v2id_val));
             return *this;
         };
         EdgesIterator operator++(int)
@@ -84,12 +83,13 @@ public:
             ++*this;
             return iterator;
         };
-        E &operator*() const { return graph->edgeLabel(v1id_val, v2id_val); };//?????? o co biega ??
+        E &operator*() const { return graph->edgeLabel(v1id_val, v2id_val); }; //?????? o co biega ??
         E *operator->() const;
         // zwraca id wierzchołka startowego
         std::size_t v1id() const { return v1id_val; };
         // zwraca id wierzchołka koncowego
         std::size_t v2id() const { return v2id_val; };
+        operator bool() const { return v1id_val < graph->nrOfVertices() && v2id_val < graph->nrOfVertices(); };
 
     private:
         size_t v1id_val;
@@ -102,8 +102,8 @@ public:
     Graph() : verticesAmount(0){};
     Graph(const Graph<V, E> &source) = default;
     Graph(Graph<V, E> &&source) = default;
-    Graph &operator=(const Graph<V, E> &source) = default ;
-    Graph &operator=(Graph<V, E> &&source) = default ;
+    Graph &operator=(const Graph<V, E> &source) = default;
+    Graph &operator=(Graph<V, E> &&source) = default;
     ~Graph(){};
 
     // dodaje nowy wierzchołek z danymi przyjętymi w argumencie (wierzchołek powinien posiadać kopie danych) i zwraca "VerticesIterator" na nowo utworzony wierzchołek
@@ -133,16 +133,16 @@ public:
     // drukuje macierz sąsiedztwa na konsoli (debug)
     void printNeighborhoodMatrix() const;
     // zwraca "VerticesIterator" do wierzchołka o podanym id, lub to samo co "endVertices()" w przypadku braku wierzchołka o podanym id
-    VerticesIterator vertex(std::size_t vertex_id){return vertex_id < valueList.size() ? VerticesIterator(vertex_id, &valueList) : endVertices()};
+    VerticesIterator vertex(std::size_t vertex_id) { return vertex_id < valueList.size() ? VerticesIterator(vertex_id, &valueList) : endVertices(); };
     ;
     // zwraca referencję do danych wierzchołka o podanym id
-    const V &vertexData(std::size_t vertex_id) const {return valueList[vertex_id]};
+    const V &vertexData(std::size_t vertex_id) const { return valueList[vertex_id]; };
     ;
     // zwraca referencję do danych wierzchołka o podanym id
     V &vertexData(std::size_t vertex_id) { return valueList[vertex_id]; };
     ;
     // zwraca "EdgesIterator" do krawędzi pomiędzy wierzchołkami o podanych id, lub to samo co "endEdges()" w przypadku braku krawędzi między wierzchołkami o podanych id
-    EdgesIterator edge(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id] ? EdgesIterator(vertex1_id, vertex2_id, &matrix); };
+    EdgesIterator edge(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id] ? EdgesIterator(vertex1_id, vertex2_id, &matrix) : end(); };
     ;
     // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
     const E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) const { return matrix[vertex1_id][vertex2_id].value(); };
@@ -159,10 +159,10 @@ public:
     VerticesIterator endVertices() { return VerticesIterator(valueList.size(), &valueList); };
     ;
     // zwraca "EdgesIterator" na pierwszą krawędz
-    EdgesIterator beginEdges() { return EdgesIterator(0, 0, &matrix); };
+    EdgesIterator beginEdges() { return EdgesIterator(this); };
     ;
     // zwraca "EdgesIterator" "za ostatnią" krawędz
-    EdgesIterator endEdges() { return EdgesIterator(matrix.size() + 1, matrix.size() + 1, this); };
+    EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
     ;
 
 private:
@@ -188,25 +188,27 @@ typename Graph<V, E>::VerticesIterator Graph<V, E>::insertVertex(const V &vertex
 template <typename V, typename E>
 std::pair<typename Graph<V, E>::EdgesIterator, bool> Graph<V, E>::insertEdge(std::size_t vertex1_id, std::size_t vertex2_id, const E &label, bool replace)
 {
+    if (vertex1_id >= nrOfVertices() || vertex2_id >= nrOfVertices())
+        return {endEdges(), false};
     if (matrix[vertex1_id][vertex2_id])
     {
         if (replace)
         {
             matrix[vertex1_id][vertex2_id] = label;
-            return {EdgesIterator((vertex1_id, vertex2_id, this)), true};
+            return {EdgesIterator(vertex1_id, vertex2_id, this), true};
 
             verticesAmount++;
         }
-        return {EdgesIterator((vertex1_id, vertex2_id, this)), false};
+        return {EdgesIterator(vertex1_id, vertex2_id, this), false};
     }
     else
     {
         matrix[vertex1_id][vertex2_id] = label;
         verticesAmount++;
 
-        return {EdgesIterator((vertex1_id, vertex2_id, this)), true};
+        return {EdgesIterator(vertex1_id, vertex2_id, this), true}; // poprawić chyba na false
     }
-    return {EdgesIterator((vertex1_id, vertex2_id, this)), false};
+    return {EdgesIterator(vertex1_id, vertex2_id, this), false};
 }
 
 template <typename V, typename E>
@@ -235,7 +237,10 @@ void Graph<V, E>::printNeighborhoodMatrix() const
     {
         for (auto &&value : verse)
         {
-            std::cout << (value ? "1" : "0") << "  ";
+            if(value)
+                std::cout <<  value.value() << ",  ";
+            else
+                std::cout <<  "X " << ",  "; //TODO zrobić ładnie 
         }
         std::cout << std::endl;
     }
@@ -247,7 +252,7 @@ typename Graph<V, E>::EdgesIterator Graph<V, E>::removeEdge(std::size_t vertex1_
     if (matrix[vertex1_id][vertex2_id])
     {
         matrix[vertex1_id][vertex2_id].reset();
-        return EdgesIterator(vertex1_id, vertex2_id, this)++;
+        return ++EdgesIterator(vertex1_id, vertex2_id, this);
     }
     else
         return endEdges();

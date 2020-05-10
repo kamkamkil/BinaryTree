@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(DataStructures VERSION 1.0.0)
-
+set(CMAKE_CXX_STANDARD 17)
 include(CTest)
 enable_testing()
 
@@ -28,10 +28,7 @@ target_include_directories(graph INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:include/graph>
 )
-target_compile_features (graph
-  INTERFACE
-    cxx_std_17
-)
+
 add_executable(main main.cpp)
 target_link_libraries(main BinaryTree)
 
@@ -55,6 +52,9 @@ target_link_libraries(testMapZajecia map)
 
 add_executable(testGraph test/testGraph.cpp)
 target_link_libraries(testGraph graph)
+
+add_executable(testGraphZajecia test/testGraphZajecia.cpp)
+target_link_libraries(testGraphZajecia graph)
 
 add_test(testGraph testGraph)
 

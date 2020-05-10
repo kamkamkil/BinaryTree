@@ -2,7 +2,8 @@
 
 #include <iostream>
 #include <string>
-#include "../src/treeSet.hpp    "
+#include <vector>
+#include "../src/treeSet.hpp"
 
 
 template <typename Iter>

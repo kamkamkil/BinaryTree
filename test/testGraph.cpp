@@ -22,6 +22,26 @@ TEST_CASE("VerticesIterator", "[iterator]")
 }
 TEST_CASE("EdgesIterator", "[iterator]")
 {
+    Graph<int, std::string> g;
+    g.insertVertex(1);
+    g.insertVertex(2);
+    g.insertVertex(3);
+    g.insertVertex(4);
+    g.insertVertex(5);
+    g.insertEdge(1, 1, "1_1");
+    g.insertEdge(1, 2, "1_2");
+    g.insertEdge(3, 1, "3_1");
+    g.insertEdge(0, 1, "0_1");
+    g.insertEdge(0, 0, "0_0");
+    g.insertEdge(4, 4, "4_4");
+    std::string result[] = {"0_0", "0_1", "1_1", "0_2", "3_1", "4_4"};
+    int n = 0;
+    for (auto it = g.beginEdges(); it != g.endEdges(); it++)
+    {
+        *it = result[n];
+        n++;
+    }
+    REQUIRE(true == true);
 }
 TEST_CASE("insertVertex")
 {
@@ -59,25 +79,25 @@ TEST_CASE("insertEdge")
     g.insertVertex(3);
     g.insertVertex(4);
     g.insertVertex(5);
-    // REQUIRE(g.nrOfVertices() == 5);
+    REQUIRE(g.nrOfVertices() == 5);
 
     auto pair = g.insertEdge(1, 2, "jeden_dwa");
-    // REQUIRE(*(pair.first) == "jeden_dwa");
+    REQUIRE(*(pair.first) == "jeden_dwa");
     REQUIRE(pair.second);
     pair = g.insertEdge(3, 4, "trzy_cztery");
-    // REQUIRE(*pair.first == "trzy_cztery");
+    REQUIRE(*pair.first == "trzy_cztery");
     REQUIRE(pair.second);
     pair = g.insertEdge(2, 1, "dwa_jeden");
-    // REQUIRE(*pair.first == "dwa_jeden");
+    REQUIRE(*pair.first == "dwa_jeden");
     REQUIRE(pair.second);
     pair = g.insertEdge(1, 2, "jeden_dwa_zmieniony");
-    // REQUIRE(*pair.first == "jeden_dwa_zmieniony");
+    REQUIRE(*pair.first == "jeden_dwa_zmieniony");
     REQUIRE(pair.second);
     pair = g.insertEdge(1, 2, "jeden_dwa_nowy", false);
-    // REQUIRE(*pair.first == "jeden_dwa_zmieniony");
+    REQUIRE(*pair.first == "jeden_dwa_zmieniony");
     REQUIRE_FALSE(pair.second);
-    // pair = g.insertEdge(5,5, "nie_powinno_sie_udac"); // TODO dodac wyjatek albo cos
-    // REQUIRE(pair.first == g.endEdges());
+    pair = g.insertEdge(5,5, "nie_powinno_sie_udac");
+    REQUIRE(pair.first == g.endEdges());
     REQUIRE_FALSE(pair.second);
     REQUIRE(g.edgeExist(1, 2));
     REQUIRE(g.edgeExist(3, 4));
@@ -128,10 +148,10 @@ TEST_CASE("removeEdge", "[remove]")
     g.insertEdge(2, 2, "dwa_dwa");
     g.insertEdge(3, 2, "trzy_dwa");
     g.insertEdge(0, 0, "zero_zero");
-    g.removeEdge(0,0);
-    REQUIRE_FALSE(g.edgeExist(0,0));
-    g.removeEdge(3,2);
-    g.removeEdge(1,2);
-    REQUIRE_FALSE(g.edgeExist(3,2));
-    REQUIRE_FALSE(g.edgeExist(1,2));
+    g.removeEdge(0, 0);
+    REQUIRE_FALSE(g.edgeExist(0, 0));
+    g.removeEdge(3, 2);
+    g.removeEdge(1, 2);
+    REQUIRE_FALSE(g.edgeExist(3, 2));
+    REQUIRE_FALSE(g.edgeExist(1, 2));
 }
