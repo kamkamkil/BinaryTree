@@ -44,7 +44,7 @@ TEST_CASE("EdgesIterator", "[iterator]")
     }
     REQUIRE(true == true);
 }
-TEST_CASE("insertVertex")
+TEST_CASE("insertVertex", "[insert]")
 {
     SECTION("int_vertex")
     {
@@ -72,7 +72,7 @@ TEST_CASE("insertVertex")
         REQUIRE(g.vertexData(2) == "dwa");
     }
 }
-TEST_CASE("insertEdge")
+TEST_CASE("insertEdge", "[insert]")
 {
     Graph<int, std::string> g;
     g.insertVertex(1);
@@ -186,7 +186,7 @@ TEST_CASE("allneighbours")
     temp = {0, 2, 4};
     REQUIRE(g.neighbours(1) == temp);
 }
-TEST_CASE("DFS")
+TEST_CASE("DFS", "[Search_algorithm]")
 {
     std::vector<std::string> result;
     std::vector<std::string> requireResult;
@@ -204,19 +204,19 @@ TEST_CASE("DFS")
         g.insertEdge(4, 1, 1);
         g.insertEdge(4, 2, 1);
         g.insertEdge(4, 5, 1);
-        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
-        requireResult =  {"zero", "trzy", "cztery", "jeden", "dwa", "piec"};
+        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero", "trzy", "cztery", "jeden", "dwa", "piec"};
         REQUIRE(result == requireResult);
     }
-    SECTION("multiple_roud_from_begining")
+    SECTION("multiple_roa`d_from_begining")
     {
         g.insertEdge(0, 1, 1);
         g.insertEdge(0, 2, 1);
         g.insertEdge(0, 3, 1);
         g.insertEdge(0, 4, 1);
         g.insertEdge(4, 5, 1);
-        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
-        requireResult =  {"zero", "cztery", "piec", "jeden", "dwa", "trzy"};
+        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero", "cztery", "piec", "jeden", "dwa", "trzy"};
         REQUIRE(result == requireResult);
     }
     SECTION("big_loop")
@@ -227,8 +227,8 @@ TEST_CASE("DFS")
         g.insertEdge(3, 4, 1);
         g.insertEdge(4, 5, 1);
         g.insertEdge(5, 0, 1);
-        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
-        requireResult =  {"zero", "jeden", "dwa", "trzy", "cztery", "piec"};
+        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero", "jeden", "dwa", "trzy", "cztery", "piec"};
         REQUIRE(result == requireResult);
     }
     SECTION("small_loops")
@@ -240,8 +240,8 @@ TEST_CASE("DFS")
         g.insertEdge(3, 0, 1);
         g.insertEdge(4, 3, 1);
         g.insertEdge(4, 5, 1);
-        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
-        requireResult =  {"zero", "jeden", "dwa", "piec", "cztery", "trzy"};
+        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero", "jeden", "dwa", "piec", "cztery", "trzy"};
         REQUIRE(result == requireResult);
     }
     SECTION("not_all")
@@ -250,14 +250,93 @@ TEST_CASE("DFS")
         g.insertEdge(1, 4, 1);
         g.insertEdge(4, 3, 1);
         g.insertEdge(3, 4, 1);
-        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
-        requireResult =  {"zero", "jeden", "cztery", "trzy"};
+        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero", "jeden", "cztery", "trzy"};
         REQUIRE(result == requireResult);
     }
     SECTION("empty_grapf")
     {
-        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
-        requireResult =  {"zero"};
+        DFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero"};
+        REQUIRE(result == requireResult);
+    }
+}
+TEST_CASE("BFS", "[Search_algorithm]")
+{
+    std::vector<std::string> result;
+    std::vector<std::string> requireResult;
+    Graph<std::string, int> g;
+    g.insertVertex("zero");
+    g.insertVertex("jeden");
+    g.insertVertex("dwa");
+    g.insertVertex("trzy");
+    g.insertVertex("cztery");
+    g.insertVertex("pięć");
+    g.insertVertex("sześć");
+    g.insertVertex("siedem");
+    SECTION("simple_graph")
+    {
+        g.insertEdge(0, 1, 1);
+        g.insertEdge(0, 3, 1);
+        g.insertEdge(1, 2, 1);
+        g.insertEdge(1, 7, 1);
+        g.insertEdge(3, 4, 1);
+        g.insertEdge(4, 5, 1);
+        g.insertEdge(4, 6, 1);
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void {result.push_back(v); });
+        requireResult = {"zero", "jeden", "trzy", "dwa", "siedem", "cztery", "pięć", "sześć"};
+        REQUIRE(result == requireResult);
+    }
+    SECTION("star_like_graph")
+    {
+        g.insertEdge(0, 1, 1);
+        g.insertEdge(0, 2, 1);
+        g.insertEdge(0, 3, 1);
+        g.insertEdge(0, 4, 1);
+        g.insertEdge(0, 5, 1);
+        g.insertEdge(0, 6, 1);
+        g.insertEdge(0, 7, 1);
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
+        requireResult = {"zero", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem"};
+        REQUIRE(result == requireResult);
+    }
+    SECTION("big_loop_graph")
+    {
+        g.insertEdge(0, 1, 1);
+        g.insertEdge(1, 2, 1);
+        g.insertEdge(2, 3, 1);
+        g.insertEdge(3, 4, 1);
+        g.insertEdge(4, 5, 1);
+        g.insertEdge(5, 6, 1);
+        g.insertEdge(6, 7, 1);
+        g.insertEdge(7, 0, 1);
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
+        requireResult = {"zero", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem"};
+        REQUIRE(result == requireResult);
+    }
+    SECTION("small_loops_graph")
+    {
+        g.insertEdge(0, 1, 1);
+        g.insertEdge(0, 3, 1);
+        g.insertEdge(1, 4, 1);
+        g.insertEdge(1, 2, 1);
+        g.insertEdge(2, 1, 1);
+        g.insertEdge(2, 7, 1);
+        g.insertEdge(3, 4, 1);
+        g.insertEdge(4, 3, 1);
+        g.insertEdge(4, 5, 1);
+        g.insertEdge(5, 6, 1);
+        g.insertEdge(6, 7, 1);
+        g.insertEdge(7, 2, 1);
+        g.insertEdge(7, 6, 1);
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
+        requireResult = {"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"};
+        REQUIRE(result == requireResult);
+    }
+    SECTION("emppty_graph")
+    {
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
+        requireResult = {"zero"};
         REQUIRE(result == requireResult);
     }
 }

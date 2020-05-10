@@ -255,7 +255,7 @@ void Graph<V, E>::printNeighborhoodMatrix() const
                 std::cout << value.value() << ",  ";
             else
                 std::cout << "X "
-                          << ",  "; //TODO zrobić ładnie
+                          << ",  ";
         }
         std::cout << std::endl;
     }
@@ -287,11 +287,11 @@ std::vector<size_t> Graph<V, E>::neighbours(size_t vertex) const
 template <typename V, typename E>
 void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun) //const
 {
-    if(graph.neighbours(vertex).empty())
-        {
-            fun(graph.vertexData(vertex));
-            return;
-        }
+    if (graph.neighbours(vertex).empty())
+    {
+        fun(graph.vertexData(vertex));
+        return;
+    }
     std::vector<bool> visited(graph.nrOfVertices());
     for (size_t i = 0; i < graph.nrOfVertices(); i++)
         visited[i] = false;
@@ -326,7 +326,7 @@ void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> 
                 break;
             }
         }
-        if(finish)
+        if (finish)
             return;
         if (test(current))
         {
@@ -346,4 +346,38 @@ void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> 
             }
         }
     };
+}
+template <typename V, typename E>
+void BFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun) //const
+{
+    if (graph.neighbours(vertex).empty())
+    {
+        fun(graph.vertexData(vertex));
+        return;
+    }
+    std::vector<bool> visited(graph.nrOfVertices());
+    for (size_t i = 0; i < graph.nrOfVertices(); i++)
+        visited[i] = false;
+    visited[vertex] = true;
+    std::queue<size_t> queue;
+    size_t current;
+    queue.push(vertex);
+    while (!queue.empty())
+    {
+        current = queue.front();
+        queue.pop();
+        visited[current] = true;
+        fun(graph.vertexData(current));
+        if (!graph.neighbours(current).empty())
+        {
+            for (auto &&node : graph.neighbours(current))
+            {
+                if (!visited[node])
+                {
+                    queue.push(node);
+                    visited[node] = true;
+                }
+            }
+        }
+    }
 }
