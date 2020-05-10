@@ -287,7 +287,11 @@ std::vector<size_t> Graph<V, E>::neighbours(size_t vertex) const
 template <typename V, typename E>
 void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun) //const
 {
-    //TODO dodać testy oraz przypadek dla którego wiele ścieszki wychodzą z pierwszego wieszchołka
+    if(graph.neighbours(vertex).empty())
+        {
+            fun(graph.vertexData(vertex));
+            return;
+        }
     std::vector<bool> visited(graph.nrOfVertices());
     for (size_t i = 0; i < graph.nrOfVertices(); i++)
         visited[i] = false;
@@ -295,24 +299,36 @@ void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> 
     std::stack<size_t> stack;
     stack.push(vertex);
     fun(graph.vertexData(vertex));
-    size_t current = graph.neighbours(vertex).back(); //TODO dodać przypadek dla pustego wieszchołka bez dróg wyjściowych
+    size_t current = graph.neighbours(vertex).back();
     size_t oldCurrent = vertex;
-    auto test = [&](std::vector<size_t> neighbours) -> bool {
-        for (auto &&n : neighbours)
+    auto test = [&](size_t vertex_) -> bool {
+        for (auto &&n : graph.neighbours(vertex_))
         {
             if (!visited[n])
                 return true;
         }
         return false;
     };
-    while (current != vertex || test(graph.neighbours(vertex)))//TODO ten kod bardzo mocno poczebuje refraktoringu
+    while (current != vertex || test(vertex)) //TODO ten kod bardzo mocno poczebuje refraktoringu
     {
-        if (!visited[current])
-            fun(graph.vertexData(current));
-        visited[current] = true;
         stack.push(current);
-        oldCurrent = current;
-        if (!graph.neighbours(current).empty())
+        if (!visited[current])
+        {
+            fun(graph.vertexData(current));
+            visited[current] = true;
+        }
+        bool finish = true;
+        for (auto &&value : visited)
+        {
+            if (!value)
+            {
+                finish = false;
+                break;
+            }
+        }
+        if(finish)
+            return;
+        if (test(current))
         {
             for (auto &&ver : graph.neighbours(current))
                 if (!visited[ver])
@@ -320,26 +336,14 @@ void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> 
                     current = ver;
                     break;
                 }
-            if (oldCurrent != current)
-                continue;
         }
-        while (!stack.empty() && !test(graph.neighbours(current)))
+        else
         {
-            stack.pop();
-            current = stack.top();
-        }
-        if (stack.empty())
-            break;
-        bool everythink = false;
-        for (size_t i = 0; i < graph.nrOfVertices(); i++)
-        {
-            if (!visited[i])
+            while (!stack.empty() && !test(current))
             {
-                everythink = true;
-                break;
+                current = stack.top();
+                stack.pop();
             }
         }
-        if (!everythink)
-            break;
     };
 }
