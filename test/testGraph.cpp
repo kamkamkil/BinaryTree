@@ -19,7 +19,26 @@ TEST_CASE("basic_operation")
 }
 TEST_CASE("VerticesIterator", "[iterator]")
 {
-    //TODO
+    Graph<int, std::string> g;
+    g.insertVertex(1);
+    g.insertVertex(2);
+    g.insertVertex(3);
+    g.insertVertex(4);
+    g.insertVertex(5);
+    int result[] = {1, 2, 3, 4, 5};
+    int n = 0;
+    for (auto &&value : g)
+    {
+        REQUIRE(value == result[n]);
+        n++;
+    }
+    g.removeVertex(4);
+    n = 0;
+    for (auto &&value : g)
+    {
+        REQUIRE(value == result[n]);
+        n++;
+    }
 }
 TEST_CASE("EdgesIterator", "[iterator]")
 {
@@ -35,14 +54,13 @@ TEST_CASE("EdgesIterator", "[iterator]")
     g.insertEdge(0, 1, "0_1");
     g.insertEdge(0, 0, "0_0");
     g.insertEdge(4, 4, "4_4");
-    std::string result[] = {"0_0", "0_1", "1_1", "0_2", "3_1", "4_4"};
+    std::string result[] = {"0_0", "0_1", "1_1", "1_2", "3_1", "4_4"};
     int n = 0;
     for (auto it = g.beginEdges(); it != g.endEdges(); it++)
     {
-        *it = result[n];
+        REQUIRE(*it == result[n]);
         n++;
     }
-    REQUIRE(true == true);
 }
 TEST_CASE("insertVertex", "[insert]")
 {
@@ -283,7 +301,7 @@ TEST_CASE("BFS", "[Search_algorithm]")
         g.insertEdge(3, 4, 1);
         g.insertEdge(4, 5, 1);
         g.insertEdge(4, 6, 1);
-        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void {result.push_back(v); });
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
         requireResult = {"zero", "jeden", "trzy", "dwa", "siedem", "cztery", "pięć", "sześć"};
         REQUIRE(result == requireResult);
     }
@@ -296,7 +314,7 @@ TEST_CASE("BFS", "[Search_algorithm]")
         g.insertEdge(0, 5, 1);
         g.insertEdge(0, 6, 1);
         g.insertEdge(0, 7, 1);
-        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
         requireResult = {"zero", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem"};
         REQUIRE(result == requireResult);
     }
@@ -310,7 +328,7 @@ TEST_CASE("BFS", "[Search_algorithm]")
         g.insertEdge(5, 6, 1);
         g.insertEdge(6, 7, 1);
         g.insertEdge(7, 0, 1);
-        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
         requireResult = {"zero", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem"};
         REQUIRE(result == requireResult);
     }
@@ -329,7 +347,7 @@ TEST_CASE("BFS", "[Search_algorithm]")
         g.insertEdge(6, 7, 1);
         g.insertEdge(7, 2, 1);
         g.insertEdge(7, 6, 1);
-        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v);});
+        BFS<std::string, int>(g, 0, [&](const std::string &v) -> void { result.push_back(v); });
         requireResult = {"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"};
         REQUIRE(result == requireResult);
     }
