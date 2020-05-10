@@ -96,7 +96,7 @@ TEST_CASE("insertEdge")
     pair = g.insertEdge(1, 2, "jeden_dwa_nowy", false);
     REQUIRE(*pair.first == "jeden_dwa_zmieniony");
     REQUIRE_FALSE(pair.second);
-    pair = g.insertEdge(5,5, "nie_powinno_sie_udac");
+    pair = g.insertEdge(5, 5, "nie_powinno_sie_udac");
     REQUIRE(pair.first == g.endEdges());
     REQUIRE_FALSE(pair.second);
     REQUIRE(g.edgeExist(1, 2));
@@ -118,19 +118,27 @@ TEST_CASE("removeVertex", "[remove]")
     g.insertVertex(5);
     g.insertVertex(6);
     REQUIRE(g.nrOfVertices() == 6);
-    g.insertEdge(1, 2, "jeden_dwa");
-    g.insertEdge(3, 1, "trzy_jeden");
-    g.insertEdge(5, 0, "piec_zero");
-    g.insertEdge(1, 1, "jeden_jeden");
-    REQUIRE(*g.removeVertex(0) == 2);
-    REQUIRE(g.nrOfVertices() == 5);
-    REQUIRE(g.nrOfEdges() == 3);
-    REQUIRE(*g.removeVertex(1) == 4);
-    REQUIRE(g.nrOfVertices() == 4);
-    REQUIRE(g.nrOfEdges() == 2);
-    g.removeVertex(3);
-    REQUIRE(g.nrOfVertices() == 3);
-    REQUIRE(g.nrOfEdges() == 2);
+    for (size_t verse = 0; verse < 6; verse++)
+    {
+        for (size_t column = 0; column < 6; column++)
+        {
+            if (column * verse % 2 == 0)
+                g.insertEdge(verse, column, std::to_string(verse * 10 + column));
+        }
+    }
+    REQUIRE(g.nrOfEdges() == 27);
+    SECTION("half_empty_vertex")
+    {
+        g.removeVertex(1);
+        REQUIRE(g.nrOfEdges() == 21);
+        REQUIRE(g.nrOfVertices() == 5);
+    }
+    SECTION("full_vertex")
+    {
+        g.removeVertex(2);
+        REQUIRE(g.nrOfEdges() == 16);
+        REQUIRE(g.nrOfVertices() == 5);
+    }
 }
 TEST_CASE("removeEdge", "[remove]")
 {

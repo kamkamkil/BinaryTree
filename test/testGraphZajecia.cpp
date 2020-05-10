@@ -51,13 +51,12 @@ int main()
 
         g.printNeighborhoodMatrix();
         std::cout << std::endl;
-
         printDebugRemoveInfo(g.removeEdge(0, 2));
         printDebugInsertInfo(g.insertEdge(0, 2, 4.));
         printDebugRemoveInfo(g.removeVertex(1));
         printDebugRemoveInfo(g.removeEdge(2, 2));
         printDebugRemoveInfo(g.removeEdge(2, 3));
-        printDebugRemoveInfo(g.removeEdge(4, 3));
+        printDebugRemoveInfo(g.removeEdge(4, 3));//?dlaczego
         printDebugRemoveInfo(g.removeVertex(8));
         std::cout << "Nr of vertices: " << g.nrOfVertices() << std::endl;
         std::cout << "Nr of edges: " << g.nrOfEdges() << std::endl;

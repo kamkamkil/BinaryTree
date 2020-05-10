@@ -65,7 +65,7 @@ public:
         {
             do
             {
-                if (v2id_val < graph->nrOfVertices())
+                if (v2id_val < graph->nrOfVertices() - 1)
                     v2id_val++;
                 else
                 {
@@ -206,7 +206,7 @@ std::pair<typename Graph<V, E>::EdgesIterator, bool> Graph<V, E>::insertEdge(std
         matrix[vertex1_id][vertex2_id] = label;
         verticesAmount++;
 
-        return {EdgesIterator(vertex1_id, vertex2_id, this), true}; // poprawić chyba na false
+        return {EdgesIterator(vertex1_id, vertex2_id, this), false}; // poprawić chyba na false
     }
     return {EdgesIterator(vertex1_id, vertex2_id, this), false};
 }
@@ -218,8 +218,18 @@ typename Graph<V, E>::VerticesIterator Graph<V, E>::removeVertex(std::size_t ver
         return endVertices();
     for (size_t i = 0; i < valueList.size(); i++)
     {
-        if (matrix[vertex_id][i] || matrix[i][vertex_id])
+        if (i == vertex_id)
+        {
+            if(matrix[i][i])
+                verticesAmount--;
+                continue;
+        }
+        if (matrix[vertex_id][i] && !matrix[i][vertex_id])
             verticesAmount--;
+        if (!matrix[vertex_id][i] && matrix[i][vertex_id])
+            verticesAmount--;
+        if (matrix[vertex_id][i] && matrix[i][vertex_id])
+            verticesAmount -= 2;
     }
     matrix.erase(matrix.begin() + vertex_id);
     for (auto &&column : matrix)
@@ -240,7 +250,7 @@ void Graph<V, E>::printNeighborhoodMatrix() const
             if(value)
                 std::cout <<  value.value() << ",  ";
             else
-                std::cout <<  "X " << ",  "; //TODO zrobić ładnie 
+                std::cout <<  "X " << ",  "; //TODO zrobić ładnie
         }
         std::cout << std::endl;
     }
@@ -252,6 +262,7 @@ typename Graph<V, E>::EdgesIterator Graph<V, E>::removeEdge(std::size_t vertex1_
     if (matrix[vertex1_id][vertex2_id])
     {
         matrix[vertex1_id][vertex2_id].reset();
+        verticesAmount--;
         return ++EdgesIterator(vertex1_id, vertex2_id, this);
     }
     else
