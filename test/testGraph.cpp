@@ -1,7 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_CONSOLE_WIDTH 300
 #include "../lib/catch/catch.hpp"
-#include <functional>
 #include "../src/graph.hpp"
 #include <string>
 
@@ -20,6 +19,7 @@ TEST_CASE("basic_operation")
 }
 TEST_CASE("VerticesIterator", "[iterator]")
 {
+    //TODO
 }
 TEST_CASE("EdgesIterator", "[iterator]")
 {
@@ -181,7 +181,6 @@ TEST_CASE("allneighbours")
                 g.insertEdge(verse, column, std::to_string(verse * 10 + column));
         }
     }
-    g.printNeighborhoodMatrix();
     std::vector<size_t> temp = {0, 1, 2, 3, 4, 5};
     REQUIRE(g.neighbours(0) == temp);
     temp = {0, 2, 4};
@@ -190,19 +189,29 @@ TEST_CASE("allneighbours")
 TEST_CASE("DFS")
 {
     Graph<std::string, int> g;
+    g.insertVertex("zero");
     g.insertVertex("jeden");
     g.insertVertex("dwa");
     g.insertVertex("trzy");
     g.insertVertex("cztery");
-    g.insertVertex("pięć");
-    g.insertVertex("sześć");
+    g.insertVertex("piec");
     SECTION("easy_grah")
     {
+        // g.insertEdge(0, 3, 1);
+        // g.insertEdge(3, 4, 1);
+        // g.insertEdge(4, 1, 1);
+        // g.insertEdge(4, 2, 1);
+        // g.insertEdge(4, 5, 1);
+        // DFS<std::string, int>(g, 0, [](const std::string &v) -> void { std::cout << v << ", "; });
+        // std::cout << std::endl;
+    }
+    SECTION("multiple_roud_from_begining")
+    {
+        g.insertEdge(0, 1, 1);
+        g.insertEdge(0, 2, 1);
         g.insertEdge(0, 3, 1);
-        g.insertEdge(3, 4, 1);
-        g.insertEdge(4, 1, 1);
-        g.insertEdge(4, 2, 1);
+        g.insertEdge(0, 4, 1);
         g.insertEdge(4, 5, 1);
-        DFS(g, 0, [](const std::string &v) -> void { std::cout << v << ", "; });
+        DFS<std::string, int>(g, 0, [](const std::string &v) -> void { std::cout << v << ", "; });
     }
 }

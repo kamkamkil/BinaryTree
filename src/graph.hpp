@@ -285,10 +285,10 @@ std::vector<size_t> Graph<V, E>::neighbours(size_t vertex) const
     return result;
 }
 template <typename V, typename E>
-void DFS(const Graph<V, E> graph, size_t vertex,std::function<void(const V &)> fun) //const
+void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun) //const
 {
-    //TODO dodać testy oraz przypadek dla którego wiele ścieszki wychodzą z pierwszego wieszchołka 
-     std::vector<bool> visited(graph.nrOfVertices());
+    //TODO dodać testy oraz przypadek dla którego wiele ścieszki wychodzą z pierwszego wieszchołka
+    std::vector<bool> visited(graph.nrOfVertices());
     for (size_t i = 0; i < graph.nrOfVertices(); i++)
         visited[i] = false;
     visited[vertex] = true;
@@ -296,10 +296,19 @@ void DFS(const Graph<V, E> graph, size_t vertex,std::function<void(const V &)> f
     stack.push(vertex);
     fun(graph.vertexData(vertex));
     size_t current = graph.neighbours(vertex).back(); //TODO dodać przypadek dla pustego wieszchołka bez dróg wyjściowych
-    size_t oldCurrent;
-    while (current != vertex)
+    size_t oldCurrent = vertex;
+    auto test = [&](std::vector<size_t> neighbours) -> bool {
+        for (auto &&n : neighbours)
+        {
+            if (!visited[n])
+                return true;
+        }
+        return false;
+    };
+    while (current != vertex || test(graph.neighbours(vertex)))//TODO ten kod bardzo mocno poczebuje refraktoringu
     {
-        fun(graph.vertexData(current));
+        if (!visited[current])
+            fun(graph.vertexData(current));
         visited[current] = true;
         stack.push(current);
         oldCurrent = current;
@@ -311,18 +320,26 @@ void DFS(const Graph<V, E> graph, size_t vertex,std::function<void(const V &)> f
                     current = ver;
                     break;
                 }
-        if (oldCurrent != current)
-            continue;
-        }
-        stack.pop();
-        current = stack.top();
-        if(stack.empty())
-            break;
-        for (size_t i = 0; i < graph.nrOfVertices(); i++)
-        {
-            if(!visited[i])
+            if (oldCurrent != current)
                 continue;
         }
-        break;
+        while (!stack.empty() && !test(graph.neighbours(current)))
+        {
+            stack.pop();
+            current = stack.top();
+        }
+        if (stack.empty())
+            break;
+        bool everythink = false;
+        for (size_t i = 0; i < graph.nrOfVertices(); i++)
+        {
+            if (!visited[i])
+            {
+                everythink = true;
+                break;
+            }
+        }
+        if (!everythink)
+            break;
     };
 }
