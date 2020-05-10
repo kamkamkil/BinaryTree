@@ -115,7 +115,11 @@ int main()
     }
 
     std::cout << std::endl;
-    // DFS<std::string, double>(g, 1, [](const std::string &v) -> void { std::cout << v << ", "; });
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    g.printNeighborhoodMatrix();
+    DFS<std::string, double>(g, 1, [](const std::string &v) -> void { std::cout << v << ", "; });
 
     return 0;
 }

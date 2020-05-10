@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_CONSOLE_WIDTH 300
 #include "../lib/catch/catch.hpp"
+#include <functional>
 #include "../src/graph.hpp"
 #include <string>
 
@@ -83,13 +84,13 @@ TEST_CASE("insertEdge")
 
     auto pair = g.insertEdge(1, 2, "jeden_dwa");
     REQUIRE(*(pair.first) == "jeden_dwa");
-    REQUIRE(pair.second);
+    REQUIRE_FALSE(pair.second);
     pair = g.insertEdge(3, 4, "trzy_cztery");
     REQUIRE(*pair.first == "trzy_cztery");
-    REQUIRE(pair.second);
+    REQUIRE_FALSE(pair.second);
     pair = g.insertEdge(2, 1, "dwa_jeden");
     REQUIRE(*pair.first == "dwa_jeden");
-    REQUIRE(pair.second);
+    REQUIRE_FALSE(pair.second);
     pair = g.insertEdge(1, 2, "jeden_dwa_zmieniony");
     REQUIRE(*pair.first == "jeden_dwa_zmieniony");
     REQUIRE(pair.second);
@@ -162,4 +163,46 @@ TEST_CASE("removeEdge", "[remove]")
     g.removeEdge(1, 2);
     REQUIRE_FALSE(g.edgeExist(3, 2));
     REQUIRE_FALSE(g.edgeExist(1, 2));
+}
+TEST_CASE("allneighbours")
+{
+    Graph<int, std::string> g;
+    g.insertVertex(1);
+    g.insertVertex(2);
+    g.insertVertex(3);
+    g.insertVertex(4);
+    g.insertVertex(5);
+    g.insertVertex(6);
+    for (size_t verse = 0; verse < 6; verse++)
+    {
+        for (size_t column = 0; column < 6; column++)
+        {
+            if (column * verse % 2 == 0)
+                g.insertEdge(verse, column, std::to_string(verse * 10 + column));
+        }
+    }
+    g.printNeighborhoodMatrix();
+    std::vector<size_t> temp = {0, 1, 2, 3, 4, 5};
+    REQUIRE(g.neighbours(0) == temp);
+    temp = {0, 2, 4};
+    REQUIRE(g.neighbours(1) == temp);
+}
+TEST_CASE("DFS")
+{
+    Graph<std::string, int> g;
+    g.insertVertex("jeden");
+    g.insertVertex("dwa");
+    g.insertVertex("trzy");
+    g.insertVertex("cztery");
+    g.insertVertex("pięć");
+    g.insertVertex("sześć");
+    SECTION("easy_grah")
+    {
+        g.insertEdge(0, 3, 1);
+        g.insertEdge(3, 4, 1);
+        g.insertEdge(4, 1, 1);
+        g.insertEdge(4, 2, 1);
+        g.insertEdge(4, 5, 1);
+        DFS(g, 0, [](const std::string &v) -> void { std::cout << v << ", "; });
+    }
 }

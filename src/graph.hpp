@@ -8,6 +8,8 @@
 #include <queue>
 #include <stack>
 #include <iostream>
+#include <bitset>
+#include <functional>
 
 // Uwaga! Kod powinien być odporny na błędy i każda z metod jeżeli zachodzi niebezpieczeństwo wywołania z niepoprawnymi parametrami powinna zgłaszac odpowiednie wyjątki!
 
@@ -164,6 +166,8 @@ public:
     // zwraca "EdgesIterator" "za ostatnią" krawędz
     EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
     ;
+    //zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
+    std::vector<size_t> neighbours(size_t vertex) const;
 
 private:
     std::vector<std::vector<std::optional<E>>> matrix;
@@ -220,9 +224,9 @@ typename Graph<V, E>::VerticesIterator Graph<V, E>::removeVertex(std::size_t ver
     {
         if (i == vertex_id)
         {
-            if(matrix[i][i])
+            if (matrix[i][i])
                 verticesAmount--;
-                continue;
+            continue;
         }
         if (matrix[vertex_id][i] && !matrix[i][vertex_id])
             verticesAmount--;
@@ -247,10 +251,11 @@ void Graph<V, E>::printNeighborhoodMatrix() const
     {
         for (auto &&value : verse)
         {
-            if(value)
-                std::cout <<  value.value() << ",  ";
+            if (value)
+                std::cout << value.value() << ",  ";
             else
-                std::cout <<  "X " << ",  "; //TODO zrobić ładnie
+                std::cout << "X "
+                          << ",  "; //TODO zrobić ładnie
         }
         std::cout << std::endl;
     }
@@ -267,4 +272,57 @@ typename Graph<V, E>::EdgesIterator Graph<V, E>::removeEdge(std::size_t vertex1_
     }
     else
         return endEdges();
+}
+template <typename V, typename E>
+std::vector<size_t> Graph<V, E>::neighbours(size_t vertex) const
+{
+    std::vector<size_t> result;
+    for (size_t i = 0; i < valueList.size(); i++)
+    {
+        if (matrix[vertex][i])
+            result.push_back(i);
+    }
+    return result;
+}
+template <typename V, typename E>
+void DFS(const Graph<V, E> graph, size_t vertex,std::function<void(const V &)> fun) //const
+{
+    //TODO dodać testy oraz przypadek dla którego wiele ścieszki wychodzą z pierwszego wieszchołka 
+     std::vector<bool> visited(graph.nrOfVertices());
+    for (size_t i = 0; i < graph.nrOfVertices(); i++)
+        visited[i] = false;
+    visited[vertex] = true;
+    std::stack<size_t> stack;
+    stack.push(vertex);
+    fun(graph.vertexData(vertex));
+    size_t current = graph.neighbours(vertex).back(); //TODO dodać przypadek dla pustego wieszchołka bez dróg wyjściowych
+    size_t oldCurrent;
+    while (current != vertex)
+    {
+        fun(graph.vertexData(current));
+        visited[current] = true;
+        stack.push(current);
+        oldCurrent = current;
+        if (!graph.neighbours(current).empty())
+        {
+            for (auto &&ver : graph.neighbours(current))
+                if (!visited[ver])
+                {
+                    current = ver;
+                    break;
+                }
+        if (oldCurrent != current)
+            continue;
+        }
+        stack.pop();
+        current = stack.top();
+        if(stack.empty())
+            break;
+        for (size_t i = 0; i < graph.nrOfVertices(); i++)
+        {
+            if(!visited[i])
+                continue;
+        }
+        break;
+    };
 }
