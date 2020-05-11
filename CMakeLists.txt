@@ -56,6 +56,9 @@ target_link_libraries(testGraph graph)
 add_executable(testGraphZajecia test/testGraphZajecia.cpp)
 target_link_libraries(testGraphZajecia graph)
 
+add_executable(drawgraph src/drawgraph.cpp)
+target_link_libraries(drawgraph graph)
+
 
 add_executable(testGrafSearcheZ test/testGrafSearcheZ.cpp)
 target_link_libraries(testGrafSearcheZ graph)
