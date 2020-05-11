@@ -105,9 +105,9 @@ public:
         DFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
         {
             visited.resize(graph->nrOfVertices(), false);
-            visited[vertex] = true;
-            stack.push(vertex);
-            size_t current = graph.neighbours(vertex).back();
+            visited[start] = true;
+            stack.push(start);
+            size_t current = graph->neighbours(start).back();
         }
         bool operator==(const DFSIterator &dfsi) const { return (stack.empty() && dfsi.stack.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
 
@@ -118,7 +118,7 @@ public:
             visited[current] = true;
             if (test(current))
             {
-                for (auto &&ver : graph.neighbours(current))
+                for (auto &&ver : graph->neighbours(current))
                     if (!visited[ver])
                     {
                         current = ver;
@@ -133,6 +133,11 @@ public:
                     stack.pop();
                 }
             }
+            while(!stack.empty() && visited[current])
+            {
+                operator++();
+            }
+            return *this;
         };
     
     DFSIterator operator++(int)
@@ -141,9 +146,9 @@ public:
         ++*this;
         return iterator;
     };
-    V &operator*() const { graph->vertexData(stack.top()); };
-    V *operator->() const { graph->vertexData(stack.top()); };
-    operator bool() const {!stack.empty()};
+    V &operator*() const { return graph->vertexData(current); };
+    V *operator->() const { return graph->vertexData(current); };
+    operator bool() const {return !stack.empty()};
     bool test(size_t vertex)
     {
         for (auto &&n : graph->neighbours(vertex))
@@ -279,13 +284,13 @@ EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
 ;
 //zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
 std::vector<size_t> neighbours(size_t vertex) const;
-DFSIterator beginDFS(std::size_t vertex_id); //TODO
+DFSIterator beginDFS(std::size_t vertex_id) {return DFSIterator(vertex_id,this);}; 
 // zwraca "DFSIterator" "za ostatni" wierzcholek
-DFSIterator endDFS(); //TODO
+DFSIterator endDFS() {return DFSIterator();}; 
 // zwraca "BFSIterator" na wierzcholek o podanym id
-BFSIterator beginBFS(std::size_t vertex_id) { return BFSIterator(vertex_id, this); }; //TODO
+BFSIterator beginBFS(std::size_t vertex_id) { return BFSIterator(vertex_id, this); }; 
 // zwraca "BFSIterator" "za ostatni" wierzcholek
-BFSIterator endBFS() { return BFSIterator(); }; //TODO
+BFSIterator endBFS() { return BFSIterator(); }; 
 
 private:
 std::vector<std::vector<std::optional<E>>> matrix;

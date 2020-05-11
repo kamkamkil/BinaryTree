@@ -88,13 +88,36 @@ TEST_CASE("BFSIterator", "[iterator]")
     g.insertEdge(7, 6, 1);
     std::string result[] = {"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"};
     int n = 0;
-    for(auto it = g.beginBFS(0);it != g.endBFS();it++)
+    for (auto it = g.beginBFS(0); it != g.endBFS(); it++)
     {
         REQUIRE(result[n] == *it);
         n++;
     }
 }
-//"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"
+TEST_CASE("DFSIterator", "[iterator]")
+{
+    Graph<std::string, int> g;
+    g.insertVertex("zero");
+    g.insertVertex("jeden");
+    g.insertVertex("dwa");
+    g.insertVertex("trzy");
+    g.insertVertex("cztery");
+    g.insertVertex("piec");
+    g.insertEdge(0, 1, 1);
+    g.insertEdge(1, 4, 1);
+    g.insertEdge(1, 2, 1);
+    g.insertEdge(2, 5, 1);
+    g.insertEdge(3, 0, 1);
+    g.insertEdge(4, 3, 1);
+    g.insertEdge(4, 5, 1);
+    std::string result[] = {"zero", "jeden", "dwa", "piec", "cztery", "trzy"};
+    int n = 0;
+    for (auto it = g.beginDFS(0); it != g.endDFS(); it++)
+    {
+        REQUIRE(result[n] == *it);
+        n++;
+    }
+} //"zero", "jeden", "dwa", "piec", "cztery", "trzy"
 TEST_CASE("insertVertex", "[insert]")
 {
     SECTION("int_vertex")
