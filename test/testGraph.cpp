@@ -91,6 +91,7 @@ TEST_CASE("BFSIterator", "[iterator]")
     for(auto it = g.beginBFS(0);it != g.endBFS();it++)
     {
         REQUIRE(result[n] == *it);
+        n++;
     }
 }
 //"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"

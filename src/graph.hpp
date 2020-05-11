@@ -101,145 +101,198 @@ public:
     class DFSIterator
     {
     public:
-        bool operator==(const DFSIterator &dfsi) const;
-        bool operator!=(const DFSIterator &dfsi) const { return !(*this == dfsi); }
-        DFSIterator &operator++();
-        DFSIterator operator++(int);
-        V &operator*();
-        V *operator->() const;
-        operator bool() const;
-    };
-
-    class BFSIterator
-    {
-    public:
-        BFSIterator() : queue(){};
-        BFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
+        DFSIterator(){};
+        DFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
         {
-            visited.resize(graph->nrOfVertices(),false);
-            visited[start] = true;
-            queue.push(start);
+            visited.resize(graph->nrOfVertices(), false);
+            visited[vertex] = true;
+            stack.push(vertex);
+            size_t current = graph.neighbours(vertex).back();
         }
-        bool operator==(const BFSIterator &dfsi) const { return (queue.empty() && dfsi.queue.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
-        bool operator!=(const BFSIterator &dfsi) const { return !(*this == dfsi); }
-        BFSIterator &operator++()
+        bool operator==(const DFSIterator &dfsi) const { return (stack.empty() && dfsi.stack.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
+
+        bool operator!=(const DFSIterator &dfsi) const { return !(*this == dfsi); }
+        DFSIterator &operator++()
         {
-            current = queue.front();
-            queue.pop();
+            stack.push(current);
             visited[current] = true;
-            if (!graph->neighbours(current).empty())
+            if (test(current))
             {
-                for (auto &&node : graph->neighbours(current))
-                {
-                    if (!visited[node])
+                for (auto &&ver : graph.neighbours(current))
+                    if (!visited[ver])
                     {
-                        queue.push(node);
-                        visited[node] = true;
+                        current = ver;
+                        break;
                     }
+            }
+            else
+            {
+                while (!stack.empty() && !test(current))
+                {
+                    current = stack.top();
+                    stack.pop();
                 }
             }
-            return *this;
-        }
-        BFSIterator operator++(int)
-        {
-            BFSIterator iterator = *this;
-            ++*this;
-            return iterator;
         };
-        ;
-        V &operator*() const { return graph->vertexData(queue.front()); };
-        V *operator->() const { return graph->vertexData(queue.front()); };
-        operator bool() const {return !queue.empty()};
-
-    private:
-        std::vector<bool> visited;
-        size_t current;
-        size_t start;
-        std::queue<size_t> queue;
-        Graph<V, E> *graph;
-    };
-
-public:
-    Graph() : verticesAmount(0){};
-    Graph(const Graph<V, E> &source) = default;
-    Graph(Graph<V, E> &&source) = default;
-    Graph &operator=(const Graph<V, E> &source) = default;
-    Graph &operator=(Graph<V, E> &&source) = default;
-    ~Graph(){};
-
-    // dodaje nowy wierzchołek z danymi przyjętymi w argumencie (wierzchołek powinien posiadać kopie danych) i zwraca "VerticesIterator" na nowo utworzony wierzchołek
-    VerticesIterator insertVertex(const V &vertex_data);
-    // dodaje nową krawędź między wierzchołkami o id "vertex1_id" i "vertex2_id" i zwraca "EdgesIterator" na nowo dodaną krawędź, oraz informację o tym czy została dodana nowa krawędź, czy nie
-    // jeśli krawędź między podanymi wierzchołkami już istnieje to działanie funkcji zależy od ostatniego argumentu
-    // jeśli ostatni argument przyjmuje wartość "true" to krawędź zostaje zastąpiona, jeśli "false" to nie
-    std::pair<EdgesIterator, bool> insertEdge(std::size_t vertex1_id, std::size_t vertex2_id, const E &label = E(), bool replace = true);
-    // usuwa wierzchołek o podanym id i zwraca "VerticesIterator" na kolejny wierzchołek, lub to samo co "endVertices()" w przypadku usunięcia ostatniego wierzchołka, lub braku wierzchołka o podanym id
-    VerticesIterator removeVertex(std::size_t vertex_id);
-    // usuwa krawedź między dwoma wierzchołkami o podanych id i zwraca "EdgesIterator" na kolejną krawędź, lub to samo co "endEdges()" w przypadku usunięcia ostatniej krawedzi, lub braku krawędzi między wierzchołkami o podanych id
-    EdgesIterator removeEdge(std::size_t vertex1_id, std::size_t vertex2_id);
-    ;
-    // zwraca true jeśli istnieje krawędź między wierzchołkami o podanych id, false w przeciwnym razie
-    // O(1)
-    bool edgeExist(std::size_t vertex1_id, std::size_t vertex2_id) const
+    
+    DFSIterator operator++(int)
     {
-        return vertex1_id < matrix.size() && vertex2_id < matrix.size() && matrix[vertex1_id][vertex2_id];
+        DFSIterator iterator = *this;
+        ++*this;
+        return iterator;
     };
-    ;
-    // zwraca ilość wierzchołków w grafie
-    // O(1)
-    std::size_t nrOfVertices() const { return valueList.size(); };
-    // zwraca ilość krawędzi w grafie
-    // O(1)
-    std::size_t nrOfEdges() const { return verticesAmount; };
-    // drukuje macierz sąsiedztwa na konsoli (debug)
-    void printNeighborhoodMatrix() const;
-    // zwraca "VerticesIterator" do wierzchołka o podanym id, lub to samo co "endVertices()" w przypadku braku wierzchołka o podanym id
-    VerticesIterator vertex(std::size_t vertex_id) { return vertex_id < valueList.size() ? VerticesIterator(vertex_id, &valueList) : endVertices(); };
-    ;
-    // zwraca referencję do danych wierzchołka o podanym id
-    const V &vertexData(std::size_t vertex_id) const { return valueList[vertex_id]; };
-    ;
-    // zwraca referencję do danych wierzchołka o podanym id
-    V &vertexData(std::size_t vertex_id) { return valueList[vertex_id]; };
-    ;
-    // zwraca "EdgesIterator" do krawędzi pomiędzy wierzchołkami o podanych id, lub to samo co "endEdges()" w przypadku braku krawędzi między wierzchołkami o podanych id
-    EdgesIterator edge(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id] ? EdgesIterator(vertex1_id, vertex2_id, &matrix) : end(); };
-    ;
-    // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
-    const E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) const { return matrix[vertex1_id][vertex2_id].value(); };
-    ;
-    // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
-    E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id].value(); };
-    ;
-    VerticesIterator begin() { return beginVertices(); };
-    VerticesIterator end() { return endVertices(); };
-    // zwraca "VerticesIterator" na pierwszy wierzchołek (o najmniejszym id)
-    VerticesIterator beginVertices() { return VerticesIterator(0, &valueList); };
-    ;
-    // zwraca "VerticesIterator" "za ostatni" wierzchołek
-    VerticesIterator endVertices() { return VerticesIterator(valueList.size(), &valueList); };
-    ;
-    // zwraca "EdgesIterator" na pierwszą krawędz
-    EdgesIterator beginEdges() { return EdgesIterator(this); };
-    ;
-    // zwraca "EdgesIterator" "za ostatnią" krawędz
-    EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
-    ;
-    //zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
-    std::vector<size_t> neighbours(size_t vertex) const;
-    DFSIterator beginDFS(std::size_t vertex_id); //TODO
-    // zwraca "DFSIterator" "za ostatni" wierzcholek
-    DFSIterator endDFS(); //TODO
-    // zwraca "BFSIterator" na wierzcholek o podanym id
-    BFSIterator beginBFS(std::size_t vertex_id) { return BFSIterator(vertex_id,this); }; //TODO
-    // zwraca "BFSIterator" "za ostatni" wierzcholek
-    BFSIterator endBFS() { return BFSIterator(); }; //TODO
+    V &operator*() const { graph->vertexData(stack.top()); };
+    V *operator->() const { graph->vertexData(stack.top()); };
+    operator bool() const {!stack.empty()};
+    bool test(size_t vertex)
+    {
+        for (auto &&n : graph->neighbours(vertex))
+        {
+            if (!visited[n])
+                return true;
+        }
+        return false;
+    };
 
 private:
-    std::vector<std::vector<std::optional<E>>> matrix;
-    std::vector<V> valueList;
-    std::size_t verticesAmount;
+    std::vector<bool> visited;
+    size_t current;
+    size_t start;
+    std::stack<size_t> stack;
+    Graph<V, E> *graph;
 };
+
+class BFSIterator
+{
+public:
+    BFSIterator() : queue(){};
+    BFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
+    {
+        visited.resize(graph->nrOfVertices(), false);
+        visited[start] = true;
+        queue.push(start);
+    }
+    bool operator==(const BFSIterator &dfsi) const { return (queue.empty() && dfsi.queue.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
+    bool operator!=(const BFSIterator &dfsi) const { return !(*this == dfsi); }
+    BFSIterator &operator++()
+    {
+        current = queue.front();
+        queue.pop();
+        visited[current] = true;
+        if (!graph->neighbours(current).empty())
+        {
+            for (auto &&node : graph->neighbours(current))
+            {
+                if (!visited[node])
+                {
+                    queue.push(node);
+                    visited[node] = true;
+                }
+            }
+        }
+        return *this;
+    }
+    BFSIterator operator++(int)
+    {
+        BFSIterator iterator = *this;
+        ++*this;
+        return iterator;
+    };
+    ;
+    V &operator*() const { return graph->vertexData(queue.front()); };
+    V *operator->() const { return graph->vertexData(queue.front()); };
+    operator bool() const {return !queue.empty()};
+
+private:
+    std::vector<bool> visited;
+    size_t current;
+    size_t start;
+    std::queue<size_t> queue;
+    Graph<V, E> *graph;
+};
+
+public:
+Graph() : verticesAmount(0){};
+Graph(const Graph<V, E> &source) = default;
+Graph(Graph<V, E> &&source) = default;
+Graph &operator=(const Graph<V, E> &source) = default;
+Graph &operator=(Graph<V, E> &&source) = default;
+~Graph(){};
+
+// dodaje nowy wierzchołek z danymi przyjętymi w argumencie (wierzchołek powinien posiadać kopie danych) i zwraca "VerticesIterator" na nowo utworzony wierzchołek
+VerticesIterator insertVertex(const V &vertex_data);
+// dodaje nową krawędź między wierzchołkami o id "vertex1_id" i "vertex2_id" i zwraca "EdgesIterator" na nowo dodaną krawędź, oraz informację o tym czy została dodana nowa krawędź, czy nie
+// jeśli krawędź między podanymi wierzchołkami już istnieje to działanie funkcji zależy od ostatniego argumentu
+// jeśli ostatni argument przyjmuje wartość "true" to krawędź zostaje zastąpiona, jeśli "false" to nie
+std::pair<EdgesIterator, bool> insertEdge(std::size_t vertex1_id, std::size_t vertex2_id, const E &label = E(), bool replace = true);
+// usuwa wierzchołek o podanym id i zwraca "VerticesIterator" na kolejny wierzchołek, lub to samo co "endVertices()" w przypadku usunięcia ostatniego wierzchołka, lub braku wierzchołka o podanym id
+VerticesIterator removeVertex(std::size_t vertex_id);
+// usuwa krawedź między dwoma wierzchołkami o podanych id i zwraca "EdgesIterator" na kolejną krawędź, lub to samo co "endEdges()" w przypadku usunięcia ostatniej krawedzi, lub braku krawędzi między wierzchołkami o podanych id
+EdgesIterator removeEdge(std::size_t vertex1_id, std::size_t vertex2_id);
+;
+// zwraca true jeśli istnieje krawędź między wierzchołkami o podanych id, false w przeciwnym razie
+// O(1)
+bool edgeExist(std::size_t vertex1_id, std::size_t vertex2_id) const
+{
+    return vertex1_id < matrix.size() && vertex2_id < matrix.size() && matrix[vertex1_id][vertex2_id];
+};
+;
+// zwraca ilość wierzchołków w grafie
+// O(1)
+std::size_t nrOfVertices() const { return valueList.size(); };
+// zwraca ilość krawędzi w grafie
+// O(1)
+std::size_t nrOfEdges() const { return verticesAmount; };
+// drukuje macierz sąsiedztwa na konsoli (debug)
+void printNeighborhoodMatrix() const;
+// zwraca "VerticesIterator" do wierzchołka o podanym id, lub to samo co "endVertices()" w przypadku braku wierzchołka o podanym id
+VerticesIterator vertex(std::size_t vertex_id) { return vertex_id < valueList.size() ? VerticesIterator(vertex_id, &valueList) : endVertices(); };
+;
+// zwraca referencję do danych wierzchołka o podanym id
+const V &vertexData(std::size_t vertex_id) const { return valueList[vertex_id]; };
+;
+// zwraca referencję do danych wierzchołka o podanym id
+V &vertexData(std::size_t vertex_id) { return valueList[vertex_id]; };
+;
+// zwraca "EdgesIterator" do krawędzi pomiędzy wierzchołkami o podanych id, lub to samo co "endEdges()" w przypadku braku krawędzi między wierzchołkami o podanych id
+EdgesIterator edge(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id] ? EdgesIterator(vertex1_id, vertex2_id, &matrix) : end(); };
+;
+// zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
+const E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) const { return matrix[vertex1_id][vertex2_id].value(); };
+;
+// zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
+E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id].value(); };
+;
+VerticesIterator begin() { return beginVertices(); };
+VerticesIterator end() { return endVertices(); };
+// zwraca "VerticesIterator" na pierwszy wierzchołek (o najmniejszym id)
+VerticesIterator beginVertices() { return VerticesIterator(0, &valueList); };
+;
+// zwraca "VerticesIterator" "za ostatni" wierzchołek
+VerticesIterator endVertices() { return VerticesIterator(valueList.size(), &valueList); };
+;
+// zwraca "EdgesIterator" na pierwszą krawędz
+EdgesIterator beginEdges() { return EdgesIterator(this); };
+;
+// zwraca "EdgesIterator" "za ostatnią" krawędz
+EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
+;
+//zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
+std::vector<size_t> neighbours(size_t vertex) const;
+DFSIterator beginDFS(std::size_t vertex_id); //TODO
+// zwraca "DFSIterator" "za ostatni" wierzcholek
+DFSIterator endDFS(); //TODO
+// zwraca "BFSIterator" na wierzcholek o podanym id
+BFSIterator beginBFS(std::size_t vertex_id) { return BFSIterator(vertex_id, this); }; //TODO
+// zwraca "BFSIterator" "za ostatni" wierzcholek
+BFSIterator endBFS() { return BFSIterator(); }; //TODO
+
+private:
+std::vector<std::vector<std::optional<E>>> matrix;
+std::vector<V> valueList;
+std::size_t verticesAmount;
+}
+;
 
 template <typename V, typename E>
 typename Graph<V, E>::VerticesIterator Graph<V, E>::insertVertex(const V &vertex_data)
@@ -366,7 +419,6 @@ void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> 
     stack.push(vertex);
     fun(graph.vertexData(vertex));
     size_t current = graph.neighbours(vertex).back();
-    size_t oldCurrent = vertex;
     auto test = [&](size_t vertex_) -> bool {
         for (auto &&n : graph.neighbours(vertex_))
         {
