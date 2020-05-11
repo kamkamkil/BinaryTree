@@ -62,6 +62,38 @@ TEST_CASE("EdgesIterator", "[iterator]")
         n++;
     }
 }
+TEST_CASE("BFSIterator", "[iterator]")
+{
+    Graph<std::string, int> g;
+    g.insertVertex("zero");
+    g.insertVertex("jeden");
+    g.insertVertex("dwa");
+    g.insertVertex("trzy");
+    g.insertVertex("cztery");
+    g.insertVertex("pięć");
+    g.insertVertex("sześć");
+    g.insertVertex("siedem");
+    g.insertEdge(0, 1, 1);
+    g.insertEdge(0, 3, 1);
+    g.insertEdge(1, 4, 1);
+    g.insertEdge(1, 2, 1);
+    g.insertEdge(2, 1, 1);
+    g.insertEdge(2, 7, 1);
+    g.insertEdge(3, 4, 1);
+    g.insertEdge(4, 3, 1);
+    g.insertEdge(4, 5, 1);
+    g.insertEdge(5, 6, 1);
+    g.insertEdge(6, 7, 1);
+    g.insertEdge(7, 2, 1);
+    g.insertEdge(7, 6, 1);
+    std::string result[] = {"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"};
+    int n = 0;
+    for(auto it = g.beginBFS(0);it != g.endBFS();it++)
+    {
+        REQUIRE(result[n] == *it);
+    }
+}
+//"zero", "jeden", "trzy", "dwa", "cztery", "siedem", "pięć", "sześć"
 TEST_CASE("insertVertex", "[insert]")
 {
     SECTION("int_vertex")
@@ -226,7 +258,7 @@ TEST_CASE("DFS", "[Search_algorithm]")
         requireResult = {"zero", "trzy", "cztery", "jeden", "dwa", "piec"};
         REQUIRE(result == requireResult);
     }
-    SECTION("multiple_roa`d_from_begining")
+    SECTION("multiple_road_from_begining")
     {
         g.insertEdge(0, 1, 1);
         g.insertEdge(0, 2, 1);

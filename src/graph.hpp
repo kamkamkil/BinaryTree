@@ -85,7 +85,7 @@ public:
             ++*this;
             return iterator;
         };
-        E &operator*() const { return graph->edgeLabel(v1id_val, v2id_val); }; //?????? o co biega ??
+        E &operator*() const { return graph->edgeLabel(v1id_val, v2id_val); };
         E *operator->() const;
         // zwraca id wierzchołka startowego
         std::size_t v1id() const { return v1id_val; };
@@ -98,7 +98,66 @@ public:
         size_t v2id_val;
         Graph<V, E> *graph;
     };
-    // ...
+    class DFSIterator
+    {
+    public:
+        bool operator==(const DFSIterator &dfsi) const;
+        bool operator!=(const DFSIterator &dfsi) const { return !(*this == dfsi); }
+        DFSIterator &operator++();
+        DFSIterator operator++(int);
+        V &operator*();
+        V *operator->() const;
+        operator bool() const;
+    };
+
+    class BFSIterator
+    {
+    public:
+        BFSIterator() : queue(){};
+        BFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
+        {
+            visited.resize(graph->nrOfVertices(),false);
+            visited[start] = true;
+            queue.push(start);
+        }
+        bool operator==(const BFSIterator &dfsi) const { return (queue.empty() && dfsi.queue.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
+        bool operator!=(const BFSIterator &dfsi) const { return !(*this == dfsi); }
+        BFSIterator &operator++()
+        {
+            current = queue.front();
+            queue.pop();
+            visited[current] = true;
+            if (!graph->neighbours(current).empty())
+            {
+                for (auto &&node : graph->neighbours(current))
+                {
+                    if (!visited[node])
+                    {
+                        queue.push(node);
+                        visited[node] = true;
+                    }
+                }
+            }
+            return *this;
+        }
+        BFSIterator operator++(int)
+        {
+            BFSIterator iterator = *this;
+            ++*this;
+            return iterator;
+        };
+        ;
+        V &operator*() const { return graph->vertexData(queue.front()); };
+        V *operator->() const { return graph->vertexData(queue.front()); };
+        operator bool() const {return !queue.empty()};
+
+    private:
+        std::vector<bool> visited;
+        size_t current;
+        size_t start;
+        std::queue<size_t> queue;
+        Graph<V, E> *graph;
+    };
 
 public:
     Graph() : verticesAmount(0){};
@@ -168,6 +227,13 @@ public:
     ;
     //zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
     std::vector<size_t> neighbours(size_t vertex) const;
+    DFSIterator beginDFS(std::size_t vertex_id); //TODO
+    // zwraca "DFSIterator" "za ostatni" wierzcholek
+    DFSIterator endDFS(); //TODO
+    // zwraca "BFSIterator" na wierzcholek o podanym id
+    BFSIterator beginBFS(std::size_t vertex_id) { return BFSIterator(vertex_id,this); }; //TODO
+    // zwraca "BFSIterator" "za ostatni" wierzcholek
+    BFSIterator endBFS() { return BFSIterator(); }; //TODO
 
 private:
     std::vector<std::vector<std::optional<E>>> matrix;
