@@ -519,3 +519,40 @@ void BFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> 
         }
     }
 }
+
+template <typename V, typename E>
+std::vector<size_t> BFS(const Graph<V, E> graph, size_t vertex) //const
+{
+    std::vector<size_t> result;
+    if (graph.neighbours(vertex).empty())
+    {
+        result.push_back(vertex);
+        return result;
+    }
+    std::vector<bool> visited(graph.nrOfVertices());
+    for (size_t i = 0; i < graph.nrOfVertices(); i++)
+        visited[i] = false;
+    visited[vertex] = true;
+    std::queue<size_t> queue;
+    size_t current;
+    queue.push(vertex);
+    while (!queue.empty())
+    {
+        current = queue.front();
+        queue.pop();
+        visited[current] = true;
+        result.push_back(current);
+        if (!graph.neighbours(current).empty())
+        {
+            for (auto &&node : graph.neighbours(current))
+            {
+                if (!visited[node])
+                {
+                    queue.push(node);
+                    visited[node] = true;
+                }
+            }
+        }
+    }
+    return result;
+}

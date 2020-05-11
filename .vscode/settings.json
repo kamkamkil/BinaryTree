@@ -74,8 +74,11 @@
         "xlocmon": "cpp",
         "xloctime": "cpp",
         "*.rh": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "array": "cpp",
+        "complex": "cpp"
     },
     "cmake.configureOnOpen": true,
-    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+    "C_Cpp.errorSquiggles": "Disabled"
 }
