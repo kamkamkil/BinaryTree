@@ -29,6 +29,7 @@ public:
     class DFSIterator;
     // iterator przeszukiwania przez BFS
     class BFSIterator;
+
 public:
     Graph() : verticesAmount(0){};
     Graph(const Graph<V, E> &source) = default;
@@ -47,14 +48,12 @@ public:
     VerticesIterator removeVertex(std::size_t vertex_id);
     // usuwa krawedź między dwoma wierzchołkami o podanych id i zwraca "EdgesIterator" na kolejną krawędź, lub to samo co "endEdges()" w przypadku usunięcia ostatniej krawedzi, lub braku krawędzi między wierzchołkami o podanych id
     EdgesIterator removeEdge(std::size_t vertex1_id, std::size_t vertex2_id);
-    ;
     // zwraca true jeśli istnieje krawędź między wierzchołkami o podanych id, false w przeciwnym razie
     // O(1)
     bool edgeExist(std::size_t vertex1_id, std::size_t vertex2_id) const
     {
         return vertex1_id < matrix.size() && vertex2_id < matrix.size() && matrix[vertex1_id][vertex2_id];
     };
-    ;
     // zwraca ilość wierzchołków w grafie
     // O(1)
     std::size_t nrOfVertices() const { return valueList.size(); };
@@ -65,36 +64,26 @@ public:
     void printNeighborhoodMatrix() const;
     // zwraca "VerticesIterator" do wierzchołka o podanym id, lub to samo co "endVertices()" w przypadku braku wierzchołka o podanym id
     VerticesIterator vertex(std::size_t vertex_id) { return vertex_id < valueList.size() ? VerticesIterator(vertex_id, &valueList) : endVertices(); };
-    ;
     // zwraca referencję do danych wierzchołka o podanym id
     const V &vertexData(std::size_t vertex_id) const { return valueList[vertex_id]; };
-    ;
     // zwraca referencję do danych wierzchołka o podanym id
     V &vertexData(std::size_t vertex_id) { return valueList[vertex_id]; };
-    ;
     // zwraca "EdgesIterator" do krawędzi pomiędzy wierzchołkami o podanych id, lub to samo co "endEdges()" w przypadku braku krawędzi między wierzchołkami o podanych id
     EdgesIterator edge(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id] ? EdgesIterator(vertex1_id, vertex2_id, &matrix) : end(); };
-    ;
     // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
     const E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) const { return matrix[vertex1_id][vertex2_id].value(); };
-    ;
     // zwraca referencję do danych (etykiety) krawędzi pomiędzy wierzchołkami o podanych id
     E &edgeLabel(std::size_t vertex1_id, std::size_t vertex2_id) { return matrix[vertex1_id][vertex2_id].value(); };
-    ;
     VerticesIterator begin() { return beginVertices(); };
     VerticesIterator end() { return endVertices(); };
     // zwraca "VerticesIterator" na pierwszy wierzchołek (o najmniejszym id)
     VerticesIterator beginVertices() { return VerticesIterator(0, &valueList); };
-    ;
     // zwraca "VerticesIterator" "za ostatni" wierzchołek
     VerticesIterator endVertices() { return VerticesIterator(valueList.size(), &valueList); };
-    ;
     // zwraca "EdgesIterator" na pierwszą krawędz
     EdgesIterator beginEdges() { return EdgesIterator(this); };
-    ;
     // zwraca "EdgesIterator" "za ostatnią" krawędz
     EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
-    ;
     //zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
     std::vector<size_t> neighbours(size_t vertex) const;
     DFSIterator beginDFS(std::size_t vertex_id) { return DFSIterator(vertex_id, this); };
@@ -110,7 +99,9 @@ private:
     std::vector<V> valueList;
     std::size_t verticesAmount;
 };
-
+/*
+iteratory 
+*/
 template <typename V, typename E>
 class Graph<V, E>::VerticesIterator
 {
@@ -140,7 +131,6 @@ private:
     size_t idVal;
     std::vector<V> *valueList;
 };
-
 template <typename V, typename E>
 class Graph<V, E>::EdgesIterator
 {
@@ -153,22 +143,7 @@ public:
     EdgesIterator(size_t v1id_val_, size_t v2id_val_, Graph<V, E> *graph_) : v1id_val(v1id_val_), v2id_val(v2id_val_), graph(graph_){};
     bool operator==(const EdgesIterator &ei) const { return v1id_val == ei.v1id_val && v2id_val == ei.v2id_val; };
     bool operator!=(const EdgesIterator &ei) const { return v1id_val != ei.v1id_val || v2id_val != ei.v2id_val; };
-    EdgesIterator &operator++()
-    {
-        do
-        {
-            if (v2id_val < graph->nrOfVertices() - 1)
-                v2id_val++;
-            else
-            {
-                v1id_val++;
-                v2id_val = 0;
-            }
-            if (v1id_val >= graph->nrOfVertices())
-                break;
-        } while (!graph->edgeExist(v1id_val, v2id_val));
-        return *this;
-    };
+    EdgesIterator &operator++();
     EdgesIterator operator++(int)
     {
         EdgesIterator iterator = *this;
@@ -193,44 +168,10 @@ class Graph<V, E>::DFSIterator
 {
 public:
     DFSIterator(){};
-    DFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
-    {
-        visited.resize(graph->nrOfVertices(), false);
-        visited[start] = true;
-        stack.push(start);
-        size_t current = graph->neighbours(start).back();
-    }
+    DFSIterator(size_t start_, Graph<V, E> *graph_);
     bool operator==(const DFSIterator &dfsi) const { return (stack.empty() && dfsi.stack.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
-
     bool operator!=(const DFSIterator &dfsi) const { return !(*this == dfsi); }
-    DFSIterator &operator++()
-    {
-        stack.push(current);
-        visited[current] = true;
-        if (test(current))
-        {
-            for (auto &&ver : graph->neighbours(current))
-                if (!visited[ver])
-                {
-                    current = ver;
-                    break;
-                }
-        }
-        else
-        {
-            while (!stack.empty() && !test(current))
-            {
-                current = stack.top();
-                stack.pop();
-            }
-        }
-        while (!stack.empty() && visited[current])
-        {
-            operator++();
-        }
-        return *this;
-    };
-
+    DFSIterator &operator++();
     DFSIterator operator++(int)
     {
         DFSIterator iterator = *this;
@@ -240,17 +181,9 @@ public:
     V &operator*() const { return graph->vertexData(current); };
     V *operator->() const { return graph->vertexData(current); };
     operator bool() const {return !stack.empty()};
-    bool test(size_t vertex)
-    {
-        for (auto &&n : graph->neighbours(vertex))
-        {
-            if (!visited[n])
-                return true;
-        }
-        return false;
-    };
 
 private:
+    bool test(size_t vertex);
     std::vector<bool> visited;
     size_t current;
     size_t start;
@@ -262,32 +195,10 @@ class Graph<V, E>::BFSIterator
 {
 public:
     BFSIterator() : queue(){};
-    BFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
-    {
-        visited.resize(graph->nrOfVertices(), false);
-        visited[start] = true;
-        queue.push(start);
-    }
+    BFSIterator(size_t start_, Graph<V, E> *graph_);
     bool operator==(const BFSIterator &dfsi) const { return (queue.empty() && dfsi.queue.empty()) || (current == dfsi.current && start == dfsi.start && graph == dfsi.graph); };
     bool operator!=(const BFSIterator &dfsi) const { return !(*this == dfsi); }
-    BFSIterator &operator++()
-    {
-        current = queue.front();
-        queue.pop();
-        visited[current] = true;
-        if (!graph->neighbours(current).empty())
-        {
-            for (auto &&node : graph->neighbours(current))
-            {
-                if (!visited[node])
-                {
-                    queue.push(node);
-                    visited[node] = true;
-                }
-            }
-        }
-        return *this;
-    }
+    BFSIterator &operator++();
     BFSIterator operator++(int)
     {
         BFSIterator iterator = *this;
@@ -307,6 +218,99 @@ private:
     Graph<V, E> *graph;
 };
 
+template <typename V, typename E>
+typename Graph<V, E>::EdgesIterator &Graph<V, E>::EdgesIterator::operator++()
+{
+    do
+    {
+        if (v2id_val < graph->nrOfVertices() - 1)
+            v2id_val++;
+        else
+        {
+            v1id_val++;
+            v2id_val = 0;
+        }
+        if (v1id_val >= graph->nrOfVertices())
+            break;
+    } while (!graph->edgeExist(v1id_val, v2id_val));
+    return *this;
+}
+
+template <typename V, typename E>
+Graph<V, E>::DFSIterator::DFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
+{
+    visited.resize(graph->nrOfVertices(), false);
+    visited[start] = true;
+    stack.push(start);
+    size_t current = graph->neighbours(start).back();
+}
+template <typename V, typename E>
+typename Graph<V, E>::DFSIterator &Graph<V, E>::DFSIterator::operator++()
+{
+    stack.push(current);
+    visited[current] = true;
+    if (test(current))
+    {
+        for (auto &&ver : graph->neighbours(current))
+            if (!visited[ver])
+            {
+                current = ver;
+                break;
+            }
+    }
+    else
+    {
+        while (!stack.empty() && !test(current))
+        {
+            current = stack.top();
+            stack.pop();
+        }
+    }
+    while (!stack.empty() && visited[current])
+    {
+        operator++();
+    }
+    return *this;
+};
+template <typename V, typename E>
+bool Graph<V, E>::DFSIterator::test(size_t vertex)
+{
+    for (auto &&n : graph->neighbours(vertex))
+    {
+        if (!visited[n])
+            return true;
+    }
+    return false;
+};
+template <typename V, typename E>
+Graph<V, E>::BFSIterator::BFSIterator(size_t start_, Graph<V, E> *graph_) : current(start_), start(start_), graph(graph_)
+{
+    visited.resize(graph->nrOfVertices(), false);
+    visited[start] = true;
+    queue.push(start);
+}
+template <typename V, typename E>
+typename Graph<V, E>::BFSIterator &Graph<V, E>::BFSIterator::operator++()
+{
+    current = queue.front();
+    queue.pop();
+    visited[current] = true;
+    if (!graph->neighbours(current).empty())
+    {
+        for (auto &&node : graph->neighbours(current))
+        {
+            if (!visited[node])
+            {
+                queue.push(node);
+                visited[node] = true;
+            }
+        }
+    }
+    return *this;
+}
+/*
+iplementacje funkcji 
+*/
 template <typename V, typename E>
 typename Graph<V, E>::VerticesIterator Graph<V, E>::insertVertex(const V &vertex_data)
 {
@@ -416,6 +420,9 @@ std::vector<size_t> Graph<V, E>::neighbours(size_t vertex) const
     }
     return result;
 }
+/*
+algorytmy
+*/
 template <typename V, typename E>
 void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun) //const
 {
