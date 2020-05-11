@@ -53,12 +53,12 @@ target_link_libraries(testMapZajecia map)
 add_executable(testGraph test/testGraph.cpp)
 target_link_libraries(testGraph graph)
 
-add_executable(testGraphZajeciaZ test/testGraphZajeciaZ.cpp)
+add_executable(testGraphZajecia test/testGraphZajecia.cpp)
 target_link_libraries(testGraphZajecia graph)
 
 
 add_executable(testGrafSearcheZ test/testGrafSearcheZ.cpp)
-target_link_libraries(testGrafSearche graph)
+target_link_libraries(testGrafSearcheZ graph)
 
 add_test(testGraph testGraph)
 

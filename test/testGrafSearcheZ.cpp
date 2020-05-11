@@ -4,6 +4,7 @@
 #include <functional>
 #include <cstdint>
 #include <cmath>
+#include <string>
 #include "../src/graph.hpp"
 
 using namespace std;
@@ -23,9 +24,9 @@ template <typename Iter>
 void printDebugRemoveInfo(const Iter &next)
 {
     if (next)
-        std::cout << "Usunięto, następny element to: " << *next << std::endl;
+        std::cout << "Usunieto, nastepny element to: " << *next << std::endl;
     else
-        std::cout << "Nie usunięto, lub następny element to end()" << std::endl;
+        std::cout << "Nie usunieto, lub nastepny element to end()" << std::endl;
 }
 
 int main()
