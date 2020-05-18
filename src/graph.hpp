@@ -361,28 +361,35 @@ std::pair<double, std::vector<std::size_t>> dijkstra(
             unvisited.insert({i, std::numeric_limits<double>::max()});
         else
             unvisited.insert({i, 0});
-    std::vector<size_t> predecesor(graph.nrOfVertices(), -1);
-    std::set<std::pair<size_t, double>> visited;
-    auto current_node = unvisited.find({start_idx,0});
+    std::vector<size_t> predecesor(graph.nrOfVertices());
+
+    auto current_node = unvisited.find({start_idx, 0});
     while ((*current_node).first != end_idx)
     {
         for (auto &&neighbour : graph.neighbours((*current_node).first))
         {
-            auto temp = find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == neighbour; }); //TODO zmiana nazwy
+            auto temp = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == neighbour; }); //TODO zmiana nazwy
             if (temp != unvisited.end() && getEdgeLength(graph.edgeLabel((*current_node).first, neighbour)) + (*current_node).second < (*temp).second)
             {
                 unvisited.erase(temp);
-                unvisited.insert({neighbour, graph.edgeLabel((*current_node).first, neighbour)  + (*current_node).second });
+                unvisited.insert({neighbour, graph.edgeLabel((*current_node).first, neighbour) + (*current_node).second});
                 predecesor[neighbour] = (*current_node).first;
             }
         }
-        visited.insert(*current_node);
         unvisited.erase(current_node);
 
         std::cout << std::endl;
-        current_node = min_element(unvisited.begin(), unvisited.end(), [](const std::pair<size_t, double> a, const std::pair<size_t, double> b) -> bool { return a.second <= b.second; });
+        current_node = std::min_element(unvisited.begin(), unvisited.end(), [](const std::pair<size_t, double> a, const std::pair<size_t, double> b) -> bool { return a.second < b.second; });
     }
-
-    
-    return {1, std::vector<std::size_t>()};
+    size_t node = end_idx;
+    std::vector<size_t> result;
+    while (node != start_idx)
+    {
+        result.push_back(node);
+        node = predecesor[node];
+    }
+    result.push_back(start_idx);
+    auto temp = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == end_idx; });
+     std::reverse(result.begin(), result.end());
+    return {(*temp).second,result};
 }

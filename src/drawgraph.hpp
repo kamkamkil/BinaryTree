@@ -1,5 +1,5 @@
+#pragma once
 #include "graph.hpp"
-// #include "../lib/gnuplot.h"
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -18,7 +18,7 @@ void drawGraph(Graph<V, E> &graph, double radius, std::string filename)
     for (auto &&value : graph)
     {
         data << getX(n) << "    " << getY(n);
-        data << "    \"" << value << "\"" << endl;
+        data << "    \"" << value <<" ( " << n << " ) "<< "\"" << endl;
         n++;
     }
     data << endl;
@@ -90,32 +90,4 @@ void animatePath(Graph<V, E> &graph, double radius, std::string filename, size_t
     }
     data << "set term wxt";
     data.close();
-}
-int main(int argc, char const *argv[])
-{
-    Graph<std::string, int> g;
-    g.insertVertex("zero");
-    g.insertVertex("jeden");
-    g.insertVertex("dwa");
-    g.insertVertex("trzy");
-    g.insertVertex("cztery");
-    g.insertVertex("pięć");
-    g.insertVertex("sześć");
-    g.insertVertex("siedem");
-    g.insertEdge(0, 1, 11);
-    g.insertEdge(0, 3, 12);
-    g.insertEdge(1, 4, 13);
-    g.insertEdge(1, 2, 14);
-    g.insertEdge(2, 1, 15);
-    g.insertEdge(2, 7, 16);
-    g.insertEdge(3, 4, 17);
-    g.insertEdge(4, 3, 18);
-    g.insertEdge(4, 5, 19);
-    g.insertEdge(5, 6, 112);
-    g.insertEdge(6, 7, 134);
-    g.insertEdge(7, 2, 145);
-    g.insertEdge(7, 6, 167);
-    // drawGraph<string,int>(g,20,"temp.txt");
-    animatePath<std::string, int>(g, 20, "_test.gp", 0);
-    return 0;
 }

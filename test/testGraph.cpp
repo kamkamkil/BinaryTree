@@ -423,11 +423,17 @@ TEST_CASE("Dijkstra's algorithm") //TODO zmiana nazwy
     g.insertVertex("trzy");
     g.insertVertex("cztery");
     g.insertEdge(0,1,1);
-    g.insertEdge(0,2,3);
+    // g.insertEdge(0,2,3);
     g.insertEdge(1,2,1);
     g.insertEdge(1,4,10);
     g.insertEdge(2,3,3);
     g.insertEdge(3,4,3);
 
-    dijkstra<std::string, int>(g, 0, 4);
+    auto result = dijkstra<std::string, int>(g, 0, 1);
+    std::cout << result.first << std::endl;
+    for (auto &&i : result.second)
+    {
+        std::cout << i << std::endl;
+    }
+    
 }
