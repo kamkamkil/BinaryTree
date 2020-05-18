@@ -174,7 +174,7 @@ TEST_CASE("Dijkstras_algorithm")
     g.insertEdge(2, 3, 3);
     g.insertEdge(3, 4, 3);
 
-    auto result = dijkstra<std::string, int>(g, 0, 1);
+    auto result = dijkstra<std::string, int>(g, 0, 4);
     std::cout << result.first << std::endl;
     for (auto &&i : result.second)
     {
