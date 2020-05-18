@@ -218,7 +218,7 @@ std::vector<size_t> Graph<V, E>::neighbours(size_t vertex) const
 algorytmy
 */
 template <typename V, typename E>
-void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun) //const
+void DFS(const Graph<V, E> graph, size_t vertex, std::function<void(const V &)> fun)
 {
     if (graph.neighbours(vertex).empty())
     {
@@ -356,7 +356,14 @@ std::pair<double, std::vector<std::size_t>> dijkstra(Graph<V, E>& graph, std::si
 {
     std::set<std::pair<size_t,double>> unvisited;
     for (size_t i = 0; i < graph.nrOfVertices(); i++)
-        unvisited.insert({i,std::numeric_limits<double>::max()});
-    size_t[graph.nrOfVertices()] poprzednik ;
+        if(i != start_idx)
+            unvisited.insert({i,std::numeric_limits<double>::max()});
+        else
+            unvisited.insert({i,0});
+    std::vector<size_t> predecesor(graph.nrOfVertices(),-1);
+    std::set<std::pair<size_t,double>> visited;
+    auto current_node = min_element(unvisited.begin(),unvisited.end(),[](const std::pair<size_t,double> a,const std::pair<size_t,double>b) -> bool {return a.second <= b.second;});
 
+
+    return {1,std::vector<std::size_t>()};
 }

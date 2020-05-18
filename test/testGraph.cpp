@@ -414,3 +414,16 @@ TEST_CASE("BFS", "[Search_algorithm]")
         REQUIRE(result == requireResult);
     }
 }
+TEST_CASE("Dijkstra's algorithm") //TODO zmiana nazwy
+{
+    Graph<std::string, int> g;
+    g.insertVertex("zero");
+    g.insertVertex("jeden");
+    g.insertVertex("dwa");
+    g.insertVertex("trzy");
+    g.insertVertex("cztery");
+    g.insertVertex("pięć");
+    g.insertVertex("sześć");
+    g.insertVertex("siedem");
+    dijkstra<std::string, int>(g, 1, 1);
+}
