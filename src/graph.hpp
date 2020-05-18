@@ -351,19 +351,38 @@ std::vector<size_t> BFS(const Graph<V, E> graph, size_t vertex) //const
     return result;
 }
 
-template<typename V, typename E>
-std::pair<double, std::vector<std::size_t>> dijkstra(Graph<V, E>& graph, std::size_t start_idx, std::size_t end_idx, std::function<double(const E&)> getEdgeLength = nullptr)
+template <typename V, typename E>
+std::pair<double, std::vector<std::size_t>> dijkstra(
+    Graph<V, E> &graph, std::size_t start_idx, std::size_t end_idx, std::function<double(const E &)> getEdgeLength = [](const E &edge) -> E { return edge; })
 {
-    std::set<std::pair<size_t,double>> unvisited;
+    std::set<std::pair<size_t, double>> unvisited;
     for (size_t i = 0; i < graph.nrOfVertices(); i++)
-        if(i != start_idx)
-            unvisited.insert({i,std::numeric_limits<double>::max()});
+        if (i != start_idx)
+            unvisited.insert({i, std::numeric_limits<double>::max()});
         else
-            unvisited.insert({i,0});
-    std::vector<size_t> predecesor(graph.nrOfVertices(),-1);
-    std::set<std::pair<size_t,double>> visited;
-    auto current_node = min_element(unvisited.begin(),unvisited.end(),[](const std::pair<size_t,double> a,const std::pair<size_t,double>b) -> bool {return a.second <= b.second;});
+            unvisited.insert({i, 0});
+    std::vector<size_t> predecesor(graph.nrOfVertices(), -1);
+    std::set<std::pair<size_t, double>> visited;
+    auto current_node = unvisited.find({start_idx,0});
+    while ((*current_node).first != end_idx)
+    {
+        for (auto &&neighbour : graph.neighbours((*current_node).first))
+        {
+            auto temp = find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == neighbour; }); //TODO zmiana nazwy
+            if (temp != unvisited.end() && getEdgeLength(graph.edgeLabel((*current_node).first, neighbour)) + (*current_node).second < (*temp).second)
+            {
+                unvisited.erase(temp);
+                unvisited.insert({neighbour, graph.edgeLabel((*current_node).first, neighbour)  + (*current_node).second });
+                predecesor[neighbour] = (*current_node).first;
+            }
+        }
+        visited.insert(*current_node);
+        unvisited.erase(current_node);
 
+        std::cout << std::endl;
+        current_node = min_element(unvisited.begin(), unvisited.end(), [](const std::pair<size_t, double> a, const std::pair<size_t, double> b) -> bool { return a.second <= b.second; });
+    }
 
-    return {1,std::vector<std::size_t>()};
+    
+    return {1, std::vector<std::size_t>()};
 }
