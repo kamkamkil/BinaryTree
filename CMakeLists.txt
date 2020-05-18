@@ -38,38 +38,31 @@ target_link_libraries(testBST BinaryTree)
 add_executable(testSet test/testSet.cpp )
 target_link_libraries(testBST treeSet)
 
-add_executable(testSetZajecia1 test/testSetZajecia1.cpp )
+add_executable(testSetZajecia1 test/test_zajecia/testSetZajecia1.cpp )
 target_link_libraries(testSetZajecia1  treeSet)
 
-add_executable(testSetZajecia2 test/testSetZajecia2.cpp )
+add_executable(testSetZajecia2 test/test_zajecia/testSetZajecia2.cpp )
 target_link_libraries(testSetZajecia2  treeSet)
 
 add_executable(testMap test/testMap.cpp)
 target_link_libraries(testMap map)
 
-add_executable(testMapZajecia test/testMapZajecia.cpp)
+add_executable(testMapZajecia test/test_zajecia/testMapZajecia.cpp)
 target_link_libraries(testMapZajecia map)
 
 add_executable(testGraph test/testGraph.cpp)
 target_link_libraries(testGraph graph)
 
-add_executable(testGraphZajecia test/testGraphZajecia.cpp)
+add_executable(testGraphAlgorithms test/testGraphAlgorithms.cpp)
+target_link_libraries(testGraphAlgorithms graph)
+
+add_executable(testGraphZajecia test/test_zajecia/testGraphZajecia.cpp)
 target_link_libraries(testGraphZajecia graph)
 
-# add_executable(drawgraph src/drawgraph.cpp)
-# target_link_libraries(drawgraph graph)
+# add_test(testGraph testGraph)
 
+# add_test(testMap testMap)
 
-add_executable(testGrafSearcheZ test/testGrafSearcheZ.cpp)
-target_link_libraries(testGrafSearcheZ graph)
+# add_test(testSet testSet)
 
-add_executable(testDikstraZajecia test/testDikstraZajecia.cpp)
-target_link_libraries(testDikstraZajecia graph)
-
-add_test(testGraph testGraph)
-
-add_test(testMap testMap)
-
-add_test(testSet testSet)
-
-add_test(testBST testBST)
+# add_test(testBST testBST)

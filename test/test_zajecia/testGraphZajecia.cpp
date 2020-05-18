@@ -1,11 +1,12 @@
 
-//TODO zmienić nazwe testu na test zajecia 
+
 #include <iostream>
 #include <functional>
 #include <cstdint>
-#include <cmath>
 #include <string>
+#include <cmath>
 #include "../src/graph.hpp"
+// #include "../src/drawgraph.hpp"
 
 using namespace std;
 
@@ -24,9 +25,9 @@ template <typename Iter>
 void printDebugRemoveInfo(const Iter &next)
 {
     if (next)
-        std::cout << "Usunieto, nastepny element to: " << *next << std::endl;
+        std::cout << "Usunięto, następny element to: " << *next << std::endl;
     else
-        std::cout << "Nie usunieto, lub nastepny element to end()" << std::endl;
+        std::cout << "Nie usunięto, lub następny element to end()" << std::endl;
 }
 
 int main()
@@ -136,9 +137,11 @@ int main()
 
     std::cout << "DFS(1):" << std::endl;
     DFS<std::string, double>(g, 1, [](const std::string &v) -> void { std::cout << v << ", "; });
+    //for(auto dfs_it = g.beginDFS(1); dfs_it != g.endDFS(); ++dfs_it) { std::cout << *dfs_it << ", "; }
     std::cout << std::endl;
     std::cout << "BFS(1):" << std::endl;
     BFS<std::string, double>(g, 1, [](const std::string &v) -> void { std::cout << v << ", "; });
+    //for(auto dfs_it = g.beginDFS(1); dfs_it != g.endDFS(); ++dfs_it) { std::cout << *dfs_it << ", "; }
     std::cout << std::endl;
 
     std::cout << "DFS(1):" << std::endl;
@@ -151,6 +154,77 @@ int main()
     for (auto bfs_it = g.beginBFS(1); bfs_it != g.endBFS(); ++bfs_it)
     {
         std::cout << *bfs_it << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout << std::endl;
+    printDebugInsertInfo(g.insertEdge(1, 2, 2));
+    printDebugInsertInfo(g.insertEdge(1, 4, 2));
+    printDebugInsertInfo(g.insertEdge(2, 1, 2));
+    printDebugInsertInfo(g.insertEdge(2, 4, 2));
+    printDebugInsertInfo(g.insertEdge(4, 1, 2));
+    printDebugInsertInfo(g.insertEdge(4, 2, 2));
+    std::cout << std::endl;
+    g.printNeighborhoodMatrix();
+    std::cout << std::endl;
+
+    std::cout << "DFS(1):" << std::endl;
+    for (auto dfs_it = g.beginDFS(1); dfs_it != g.endDFS(); ++dfs_it)
+    {
+        std::cout << *dfs_it << ", ";
+    }
+    std::cout << std::endl;
+    std::cout << "BFS(1):" << std::endl;
+    for (auto bfs_it = g.beginBFS(1); bfs_it != g.endBFS(); ++bfs_it)
+    {
+        std::cout << *bfs_it << ", ";
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    // drawGraph(g,20,"temp");
+    auto [shortest_path_distance, shortest_path] = dijkstra<std::string, double>(g, 2u, 4u, [](const double &e) -> double { return e; });
+    std::cout << "Distance from 2 to 4: " << shortest_path_distance << std::endl;
+    std::cout << "Path from 2 to 4:" << std::endl;
+    for (auto &v_id : shortest_path)
+    {
+        std::cout << v_id << ", ";
+    }
+    std::cout << std::endl;
+
+    std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 1u, 0u, [](const double &e) -> double { return e; });
+    std::cout << "Distance from 1 to 0: " << shortest_path_distance << std::endl;
+    std::cout << "Path from 1 to 0:" << std::endl;
+    for (auto &v_id : shortest_path)
+    {
+        std::cout << v_id << ", ";
+    }
+    std::cout << std::endl;
+
+    std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 3u, 0u, [](const double &e) -> double { return e; });
+    std::cout << "Distance from 3 to 0: " << shortest_path_distance << std::endl;
+    std::cout << "Path from 3 to 0:" << std::endl;
+    for (auto &v_id : shortest_path)
+    {
+        std::cout << v_id << ", ";
+    }
+    std::cout << std::endl;
+
+    std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 3u, 1u, [](const double &e) -> double { return e; });
+    std::cout << "Distance from 3 to 1: " << shortest_path_distance << std::endl;
+    std::cout << "Path from 3 to 1:" << std::endl;
+    for (auto &v_id : shortest_path)
+    {
+        std::cout << v_id << ", ";
+    }
+    std::cout << std::endl;
+
+    std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 1u, 3u, [](const double &e) -> double { return e; });
+    std::cout << "Distance from 1 to 3: " << shortest_path_distance << std::endl;
+    std::cout << "Path from 1 to 3:" << std::endl;
+    for (auto &v_id : shortest_path)
+    {
+        std::cout << v_id << ", ";
     }
     std::cout << std::endl;
 
