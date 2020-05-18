@@ -1,5 +1,5 @@
 
-
+//TODO zmienić nazwe testu na test zajecia 
 #include <iostream>
 #include <functional>
 #include <cstdint>
