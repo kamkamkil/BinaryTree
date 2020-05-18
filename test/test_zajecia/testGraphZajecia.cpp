@@ -6,6 +6,7 @@
 #include <string>
 #include <cmath>
 #include "../src/graph.hpp"
+#include "../src/graphAlgorithms.hpp"
 // #include "../src/drawgraph.hpp"
 
 using namespace std;

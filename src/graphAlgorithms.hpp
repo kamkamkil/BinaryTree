@@ -148,12 +148,13 @@ std::pair<double, std::vector<std::size_t>> dijkstra(
     while ((*current_node).first != end_idx)
     {
         auto neighbours = graph.neighbours((*current_node).first);
-        // std::remove_if(neighbours.begin(), neighbours.end(), [&](size_t n) -> bool { return std::none_of(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == n; }); });
-
-        for (auto &&neighbour : graph.neighbours((*current_node).first)) //TODO jakby się jakoś dało to fajnie by było dać tu odrazu sąsiedzi || unvisited
+        auto it = std::remove_if(neighbours.begin(), neighbours.end(), [&](size_t n) -> bool { return std::none_of(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == n; }); });
+        neighbours.erase(it,neighbours.end());
+        // it = remove_if(neighbours.begin(), neighbours.end(),[&](size_t n) -> bool {})
+        for (auto &&neighbour : neighbours)
         {
             auto temp = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == neighbour; }); //TODO zmiana nazwy
-            if (temp != unvisited.end() && getEdgeLength(graph.edgeLabel((*current_node).first, neighbour)) + (*current_node).second < (*temp).second)
+            if (getEdgeLength(graph.edgeLabel((*current_node).first, neighbour)) + (*current_node).second < (*temp).second)
             {
                 unvisited.erase(temp);
                 unvisited.insert({neighbour, graph.edgeLabel((*current_node).first, neighbour) + (*current_node).second});
