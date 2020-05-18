@@ -147,7 +147,7 @@ std::pair<double, std::vector<std::size_t>> dijkstra(
     auto current_node = unvisited.find({start_idx, 0});
     while ((*current_node).first != end_idx)
     {
-        for (auto &&neighbour : graph.neighbours((*current_node).first))
+        for (auto &&neighbour : graph.neighbours((*current_node).first))//TODO jakby się jakoś dało to fajnie by było dać tu odrazu sąsiedzi || unvisited
         {
             auto temp = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == neighbour; }); //TODO zmiana nazwy
             if (temp != unvisited.end() && getEdgeLength(graph.edgeLabel((*current_node).first, neighbour)) + (*current_node).second < (*temp).second)
