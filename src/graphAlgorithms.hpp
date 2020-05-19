@@ -136,34 +136,35 @@ template <typename V, typename E>
 std::pair<double, std::vector<std::size_t>> dijkstra(
     Graph<V, E> &graph, std::size_t start_idx, std::size_t end_idx, std::function<double(const E &)> getEdgeLength = [](const E &edge) -> E { return edge; })
 {
-    std::set<std::pair<size_t, double>> unvisited;
+    std::set<std::pair<double,size_t>> unvisited;
     for (size_t i = 0; i < graph.nrOfVertices(); i++)
         if (i != start_idx)
-            unvisited.insert({i, std::numeric_limits<double>::max()});
+            unvisited.insert({std::numeric_limits<double>::max(),i});
         else
-            unvisited.insert({i, 0});
+            unvisited.insert({0,i});
     std::vector<size_t> predecesor(graph.nrOfVertices());
 
-    auto current_node = unvisited.find({start_idx, 0});
-    while ((*current_node).first != end_idx)
+    auto current_node = unvisited.find({0 , start_idx});
+    while ((*current_node).second != end_idx)
     {
-        auto neighbours = graph.neighbours((*current_node).first);
-        auto it = std::remove_if(neighbours.begin(), neighbours.end(), [&](size_t n) -> bool { return std::none_of(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == n; }); });
+        auto neighbours = graph.neighbours((*current_node).second);
+        auto it = std::remove_if(neighbours.begin(), neighbours.end(), [&](size_t n) -> bool { return std::none_of(unvisited.begin(), unvisited.end(), [&](const std::pair<double,size_t> a) -> bool { return a.second == n; }); });
         neighbours.erase(it,neighbours.end());
         // it = remove_if(neighbours.begin(), neighbours.end(),[&](size_t n) -> bool {})
         for (auto &&neighbour : neighbours)
         {
-            auto temp = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == neighbour; }); //TODO zmiana nazwy
-            if (getEdgeLength(graph.edgeLabel((*current_node).first, neighbour)) + (*current_node).second < (*temp).second)
+            auto temp = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<double,size_t> a) -> bool { return a.second == neighbour; }); //TODO zmiana nazwy
+            if (getEdgeLength(graph.edgeLabel((*current_node).second, neighbour)) + (*current_node).first < (*temp).first)
             {
                 unvisited.erase(temp);
-                unvisited.insert({neighbour, graph.edgeLabel((*current_node).first, neighbour) + (*current_node).second});
-                predecesor[neighbour] = (*current_node).first;
+                unvisited.insert({graph.edgeLabel((*current_node).second, neighbour) + (*current_node).first,neighbour});
+                predecesor[neighbour] = (*current_node).second;
             }
         }
         unvisited.erase(current_node);
-
-        current_node = std::min_element(unvisited.begin(), unvisited.end(), [](const std::pair<size_t, double> a, const std::pair<size_t, double> b) -> bool { return a.second < b.second; });
+        if(unvisited.empty())
+            throw "now parh exeption";
+        current_node = std::min_element(unvisited.begin(), unvisited.end());
     }
     size_t node = end_idx;
     std::vector<size_t> result;
@@ -173,7 +174,7 @@ std::pair<double, std::vector<std::size_t>> dijkstra(
         node = predecesor[node];
     }
     result.push_back(start_idx);
-    auto result_distance = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<size_t, double> a) -> bool { return a.first == end_idx; });
+    auto result_distance = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<double,size_t> a) -> bool { return a.second == end_idx; });
     std::reverse(result.begin(), result.end());
-    return {(*result_distance).first, result};
+    return {(*result_distance).second, result};
 }
