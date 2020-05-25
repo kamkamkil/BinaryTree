@@ -1,9 +1,14 @@
+#include <vector>
+#include <ranges>
 #include <iostream>
-#include "Binarytree.hpp"
-
-int main(int argc, char const *argv[])
-{
-    Binarytree<int> tree;
-    tree.put(1);
-    return 0;
+ 
+int main(){
+  std::vector<int> ints{0, 1, 2, 3, 4, 5};
+  auto even = [](int i){ return 0 == i % 2; };
+  auto square = [](int i) { return i * i; };
+ 
+  for (int i : ints | std::view::filter(even) | 
+                      std::view::transform(square)) {
+    std::cout << i << ' ';             // 0 4 16
+  }
 }

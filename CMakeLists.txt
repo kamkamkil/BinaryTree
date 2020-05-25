@@ -30,7 +30,6 @@ target_include_directories(graph INTERFACE
 )
 
 add_executable(main main.cpp)
-target_link_libraries(main BinaryTree)
 
 add_executable(testBST test/testBST.cpp )
 target_link_libraries(testBST BinaryTree)

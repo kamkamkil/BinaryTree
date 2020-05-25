@@ -4,10 +4,10 @@
 #include <functional>
 #include <cstdint>
 #include <cmath>
-#include <../src/graph.hpp>
-#include <../src/graphAlgorithms.hpp>
-#include <../src/drawgraph.hpp>
-#include <string>
+#include "graph.hpp"
+#include "dijkstra.hpp"
+#include "astar.hpp"
+
 using namespace std;
 
 template <typename Iter>
@@ -326,7 +326,6 @@ int main()
         auto end_it = std::find(g.beginVertices(), g.endVertices(), end_data);
         if (start_it != g.endVertices() && end_it != g.endVertices())
         {
-            drawGraph<double>(g,"zajecia");
             auto [shortest_path_distance, shortest_path] = dijkstra<std::pair<float, float>, double>(g, start_it.id(), end_it.id(), [](const double &e) -> double { return e; });
             std::cout << "Dijkstra results:" << std::endl;
             std::cout << "\tDistance: " << shortest_path_distance << std::endl;

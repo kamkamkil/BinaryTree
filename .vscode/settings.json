@@ -76,9 +76,13 @@
         "*.rh": "cpp",
         "bitset": "cpp",
         "array": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "ranges": "cpp"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "cSpell.words": [
+        "astar"
+    ]
 }
