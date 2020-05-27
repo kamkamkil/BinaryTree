@@ -80,7 +80,6 @@ int main()
             }
             std::cout << std::endl
                       << std::endl;
-
             std::cout << "DFS(1):" << std::endl;
             for (auto dfs_it = g.beginDFS(1); dfs_it != g.endDFS(); ++dfs_it)
             {
@@ -96,6 +95,7 @@ int main()
             std::cout << std::endl
                       << std::endl;
 
+        drawGraph<std::string, double>(g,20,"maly");
             auto [shortest_path_distance, shortest_path] = dijkstra<std::string, double>(g, 3u, 0u, [](const double &e) -> double { return e; });
             std::cout << "Distance from 3 to 0: " << shortest_path_distance << std::endl;
             std::cout << "Path from 3 to 0:" << std::endl;
@@ -114,14 +114,14 @@ int main()
             }
             std::cout << std::endl;
 
-            std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 1u, 3u, [](const double &e) -> double { return e; });
-            std::cout << "Distance from 1 to 3: " << shortest_path_distance << std::endl;
-            std::cout << "Path from 1 to 3:" << std::endl;
-            for (auto &v_id : shortest_path)
-            {
-                std::cout << v_id << ", ";
-            }
-            std::cout << std::endl;
+            // std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 1u, 3u, [](const double &e) -> double { return e; });
+            // std::cout << "Distance from 1 to 3: " << shortest_path_distance << std::endl;
+            // std::cout << "Path from 1 to 3:" << std::endl;
+            // for (auto &v_id : shortest_path)
+            // {
+            //     std::cout << v_id << ", ";
+            // }
+            // std::cout << std::endl;
 
             std::vector<Graph<std::string, double>> vg, vg2;
             vg.resize(1000);
@@ -252,13 +252,13 @@ int main()
         }
         std::cout << std::endl;
 
-        std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 1u, 3u, [](const double &e) -> double { return e; });
-        std::cout << "Distance from 1 to 3: " << shortest_path_distance << std::endl;
-        std::cout << "Path from 1 to 3:" << std::endl;
-        for (auto &v_id : shortest_path)
-        {
-            std::cout << v_id << ", ";
-        }
+        // std::tie(shortest_path_distance, shortest_path) = dijkstra<std::string, double>(g, 1u, 3u, [](const double &e) -> double { return e; });
+        // std::cout << "Distance from 1 to 3: " << shortest_path_distance << std::endl;
+        // std::cout << "Path from 1 to 3:" << std::endl;
+        // for (auto &v_id : shortest_path)
+        // {
+        //     std::cout << v_id << ", ";
+        // }
         std::cout << std::endl;
 
         std::cout << std::endl;
@@ -326,6 +326,7 @@ int main()
         auto end_it = std::find(g.beginVertices(), g.endVertices(), end_data);
         if (start_it != g.endVertices() && end_it != g.endVertices())
         {
+            cout << "===test A*=="<<endl <<"poczatek:" << g.vertexData(start_it.id()).first << "   " << g.vertexData(start_it.id()).second<<endl << "koniec : "<< g.vertexData(end_it.id()).first << "   " << g.vertexData(end_it.id()).second<< endl;
             drawGraph<double>(g,"zajecia");
             auto [shortest_path_distance, shortest_path] = dijkstra<std::pair<float, float>, double>(g, start_it.id(), end_it.id(), [](const double &e) -> double { return e; });
             std::cout << "Dijkstra results:" << std::endl;
@@ -343,7 +344,6 @@ int main()
                           << ", ";
             }
             std::cout << std::endl;
-
             std::tie(shortest_path_distance, shortest_path) = astar<std::pair<float, float>, double>(g, start_it.id(), end_it.id(), zero_heuristics, [](const double &e) -> double { return e; });
             std::cout << "AStar (zero) results:" << std::endl;
             std::cout << "\tDistance: " << shortest_path_distance << std::endl;

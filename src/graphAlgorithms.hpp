@@ -173,10 +173,14 @@ std::pair<double, std::vector<std::size_t>> dijkstra(
         result.push_back(node);
         node = predecesor[node];
     }
+    double result_distance = 0;
     result.push_back(start_idx);
-    auto result_distance = std::find_if(unvisited.begin(), unvisited.end(), [&](const std::pair<double, size_t> a) -> bool { return a.second == end_idx; });
     std::reverse(result.begin(), result.end());
-    return {(*result_distance).second, result};
+    for (size_t i = 1; i < result.size(); i++)
+    {
+        result_distance += getEdgeLength(graph.edgeLabel(result[i - 1], result[i]));
+    }
+    return {result_distance, result};
 }
 
 template <typename V, typename E>
@@ -209,7 +213,7 @@ std::pair<double, std::vector<std::size_t>> astar(
                 current_node = i;
                 break;
             }
-        int n  = 0;
+        int n = 0;
         for (n = 0; n < open.size(); n++)
             if (!visited[n] && open[n].first + open[n].second < open[current_node].first + open[current_node].second)
                 current_node = n;
@@ -221,11 +225,12 @@ std::pair<double, std::vector<std::size_t>> astar(
         result.push_back(node);
         node = predecessor[node];
     }
+    result.push_back(start_idx);
     std::reverse(result.begin(), result.end());
     double result_distance = 0;
     for (size_t i = 1; i < result.size(); i++)
     {
-        result_distance += graph.edgeLabel(result[i - 1], result[i]);
+        result_distance += getEdgeLength(graph.edgeLabel(result[i - 1], result[i]));
     }
     return {result_distance, result};
 }

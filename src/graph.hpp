@@ -81,11 +81,11 @@ public:
     VerticesIterator beginVertices() { return VerticesIterator(0, &valueList); };
     // zwraca "VerticesIterator" "za ostatni" wierzchołek
     VerticesIterator endVertices() { return VerticesIterator(valueList.size(), &valueList); };
-    // zwraca "EdgesIterator" na pierwszą krawędz
+    // zwraca "EdgesIterator" na pierwszą krawędź
     EdgesIterator beginEdges() { return EdgesIterator(this); };
-    // zwraca "EdgesIterator" "za ostatnią" krawędz
+    // zwraca "EdgesIterator" "za ostatnią" krawędź
     EdgesIterator endEdges() { return EdgesIterator(matrix.size(), 0, this); };
-    //zwraca wszystkie wieszchiłki do których można się dostać z danego wieszchołka
+    //zwraca wszystkie wierzchołki do których można się dostać z danego wieszchołka
     std::vector<size_t> neighbours(size_t vertex) const;
     DFSIterator beginDFS(std::size_t vertex_id) { return DFSIterator(vertex_id, this); };
     // zwraca "DFSIterator" "za ostatni" wierzcholek
@@ -100,6 +100,7 @@ private:
     std::vector<V> valueList;
     std::size_t verticesAmount;
 };
+//implementacjia funkji 
 #include "graphIterator.hpp"
 
 /*

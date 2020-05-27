@@ -1,0 +1,4 @@
+set key off
+plot "data_maly"  index 0 with labels point  pt 7 offset char 0,1,\
+"data_maly" index 1  using 1:2:($3-$1):($4-$2)  with vectors head filled,\
+"data_maly" index 2 using 1:2:3 with labels boxed tc lt 1 
