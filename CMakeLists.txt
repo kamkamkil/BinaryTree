@@ -29,7 +29,6 @@ target_include_directories(graph INTERFACE
   $<INSTALL_INTERFACE:include/graph>
 )
 
-add_executable(main main.cpp)
 
 add_executable(testBST test/testBST.cpp )
 target_link_libraries(testBST BinaryTree)
@@ -37,17 +36,17 @@ target_link_libraries(testBST BinaryTree)
 add_executable(testSet test/testSet.cpp )
 target_link_libraries(testBST treeSet)
 
-add_executable(testSetZajecia1 test/test_zajecia/testSetZajecia1.cpp )
-target_link_libraries(testSetZajecia1  treeSet)
+# add_executable(testSetZajecia1 test/test_zajecia/testSetZajecia1.cpp )
+# target_link_libraries(testSetZajecia1  treeSet)
 
-add_executable(testSetZajecia2 test/test_zajecia/testSetZajecia2.cpp )
-target_link_libraries(testSetZajecia2  treeSet)
+# add_executable(testSetZajecia2 test/test_zajecia/testSetZajecia2.cpp )
+# target_link_libraries(testSetZajecia2  treeSet)
 
 add_executable(testMap test/testMap.cpp)
 target_link_libraries(testMap map)
 
-add_executable(testMapZajecia test/test_zajecia/testMapZajecia.cpp)
-target_link_libraries(testMapZajecia map)
+# add_executable(testMapZajecia test/test_zajecia/testMapZajecia.cpp)
+# target_link_libraries(testMapZajecia map)
 
 add_executable(testGraph test/testGraph.cpp)
 target_link_libraries(testGraph graph)

@@ -100,11 +100,11 @@ private:
     std::vector<V> valueList;
     std::size_t verticesAmount;
 };
-//implementacjia funkji 
+//implementacja iteratorów 
 #include "graphIterator.hpp"
 
 /*
-iplementacje funkcji 
+implementacja funkcji 
 */
 template <typename V, typename E>
 typename Graph<V, E>::VerticesIterator Graph<V, E>::insertVertex(const V &vertex_data)
